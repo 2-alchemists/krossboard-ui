@@ -1,6 +1,4 @@
 import * as React from 'react'
-import * as d3 from 'd3'
-import * as britecharts from 'britecharts'
 import { StackedAreaChart } from './StackedAreaChart'
 
 export const Test: React.FC = () => {

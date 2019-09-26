@@ -1,11 +1,23 @@
 {
-  "defaultSeverity": "error",
-  "extends": ["tslint-config-airbnb", "tslint-react", "tslint-config-prettier"],
-  "jsRules": {},
+  "extends": [
+      "tslint:recommended",
+      "tslint-eslint-rules",
+      "tslint-react",
+      "tslint-config-prettier"
+  ],
   "rules": {
-    "variable-name": false,
-    "function-name": false,
-    "jsx-no-lambda": false
+      "no-duplicate-variable": true,
+      "no-string-literal": false,
+      "no-console": [false],
+      "no-unused-variable": [true],
+      "no-bitwise": false,
+      "trailing-comma": [false],
+      "object-literal-sort-keys": false,
+      "no-namespace": false,
+      "jsx-boolean-value": false,
+      "jsx-no-lambda": false
   },
-  "rulesDirectory": []
+  "linterOptions": {
+      "exclude": ["**/registerServiceWorker.ts"]
+  }
 }

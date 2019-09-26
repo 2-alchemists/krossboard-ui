@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "target": "esnext",
+    "sourceMap": true,
     "module": "commonjs",
     "strict": true,
     "jsx": "react",
     "rootDir": "./src",
     "incremental": true,
-    "experimentalDecorators": true,
     "lib": ["dom", "es2015"]
   }
 }
