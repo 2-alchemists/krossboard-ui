@@ -1,8 +1,156 @@
 import * as React from 'react'
-import { Test } from './Test'
+import { BrowserRouter as Router, NavLink, Route, Switch } from 'react-router-dom'
 
-export const App = () => (
-  <div>
-    <Test />
-  </div>
+import AppBar from '@material-ui/core/AppBar'
+import Box from '@material-ui/core/Box'
+import Button from '@material-ui/core/Button'
+import Container from '@material-ui/core/Container'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Grid from '@material-ui/core/Grid'
+import Link from '@material-ui/core/Link'
+import { makeStyles } from '@material-ui/core/styles'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+
+import { ClusterView } from './ClusterView'
+import { MulticlusterView } from './MulticlusterView'
+
+const useStyles = makeStyles(theme => ({
+  '@global': {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+    ul: {
+      margin: 0,
+      padding: 0,
+    },
+    li: {
+      listStyle: 'none',
+    },
+  },
+  appBar: {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  toolbar: {
+    flexWrap: 'wrap',
+  },
+  toolbarTitle: {
+    flexGrow: 1,
+  },
+  link: {
+    color: theme.palette.text.primary,
+    textTransform: 'uppercase',
+    margin: theme.spacing(1, 1.5)
+  },
+  selected: {
+    color: theme.palette.primary.main,
+  },
+  footer: {
+    borderTop: `1px solid ${theme.palette.divider}`,
+    marginTop: theme.spacing(8),
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
+    [theme.breakpoints.up('sm')]: {
+      paddingTop: theme.spacing(6),
+      paddingBottom: theme.spacing(6),
+    },
+  },
+}))
+
+export const App = () => {
+  return <React.Fragment>
+    <CssBaseline />
+    <Router>
+      <Header />
+      <Content />
+    </Router>
+    <Footer />
+  </React.Fragment>
+}
+
+const Header = () => {
+  const classes = useStyles()
+
+  return <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
+    <Toolbar className={classes.toolbar}>
+      <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>Company name</Typography>
+      <nav>
+        <Link to="/multicluster-view"  className={classes.link} component={NavLink} activeClassName={classes.selected}>Multi-cluster charts</Link>
+        <Link to="/cluster-view"  className={classes.link} component={NavLink} activeClassName={classes.selected}>By cluster charts</Link>
+      </nav>
+      <Button href="#" color="primary" variant="outlined" className={classes.link}>
+        Login
+      </Button>
+    </Toolbar>
+  </AppBar>
+}
+
+const Content = () => (
+    <Switch>
+      <Route path="/multicluster-view">
+        <MulticlusterView/>
+      </Route>
+      <Route path="/cluster-view">
+        <ClusterView/>
+      </Route>
+      <Route path="/">
+        <div>
+          Main pannel
+        </div>
+      </Route>
+    </Switch> 
 )
+
+const Footer = () => {
+  const classes = useStyles()
+
+  const footers = [
+    {
+      title: 'Company',
+      description: ['Team', 'History', 'Contact us', 'Locations'],
+    },
+    {
+      title: 'Features',
+      description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
+    },
+    {
+      title: 'Resources',
+      description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
+    },
+    {
+      title: 'Legal',
+      description: ['Privacy policy', 'Terms of use'],
+    },
+  ]
+
+  return <Container maxWidth="md" component="footer" className={classes.footer}>
+    <Grid container spacing={4} justify="space-evenly">
+      {footers.map(footer => (
+        <Grid item xs={6} sm={3} key={footer.title}>
+          <Typography variant="h6" color="textPrimary" gutterBottom>
+            {footer.title}
+          </Typography>
+          <ul>
+            {footer.description.map(item => (
+              <li key={item}>
+                <Link href="#" variant="subtitle1" color="textSecondary">
+                  {item}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Grid>
+      ))}
+    </Grid>
+    <Box mt={5}>
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://material-ui.com/">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+    </Box>
+  </Container>
+}

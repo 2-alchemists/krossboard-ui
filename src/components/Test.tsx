@@ -1,4 +1,5 @@
 import * as React from 'react'
+
 import { StackedAreaChart } from './StackedAreaChart'
 
 export const Test: React.FC = () => {

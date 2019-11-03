@@ -11,7 +11,8 @@
     "build": "yarn type-check && parcel build ./src/index.html --no-source-maps",
     "prettify": "prettier --write './src/**/*.{ts,tsx}'",
     "type-check": "tsc --noEmit",
-    "type-check:watch": "tsc --noEmit --watch"
+    "type-check:watch": "tsc --noEmit --watch",
+    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'src/**/*.tsx' 'test/**/*.ts'"
   },
   "engines": {
     "node": ">= 10.13.0"
@@ -33,11 +34,15 @@
     "Cluster"
   ],
   "dependencies": {
+    "@material-ui/core": "^4.5.2",
     "@types/d3": "^5.7.2",
+    "@types/react-router": "^5.1.2",
+    "@types/react-router-dom": "^5.1.2",
     "britecharts": "2.11.0",
     "d3-selection": "^1.4.0",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.1.2"
   },
   "devDependencies": {
     "@types/node": "^11.13.6",
@@ -49,8 +54,8 @@
     "prettier": "^1.17.0",
     "ts-jest": "^24.0.2",
     "tslint": "^5.16.0",
-    "tslint-config-airbnb": "^5.11.1",
     "tslint-config-prettier": "^1.18.0",
+    "tslint-config-standard": "^8.0.1",
     "tslint-react": "^4.0.0",
     "typescript": "^3.4.4"
   }

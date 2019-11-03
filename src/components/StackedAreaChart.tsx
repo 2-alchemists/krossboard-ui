@@ -1,8 +1,10 @@
-import * as React from 'react'
-import * as d3 from 'd3'
 import * as britecharts from 'britecharts'
+import * as d3 from 'd3'
+import * as React from 'react'
 
-export interface StackedAreaChartProps {
+import { makeStyles } from '@material-ui/core/styles'
+
+export interface IStackedAreaChartProps {
   width?: number
   height?: number
   animated?: boolean
@@ -24,9 +26,14 @@ export enum StackedAreaGridEnum {
   Full = "full",
 }
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    fill: 'none'
+  }
+}))
+
 export const StackedAreaChart = ({
   animated = false,
-  width,
   height,
   grid = StackedAreaGridEnum.Horizontal,
   keyLabel = 'name',
@@ -36,14 +43,37 @@ export const StackedAreaChart = ({
   tooltipThreshold = 400,
   tooltipTitle = 'Values',
   dataset = [],
-}: StackedAreaChartProps) => {
+}: IStackedAreaChartProps) => {
   const elem = React.useRef<HTMLDivElement>(null)
+  const [width, setWidth] = React.useState(600)
+  const classes = useStyles()
+
+  React.useEffect(() => {
+    const resizeChart = () => {
+      if (elem.current) {
+        console.log('resize: ')
+        const node = d3.select(elem.current).node()
+        if (node) {
+          setWidth(node.getBoundingClientRect().width)
+        }
+      }
+    }
+    window.addEventListener("resize", resizeChart)
+    return () => {
+      window.removeEventListener("resize", resizeChart)
+    }
+  })
+
+  React.useEffect(() => {
+    const node = d3.select(elem.current).node()
+    if (node) {
+      setWidth(node.getBoundingClientRect().width)
+    }
+  }, [elem])
 
   React.useEffect(() => {
     if (elem.current && dataset) {
       const container = d3.select(elem.current)
-      const node = container.node()
-
       const chart = britecharts.stackedArea()
       const tooltip = britecharts.tooltip()
 
@@ -53,8 +83,8 @@ export const StackedAreaChart = ({
         .keyLabel(keyLabel)
         .dateLabel(dateLabel)
         .valueLabel(valueLabel)
-        .width(width ? width : ( node ? node.getBoundingClientRect().width : 600 ))
-        .height(height ? height : 400 )
+        .width(width)
+        .height(height ? height : 400)
         .tooltipThreshold(tooltipThreshold)
 
       if (showTooltips) {
@@ -78,7 +108,7 @@ export const StackedAreaChart = ({
           .call(tooltip)
       }
     }
-  }, [elem, dataset])
+  }, [dataset, width])
 
-  return <div ref={elem} className="britechart" style={{ fill: 'none' }} />
+  return <div ref={elem} className={`britechart ${classes.root}`} />
 }

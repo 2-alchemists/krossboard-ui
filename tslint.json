@@ -1,23 +1,19 @@
 {
-  "extends": [
-      "tslint:recommended",
-      "tslint-eslint-rules",
-      "tslint-react",
-      "tslint-config-prettier"
-  ],
-  "rules": {
-      "no-duplicate-variable": true,
-      "no-string-literal": false,
-      "no-console": [false],
-      "no-unused-variable": [true],
-      "no-bitwise": false,
-      "trailing-comma": [false],
-      "object-literal-sort-keys": false,
-      "no-namespace": false,
-      "jsx-boolean-value": false,
-      "jsx-no-lambda": false
-  },
-  "linterOptions": {
-      "exclude": ["**/registerServiceWorker.ts"]
-  }
+	"extends": [ "tslint:recommended", "tslint-eslint-rules", "tslint-react", "tslint-config-prettier" ],
+	"rules": {
+		"no-duplicate-variable": true,
+		"no-string-literal": false,
+		"no-console": [ false ],
+		"no-bitwise": false,
+		"trailing-comma": [ false ],
+        "object-literal-sort-keys": false,
+        "semicolon": [true, "never"],
+        "indent": false,
+		"no-namespace": false,
+		"jsx-boolean-value": false,
+		"jsx-no-lambda": false
+	},
+	"linterOptions": {
+		"exclude": [ "build/**/*.ts", "node_modules" ]
+	}
 }
