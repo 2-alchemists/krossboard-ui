@@ -13,7 +13,9 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 
 import { ClusterView } from './ClusterView'
+import { CurrentLoadView } from './CurrentLoadView'
 import { MulticlusterView } from './MulticlusterView'
+
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -75,6 +77,7 @@ const Header = () => {
     <Toolbar className={classes.toolbar}>
       <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>Company name</Typography>
       <nav>
+      <Link to="/"  className={classes.link} component={NavLink} activeClassName={classes.selected}>Current Load Overview</Link>
         <Link to="/multicluster-view"  className={classes.link} component={NavLink} activeClassName={classes.selected}>Multi-cluster charts</Link>
         <Link to="/cluster-view"  className={classes.link} component={NavLink} activeClassName={classes.selected}>By cluster charts</Link>
       </nav>
@@ -94,9 +97,7 @@ const Content = () => (
         <ClusterView/>
       </Route>
       <Route path="/">
-        <div>
-          Main pannel
-        </div>
+        <CurrentLoadView/>
       </Route>
     </Switch> 
 )
