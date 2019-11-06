@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import { DonutChart } from './DonutChart'
-
+import { Donut } from 'britecharts-react'
+import { Legend } from 'britecharts-react'
 
 export const ClusterCurrentLoad: React.FC <{ resourceType?: string}> = ({resourceType = 'resource type not defined'}) => {
 
@@ -23,9 +23,11 @@ export const ClusterCurrentLoad: React.FC <{ resourceType?: string}> = ({resourc
   return (
     <div>
       <h2>{resourceType}</h2>
-      <div />
-      <DonutChart
-        dataset={dataset} animated={true} showTooltips={true} />
+      <Donut data={dataset} />
+      <div>
+      <Legend data={dataset} margin={0} marginRatio={2} />
+      </div>
+      
     </div>
   )
 }
