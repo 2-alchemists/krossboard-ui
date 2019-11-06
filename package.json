@@ -39,7 +39,9 @@
     "@types/react-router": "^5.1.2",
     "@types/react-router-dom": "^5.1.2",
     "britecharts": "2.11.0",
+    "britecharts-react": "^0.5.3",
     "d3-selection": "^1.4.0",
+    "dist": "^0.1.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.1.2"

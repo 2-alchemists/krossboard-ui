@@ -7,13 +7,13 @@ export const ClusterCurrentLoad: React.FC <{ resourceType?: string}> = ({resourc
 
   const dataset = [
     {
-        quantity: 3,
+        quantity: 75,
         percentage: 75,
         name: 'used',
         id: 1
     },
     {
-        quantity: 1,
+        quantity: 25,
         percentage: 25,
         name: 'available',
         id: 2
@@ -24,10 +24,7 @@ export const ClusterCurrentLoad: React.FC <{ resourceType?: string}> = ({resourc
     <div>
       <h2>{resourceType}</h2>
       <Donut data={dataset} />
-      <div>
-      <Legend data={dataset} margin={0} marginRatio={2} />
-      </div>
-      
+      <Legend data={dataset} numberFormat=".0f" unit='%' />
     </div>
   )
 }

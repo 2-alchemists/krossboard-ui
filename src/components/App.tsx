@@ -11,6 +11,7 @@ import Link from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+import 'britecharts-react/dist/britecharts-react.min.css'
 
 import { ClusterView } from './ClusterView'
 import { CurrentLoadView } from './CurrentLoadView'
