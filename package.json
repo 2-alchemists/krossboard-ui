@@ -36,6 +36,7 @@
   "dependencies": {
     "@material-ui/core": "^4.5.2",
     "@types/d3": "^5.7.2",
+    "@types/react-resize-detector": "^4.0.2",
     "@types/react-router": "^5.1.2",
     "@types/react-router-dom": "^5.1.2",
     "britecharts": "2.11.0",
@@ -44,6 +45,7 @@
     "dist": "^0.1.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-resize-detector": "^4.2.1",
     "react-router-dom": "^5.1.2"
   },
   "devDependencies": {

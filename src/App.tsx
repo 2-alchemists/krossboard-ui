@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BrowserRouter as Router, NavLink, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react-router-dom'
 
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
@@ -8,21 +8,18 @@ import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import 'britecharts-react/dist/britecharts-react.min.css'
 
-import { ClusterView } from './ClusterView'
-import { CurrentLoadView } from './CurrentLoadView'
-import { MulticlusterView } from './MulticlusterView'
-
+import { ClusterView } from './pages/ClusterView'
+import { CurrentLoadView } from './pages/CurrentLoadView'
+import { MulticlusterView } from './pages/MulticlusterView'
+import { theme as mytheme } from './theme'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
     ul: {
       margin: 0,
       padding: 0,
@@ -41,12 +38,16 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   link: {
-    color: theme.palette.text.primary,
     textTransform: 'uppercase',
-    margin: theme.spacing(1, 1.5)
+    paddingBottom: '3px',
+    margin: theme.spacing(1, 1.5),
+    '&:hover': {
+      textDecoration: 'none',
+      borderBottom: `1px solid ${theme.palette.text.hint}`
+    }
   },
-  selected: {
-    color: theme.palette.primary.main,
+  selected: {    
+    borderBottom: `1px solid ${theme.palette.text.primary}`
   },
   footer: {
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -60,29 +61,29 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export const App = () => {
-  return <React.Fragment>
+export const App = () => (
+  <ThemeProvider theme={mytheme}>
     <CssBaseline />
     <Router>
       <Header />
       <Content />
     </Router>
     <Footer />
-  </React.Fragment>
-}
+  </ThemeProvider>
+)
 
 const Header = () => {
   const classes = useStyles()
 
-  return <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
+  return <AppBar position="static" elevation={0} className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h6" color="inherit" noWrap className={classes.toolbarTitle}>Company name</Typography>
+      <Typography variant="h6"  noWrap className={classes.toolbarTitle}>Company name</Typography>
       <nav>
-      <Link to="/"  className={classes.link} component={NavLink} activeClassName={classes.selected}>Current Load Overview</Link>
-        <Link to="/multicluster-view"  className={classes.link} component={NavLink} activeClassName={classes.selected}>Multi-cluster charts</Link>
-        <Link to="/cluster-view"  className={classes.link} component={NavLink} activeClassName={classes.selected}>By cluster charts</Link>
+        <Link to="/" exact color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Current Load Overview</Link>
+        <Link to="/multicluster-view"  color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Multi-cluster charts</Link>
+        <Link to="/cluster-view"  color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>By cluster charts</Link>
       </nav>
-      <Button href="#" color="primary" variant="outlined" className={classes.link}>
+      <Button href="#" variant="outlined" className={classes.link}>
         Login
       </Button>
     </Toolbar>
@@ -90,17 +91,20 @@ const Header = () => {
 }
 
 const Content = () => (
-    <Switch>
-      <Route path="/multicluster-view">
-        <MulticlusterView/>
-      </Route>
-      <Route path="/cluster-view">
-        <ClusterView/>
-      </Route>
-      <Route path="/">
-        <CurrentLoadView/>
-      </Route>
-    </Switch> 
+  <Switch>
+    <Route path="/multicluster-view">
+      <MulticlusterView />
+    </Route>
+    <Route path="/cluster-view">
+      <ClusterView />
+    </Route>
+    <Route exact path="/">
+      <CurrentLoadView />
+    </Route>
+    <Route path="*">
+      <Redirect to="/" />
+    </Route>
+  </Switch>
 )
 
 const Footer = () => {
@@ -145,14 +149,14 @@ const Footer = () => {
       ))}
     </Grid>
     <Box mt={5}>
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Typography variant="body2" color="textSecondary" align="center">
+        {'Copyright © '}
+        <Link color="inherit" href="https://material-ui.com/">
+          Your Website
       </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
     </Box>
   </Container>
 }
