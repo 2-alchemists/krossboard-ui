@@ -1,17 +1,24 @@
 {
-	"extends": [ "tslint:recommended", "tslint-eslint-rules", "tslint-react", "tslint-config-prettier" ],
+	"extends": [
+		"tslint:recommended",
+		"tslint-eslint-rules",
+		"tslint-react",
+		"tslint-config-prettier",
+		"tslint-react-hooks"
+	],
 	"rules": {
 		"no-duplicate-variable": true,
 		"no-string-literal": false,
 		"no-console": [ false ],
-		"no-bitwise": false,
+		"no-bitwise": false,		
 		"trailing-comma": [ false ],
-        "object-literal-sort-keys": false,
-        "semicolon": [true, "never"],
-        "indent": false,
+		"object-literal-sort-keys": false,
+		"semicolon": [ true, "never" ],
+		"indent": true,
 		"no-namespace": false,
 		"jsx-boolean-value": false,
-		"jsx-no-lambda": false
+		"jsx-no-lambda": false,
+		"react-hooks-nesting": "error"
 	},
 	"linterOptions": {
 		"exclude": [ "build/**/*.ts", "node_modules" ]
