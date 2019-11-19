@@ -3,14 +3,14 @@
     "noUnusedLocals": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "esnext",
+    "target": "es5",
     "sourceMap": true,
     "module": "commonjs",
     "strict": true,
     "jsx": "react",
     "rootDir": "./src",
     "incremental": true,
-    "lib": ["dom", "es2015"]
+    "lib": ["dom", "es5"]
   },
   "include": [
     "src"

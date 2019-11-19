@@ -13,7 +13,7 @@
 		"no-bitwise": false,		
 		"trailing-comma": [ false ],
 		"object-literal-sort-keys": false,
-		"semicolon": [ true, "never" ],
+		"semicolon": [ true, "never", "strict-bound-class-methods" ],
 		"indent": true,
 		"no-namespace": false,
 		"jsx-boolean-value": false,
