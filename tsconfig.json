@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es5",
+    "sourceMap": true,
+    "module": "commonjs",
+    "strict": true,
+    "jsx": "react",
+    "rootDir": "./src",
+    "incremental": true,
+    "lib": ["dom", "es5"]
+  },
+  "include": [
+    "src"
+  ]
+}
