@@ -1,6 +1,9 @@
+import 'britecharts-react/dist/britecharts-react.min.css'
+
 import * as React from 'react'
 import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react-router-dom'
 
+import { LinearProgress } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -11,12 +14,12 @@ import Link from '@material-ui/core/Link'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import 'britecharts-react/dist/britecharts-react.min.css'
 
-import { ClusterView } from './pages/ClusterView'
-import { CurrentLoadView } from './pages/CurrentLoadView'
-import { MulticlusterView } from './pages/MulticlusterView'
-import { theme as mytheme } from './theme'
+import { ClusterView } from '../pages/ClusterView'
+import { CurrentLoadView } from '../pages/CurrentLoadView'
+import { MulticlusterView } from '../pages/MulticlusterView'
+import { theme as mytheme } from '../theme'
+import { IClusters, IHarvesterState, ISeriesSet, useHarvester } from './harvester'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -45,9 +48,12 @@ const useStyles = makeStyles(theme => ({
       textDecoration: 'none',
       borderBottom: `1px solid ${theme.palette.text.hint}`
     }
-  },
-  selected: {    
+  },  
+  selected: {
     borderBottom: `1px solid ${theme.palette.text.primary}`
+  },
+  progress: {
+    height: '5px'
   },
   footer: {
     borderTop: `1px solid ${theme.palette.divider}`,
@@ -61,27 +67,36 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export const App = () => (
-  <ThemeProvider theme={mytheme}>
-    <CssBaseline />
-    <Router>
-      <Header />
-      <Content />
-    </Router>
-    <Footer />
-  </ThemeProvider>
-)
+export const App = () => {
+
+  const [ loadingState, clusters, seriesSet ] = useHarvester({
+    discoveryURL: "",
+    pollingInterval: 30000
+  })
+
+  return (
+    <ThemeProvider theme={mytheme}>
+      <CssBaseline />
+      <Router>
+        <Header />
+        <ProgressBar loadingState={loadingState} />
+        <Content clusters={clusters} seriesSet={seriesSet} />
+      </Router>
+      <Footer />
+    </ThemeProvider>
+  )
+}
 
 const Header = () => {
   const classes = useStyles()
 
   return <AppBar position="static" elevation={0} className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h6"  noWrap className={classes.toolbarTitle}>Company name</Typography>
+      <Typography variant="h6" noWrap className={classes.toolbarTitle}>Company name</Typography>
       <nav>
         <Link to="/" exact color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Current Load Overview</Link>
-        <Link to="/multicluster-view"  color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Multi-cluster charts</Link>
-        <Link to="/cluster-view"  color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>By cluster charts</Link>
+        <Link to="/multicluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Multi-cluster charts</Link>
+        <Link to="/cluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>By cluster charts</Link>
       </nav>
       <Button href="#" variant="outlined" className={classes.link}>
         Login
@@ -90,16 +105,26 @@ const Header = () => {
   </AppBar>
 }
 
-const Content = () => (
+const ProgressBar: React.FC<{ loadingState: IHarvesterState }> = ({ loadingState }) => {
+  const classes = useStyles()
+
+  return (
+    <div className={classes.progress}>
+      { loadingState.loading && <LinearProgress color="secondary" className={classes.progress} value={loadingState.progress} variant={loadingState.progress ? "determinate" : "indeterminate"}/> }
+    </div>
+  )
+}
+
+const Content: React.FC<{ clusters: Readonly<IClusters>, seriesSet: Readonly<ISeriesSet> }> = ({ clusters, seriesSet }) => (
   <Switch>
     <Route path="/multicluster-view">
-      <MulticlusterView />
+      <MulticlusterView seriesSet={seriesSet} />
     </Route>
     <Route path="/cluster-view">
-      <ClusterView />
+      <ClusterView seriesSet={seriesSet} />
     </Route>
     <Route exact path="/">
-      <CurrentLoadView />
+      <CurrentLoadView clusters={clusters} />
     </Route>
     <Route path="*">
       <Redirect to="/" />
