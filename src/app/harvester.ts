@@ -90,7 +90,7 @@ export const useHarvester = ({
                                 ...s,
                                 state: { ...s.state, loading: true },
                             }))
-                    // add new discovery clusters not present in old ones (in loading state)
+                    // add new discovered clusters not present in old ones (in loading state)
                     const news: ISeriesSet =
                         a.seriesSpecs
                             .filter(it => state.findIndex(s => s.clusterName === it.clusterName) === -1)

@@ -1,5 +1,3 @@
-import 'britecharts-react/dist/britecharts-react.min.css'
-
 import * as React from 'react'
 import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react-router-dom'
 
