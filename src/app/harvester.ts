@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState } from 'react'
 
 import useInterval from '@use-it/interval'
 
-import { fetchClusters } from '../client/cluster'
+import { getDiscovery } from '../client/discovery'
 import { fetchSeries } from '../client/resources'
 
 export interface ICluster {
@@ -131,7 +131,7 @@ export const useHarvester = ({
         setLoadingState({ ...loadingState, loading: true })
 
         try {
-            const data = await fetchClusters(discoveryURL)
+            const data = await getDiscovery(discoveryURL)
             const instances = data.instances ? data.instances : []
 
             setClusters(instances)

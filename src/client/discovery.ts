@@ -1,4 +1,4 @@
-export interface IClustersResourcePayload {
+export interface IGetDiscoveryPayload {
 	status: string
 	message?: string
 	instances?: Array<{
@@ -7,7 +7,7 @@ export interface IClustersResourcePayload {
 	}>
 }
 
-const fetchClustersFaked = async (): Promise<IClustersResourcePayload> =>
+const getDiscoveryFaked = async (): Promise<IGetDiscoveryPayload> =>
 	new Promise((resolve, _) => {
 		setTimeout(() => resolve({
 			status: 'ok',
@@ -28,5 +28,5 @@ const fetchClustersFaked = async (): Promise<IClustersResourcePayload> =>
 		}), 50 /* ms */)
 	})
 
-export const fetchClusters = async (endpoint: string): Promise<IClustersResourcePayload> =>
-	fetchClustersFaked()
+export const getDiscovery = async (endpoint: string): Promise<IGetDiscoveryPayload> =>
+	getDiscoveryFaked()
