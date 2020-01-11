@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState } from 'react'
 
 import useInterval from '@use-it/interval'
 
-import { fetchClusters } from '../client/cluster'
+import { getDiscovery } from '../client/discovery'
 import { fetchSeries } from '../client/resources'
 
 export interface ICluster {
@@ -90,7 +90,7 @@ export const useHarvester = ({
                                 ...s,
                                 state: { ...s.state, loading: true },
                             }))
-                    // add new discovery clusters not present in old ones (in loading state)
+                    // add new discovered clusters not present in old ones (in loading state)
                     const news: ISeriesSet =
                         a.seriesSpecs
                             .filter(it => state.findIndex(s => s.clusterName === it.clusterName) === -1)
@@ -131,7 +131,7 @@ export const useHarvester = ({
         setLoadingState({ ...loadingState, loading: true })
 
         try {
-            const data = await fetchClusters(discoveryURL)
+            const data = await getDiscovery(discoveryURL)
             const instances = data.instances ? data.instances : []
 
             setClusters(instances)

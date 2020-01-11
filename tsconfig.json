@@ -10,7 +10,12 @@
     "jsx": "react",
     "rootDir": "./src",
     "incremental": true,
-    "lib": ["dom", "es5"]
+    "lib": ["dom", "es5"],
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin"
+      }
+    ]
   },
   "include": [
     "src"

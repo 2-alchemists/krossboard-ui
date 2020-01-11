@@ -13,7 +13,8 @@ import { ClusterResourceChart } from '../component/ClusterResourceChart'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(4)
+    padding: theme.spacing(4),
+    paddingTop: 0
   },
   formControl: {
     margin: theme.spacing(1),
@@ -38,7 +39,7 @@ export const ClusterView: React.FC<{ seriesSet: Readonly<ISeriesSet> }> = ({ ser
   return (
     <div className={classes.root}>
       <Grid container justify="center" alignItems="center">
-        <Grid item xs={6} sm={6}>
+        <Grid item xs={12} sm={6}>
           <FormControl className={classes.formControl}>
             <InputLabel id="cluster-label">Cluster</InputLabel>
             <Select
@@ -57,7 +58,7 @@ export const ClusterView: React.FC<{ seriesSet: Readonly<ISeriesSet> }> = ({ ser
           </FormControl>
         </Grid>
       </Grid>
-      <Grid container spacing={10}>
+      <Grid container spacing={3}>
         {seriesSet
           .filter(series => series.clusterName === selectedCluster)
           .map(series =>
