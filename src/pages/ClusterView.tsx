@@ -1,3 +1,4 @@
+import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 
 import FormControl from '@material-ui/core/FormControl'
@@ -7,8 +8,9 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { ISeriesSet } from '../app/harvester'
+import { SeriesType } from '../client/resources'
 import { ClusterResourceChart } from '../component/ClusterResourceChart'
+import { useStore } from '../store/storeProvider'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,53 +24,58 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export const ClusterView: React.FC<{ seriesSet: Readonly<ISeriesSet> }> = ({ seriesSet }) => {
+export const ClusterView = () => {
   const classes = useStyles()
-  const [selectedCluster, setSelectedCluster] = React.useState(seriesSet.length === 0 ? "" : seriesSet[0].clusterName)
+  const store = useStore()
+
+  const [selectedCluster, setSelectedCluster] = React.useState(store.clusterNames().length === 0 ? "" : store.clusterNames()[0])
 
   const onClusterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedCluster(event.target.value as string)
   }
 
   React.useEffect(() => {
-    if (selectedCluster === "" && seriesSet.length !== 0) {
-      setSelectedCluster(seriesSet[0].clusterName)
+    if (selectedCluster === "" && store.clusterNames().length !== 0) {
+      setSelectedCluster(store.clusterNames()[0])
     }
-  }, [seriesSet])
+  })
 
-  return (
-    <div className={classes.root}>
-      <Grid container justify="center" alignItems="center">
-        <Grid item xs={12} sm={6}>
-          <FormControl className={classes.formControl}>
-            <InputLabel id="cluster-label">Cluster</InputLabel>
-            <Select
-              labelId="cluster-label"
-              id="cluster"
-              value={selectedCluster}
-              onChange={onClusterChange}
-            >
-              {
-                seriesSet
-                  .map(it => it.clusterName)
-                  .filter((it, index, self) => self.indexOf(it) === index)
-                  .map(it => <MenuItem key={it} value={it}>{it}</MenuItem>)
-              }
-            </Select>
-          </FormControl>
+  return useObserver(() => {
+    const histories = selectedCluster ? store.resourcesUsages[selectedCluster] : {}
+    const types =  Object.keys(histories)
+
+    return (
+      <div className={classes.root}>
+        <Grid container justify="center" alignItems="center">
+          <Grid item xs={12} sm={6}>
+            <FormControl className={classes.formControl}>
+              <InputLabel id="cluster-label">Cluster</InputLabel>
+              <Select
+                labelId="cluster-label"
+                id="cluster"
+                value={selectedCluster}
+                onChange={onClusterChange}
+              >
+                {
+                  store.clusterNames()
+                    .filter((it, index, self) => self.indexOf(it) === index)
+                    .map(it => <MenuItem key={it} value={it}>{it}</MenuItem>)
+                }
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={3}>
-        {seriesSet
-          .filter(series => series.clusterName === selectedCluster)
-          .map(series =>
-            <Grid key={`${series.clusterName}-${series.type}`} item xs={12} sm={6}>
-              <ClusterResourceChart series={series} />
-            </Grid>
-          )
-        }
-      </Grid>
-
-    </div>
-  )
+        <Grid container spacing={3}>
+          {
+           types
+              .map(it =>
+                <Grid key={`${selectedCluster}-${it}`} item xs={12} sm={6}>
+                  <ClusterResourceChart type={SeriesType[it as keyof typeof SeriesType]} data={histories[it].data} />
+                </Grid>
+              )
+          }
+        </Grid>
+      </div>
+    )
+  })
 }

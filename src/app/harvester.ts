@@ -1,73 +1,18 @@
-import { useEffect, useReducer, useState } from 'react'
+import { runInAction } from 'mobx'
 
 import useInterval from '@use-it/interval'
 
+import { getCurrentusage } from '../client/currentusage'
 import { getDiscovery } from '../client/discovery'
-import { fetchSeries } from '../client/resources'
-
-export interface ICluster {
-    clusterName: string
-    endpoint: string
-}
-
-export type IClusters = ICluster[]
-
-export interface IAudit {
-    harvestedAt: Date
-    lastHarvestedSuccessAt: Date
-}
-
-export interface IHarvesterState {
-    loading: boolean
-    progress?: number
-    error?: string
-    updateDate: string
-}
+import { fetchSeries, seriesTypeValues } from '../client/resources'
+import { KoaStore } from '../store/KoaStore'
+import { computeIfAbsent, defaultState, IUsageHistoryItem } from '../store/model'
+import { useStore } from '../store/storeProvider'
 
 export interface IHarvesterOptions {
     discoveryURL: string
     pollingInterval?: number
 }
-
-export interface ISeriesSpec {
-    clusterName: string
-    type: SeriesType
-    endpoint: string
-}
-
-export interface IMeasurement {
-    name: string
-    dateUTC: Date
-    usage: number
-}
-
-export interface ISeries extends ISeriesSpec {
-    state: IHarvesterState
-    measurements: IMeasurement[]
-}
-
-export type ISeriesSet = ISeries[]
-
-export enum SeriesType {
-    cpu_usage_trends,
-    memory_usage_trends,
-    cpu_usage_period_1209600,
-    memory_usage_period_1209600,
-    cpu_usage_period_31968000,
-    memory_usage_period_31968000
-}
-
-const seriesTypeValues = [
-    SeriesType.cpu_usage_trends,
-    SeriesType.memory_usage_trends,
-    SeriesType.cpu_usage_period_1209600,
-    SeriesType.memory_usage_period_1209600,
-    SeriesType.cpu_usage_period_31968000,
-    SeriesType.memory_usage_period_31968000]
-
-type SeriesSetAction =
-    | { type: 'prepare', seriesSpecs: ISeriesSpec[] }
-    | { type: 'resolve', seriesSpec: ISeriesSpec, measurements: IMeasurement[] }
 
 export const useHarvester = ({
     // Endpoint from which all discovered clusters are retrieved. 
@@ -75,112 +20,97 @@ export const useHarvester = ({
     // Interval (ms) at which you want your component to poll for data.
     // Defaults to 0 (no polling).
     pollingInterval = 0
-}: IHarvesterOptions): [Readonly<IHarvesterState>, Readonly<IClusters>, Readonly<ISeriesSet>] => {
-    const [loadingState, setLoadingState] = useState({ loading: false } as IHarvesterState)
-    const [clusters, setClusters] = useState([] as IClusters)
-    const [seriesSet, dispatchSeries] = useReducer(
-        (state: ISeriesSet, a: SeriesSetAction) => {
-            switch (a.type) {
-                case 'prepare':
-                    // retain old clusters existing in new discovery ones     
-                    const olds: ISeriesSet =
-                        state
-                            .filter(it => a.seriesSpecs.findIndex(s => s.clusterName === it.clusterName) !== -1)
-                            .map(s => ({
-                                ...s,
-                                state: { ...s.state, loading: true },
-                            }))
-                    // add new discovered clusters not present in old ones (in loading state)
-                    const news: ISeriesSet =
-                        a.seriesSpecs
-                            .filter(it => state.findIndex(s => s.clusterName === it.clusterName) === -1)
-                            .map(s => ({
-                                ...s,
-                                state: { loading: true, updateDate: new Date("1970-1-1").toISOString() },
-                                measurements: []
-                            }))
-                    return [
-                        ...olds,
-                        ...news
-                    ]
-                case 'resolve':
-                    const series = state.find(it => (it.clusterName === a.seriesSpec.clusterName) && (it.type === a.seriesSpec.type))
+}: IHarvesterOptions): void => {
+    const store = useStore()
 
-                    if (series) {
-                        series.measurements = a.measurements
-                        series.state = { loading: false, updateDate: new Date().toISOString() }
-                    }
+    const doHarvest = () => {
+        runInAction(async () => {
+            store.state.loading = true
 
-                    // update progress
-                    const total = state.length
-                    const count = state.filter(it => !it.state.loading).length
+            await loadDiscovery(store, discoveryURL)
 
-                    setLoadingState({
-                        ...loadingState,
-                        loading: total !== count,
-                        progress: total === 0 ? 0 : count * 100 / total
-                    })
+            runInAction(() => { // FIXME: maybe better to use an @action bound to a store
+                loadCurrentUsage(store, discoveryURL)
+                loadResourcesUsage(store, discoveryURL)
 
-                    return state
-            }
-        },
-        [] as ISeriesSet
-    )
-
-    const doHarvest = async () => {
-        setLoadingState({ ...loadingState, loading: true })
-
-        try {
-            const data = await getDiscovery(discoveryURL)
-            const instances = data.instances ? data.instances : []
-
-            setClusters(instances)
-
-            // prepare
-            const seriesSpecs: ISeriesSpec[] = []
-            for (const type of seriesTypeValues) {
-                for (const cluster of instances) {
-                    seriesSpecs.push({
-                        type,
-                        clusterName: cluster.clusterName,
-                        endpoint: `${cluster.endpoint}/${type}.json`
-                    })
-                }
-            }
-
-            dispatchSeries({
-                type: 'prepare',
-                seriesSpecs
+                store.state.loading = false // FIXME: improper, must wait for the loading of all resources
+                store.state.updatedAt = new Date()
             })
 
-            // load
-            for (const seriesSpec of seriesSpecs) {
-                const measurements = await fetchSeries(seriesSpec.endpoint)
-
-                dispatchSeries({
-                    type: 'resolve',
-                    seriesSpec,
-                    measurements
-                })
-            }
-        } catch (e) {
-            console.log("error:", e)
-            setLoadingState({ ...loadingState, loading: false, error: e.toString() })
-            return
-        }
+        })
     }
-
-    useEffect(() => {
-        doHarvest()
-    }, [])
 
     useInterval(() => {
         doHarvest()
     }, pollingInterval === 0 ? null : pollingInterval)
 
-    return [
-        loadingState,
-        clusters,
-        seriesSet
-    ]
+    doHarvest()
+}
+
+const loadDiscovery = async (store: KoaStore, discoveryURL: string) => {
+    store.instances.state.loading = true
+    const data = await getDiscovery(discoveryURL)
+
+    const instances: Record<string, string> = {}
+    if (data.instances) {
+        data.instances?.forEach(it => instances[it.clusterName] = it.endpoint)
+    }
+    store.setClusters(instances)
+}
+
+const loadCurrentUsage = async (store: KoaStore, discoveryURL: string) => {
+    runInAction(() => {
+        store.currentLoad.state.loading = true
+
+        const data = store.currentLoad.data
+        getCurrentusage(discoveryURL)
+            .then(res => {
+                runInAction(() => {
+                    res.clusterUsage?.forEach(it => {
+                        data[it.clusterName]["cpu"] = [
+                            { tag: "used", value: it.cpuUsed },
+                            { tag: "available", value: 100 - it.cpuUsed }
+                        ]
+                        data[it.clusterName]["mem"] = [
+                            { tag: "used", value: it.memUsed },
+                            { tag: "available", value: 100 - it.memUsed }
+                        ]
+                    })
+                    store.currentLoad.state.updatedAt = new Date()
+                })
+            })
+            .finally(() => {
+                runInAction(() => store.currentLoad.state.loading = false)
+            })
+    })
+}
+
+const loadResourcesUsage = async (store: KoaStore, discoveryURL: string) => {
+    Object.keys(store.instances.data).forEach(clusterName => { // for all clusters
+        seriesTypeValues.forEach(type => { // for each kind of series
+            runInAction(() => {
+                const series = computeIfAbsent(store.resourcesUsages[clusterName], type, (key) => ({ state: defaultState(), data: [] }))
+
+                series.state.loading = true
+
+                fetchSeries(discoveryURL, type)
+                    .then(res => {
+                        runInAction(() => {
+                            const values: Record<string, IUsageHistoryItem> = {}
+                            res.forEach(measurement => {
+                                const item = computeIfAbsent(values, measurement.dateUTC.toISOString(), (key) => ({ tag: measurement.dateUTC }))
+
+                                item[measurement.name] = measurement.usage
+                            })
+
+                            series.data = Object.keys(values).map(it => values[it]) // TODO: is there a better idiomatic way of retrieving values
+                            series.state.updatedAt = new Date()
+                        })
+                    })
+                    .finally(() => {
+                        runInAction(() => series.state.loading = false)
+                    })
+            })
+        })
+    })
 }

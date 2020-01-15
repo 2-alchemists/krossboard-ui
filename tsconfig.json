@@ -11,7 +11,7 @@
     "jsx": "react",
     "rootDir": "./src",
     "incremental": true,
-    "lib": ["dom", "es5"],
+    "lib": ["dom", "es2019"],
     "plugins": [
       {
         "name": "typescript-tslint-plugin"
