@@ -5,6 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "es5",
     "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
     "strict": true,
     "jsx": "react",
