@@ -46,6 +46,8 @@
     "d3-selection": "^1.4.0",
     "d3-time-format": "^2.2.3",
     "dist": "^0.1.2",
+    "mobx": "^5.15.2",
+    "mobx-react-lite": "^1.5.2",
     "prop-types": ">=15",
     "react": ">=15",
     "react-dom": ">=15",
