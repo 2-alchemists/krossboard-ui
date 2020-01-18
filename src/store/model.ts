@@ -17,6 +17,11 @@ export interface IUsageHistoryItem {
     [_: string]: string | Date | number
 }
 
+export interface IRange<T> {
+    start: T
+    end: T
+}
+
 export const defaultState = (): IHarvesterState => ({
     loading: false,
     updatedAt: new Date()

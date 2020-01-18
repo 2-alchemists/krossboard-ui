@@ -1,3 +1,7 @@
+import '../scheduler/currentusage'
+import '../scheduler/discovery'
+import '../scheduler/resources'
+
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react-router-dom'
@@ -16,9 +20,9 @@ import Typography from '@material-ui/core/Typography'
 
 import { ClusterView } from '../pages/ClusterView'
 import { CurrentLoadView } from '../pages/CurrentLoadView'
+import { MultiClusterView } from '../pages/MultiClusterView'
 import { useStore } from '../store/storeProvider'
 import { theme as mytheme } from '../theme'
-import { useHarvester } from './harvester'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -67,11 +71,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const App = () => {
-  useHarvester({
-    discoveryURL: "",
-    pollingInterval: 6000
-  })
-
   return (
     <ThemeProvider theme={mytheme}>
       <CssBaseline />
@@ -115,20 +114,22 @@ const ProgressBar = () => {
 }
 
 const Content = () => {
-  return <Switch>
-    {/* <Route path="/multicluster-view">
-      <MulticlusterView seriesSet={seriesSet} />
-    </Route> */}
-    <Route path="/cluster-view">
-      <ClusterView />
-    </Route>
-    <Route exact path="/">
-      <CurrentLoadView />
-    </Route>
-    <Route path="*">
-      <Redirect to="/" />
-    </Route>
-  </Switch>
+  return (
+    <Switch>
+      <Route path="/multicluster-view">
+        <MultiClusterView />
+      </Route>
+      <Route path="/cluster-view">
+        <ClusterView />
+      </Route>
+      <Route exact path="/">
+        <CurrentLoadView />
+      </Route>
+      <Route path="*">
+        <Redirect to="/" />
+      </Route>
+    </Switch>
+  )
 }
 
 const Footer = () => {

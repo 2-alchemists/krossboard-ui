@@ -1,15 +1,19 @@
 import { action, computed, observable } from 'mobx'
 
 import {
-    ClusterEndpoint, ClusterName, defaultState, IHarvesterState, IUsageHistoryItem,
+    ClusterEndpoint, ClusterName, defaultState, IHarvesterState, IRange, IUsageHistoryItem,
     IWithHarvesterState
 } from './model'
 
 export class KoaStore {
+    @observable public discoveryURL: string = "http://localhost:8080/discovery"
+    @observable public pollingInterval:number = 6000 
+
     @observable public state: IHarvesterState = defaultState()
     @observable public instances: IWithHarvesterState<Record<ClusterName, ClusterEndpoint>> = { state: defaultState(), data: {} }
     @observable public currentLoad: IWithHarvesterState<Record<ClusterName, Record<string /*type*/, IUsageHistoryItem[]>>> = { state: defaultState(), data: {} }
     @observable public resourcesUsages: Record<ClusterName, Record<string /* type */, IWithHarvesterState<IUsageHistoryItem[]>>> = {}
+    @observable public usageHistoryDateRange: IRange<Date> = { start: new Date(), end: new Date() }
 
     @computed
     public get isClustersEmpty() { return this.clusterNames.length === 0 }
