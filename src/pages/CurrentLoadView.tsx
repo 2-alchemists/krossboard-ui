@@ -35,7 +35,7 @@ export const CurrentLoadView = () => {
   return useObserver(() => (
     <div className={classes.root}>
       {
-        store.isClustersEmpty() ?
+        store.isClustersEmpty ?
           <Container fixed>
             <Typography component="div" className={classes.noDataContainer}>
               <Typography color="inherit" align="center" variant="h5" className={classes.noData}>
@@ -45,7 +45,7 @@ export const CurrentLoadView = () => {
           </Container>
           :
           <Grid container spacing={3}>
-            {store.clusterNames().map(clusterName => {
+            {store.clusterNames.map(clusterName => {
               const usages = store.currentLoad.data[clusterName]
 
               return (

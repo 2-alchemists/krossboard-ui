@@ -28,15 +28,15 @@ export const ClusterView = () => {
   const classes = useStyles()
   const store = useStore()
 
-  const [selectedCluster, setSelectedCluster] = React.useState(store.clusterNames().length === 0 ? "" : store.clusterNames()[0])
+  const [selectedCluster, setSelectedCluster] = React.useState(store.clusterNames.length === 0 ? "" : store.clusterNames[0])
 
   const onClusterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedCluster(event.target.value as string)
   }
 
   React.useEffect(() => {
-    if (selectedCluster === "" && store.clusterNames().length !== 0) {
-      setSelectedCluster(store.clusterNames()[0])
+    if (selectedCluster === "" && store.clusterNames.length !== 0) {
+      setSelectedCluster(store.clusterNames[0])
     }
   })
 
@@ -57,7 +57,7 @@ export const ClusterView = () => {
                 onChange={onClusterChange}
               >
                 {
-                  store.clusterNames()
+                  store.clusterNames
                     .filter((it, index, self) => self.indexOf(it) === index)
                     .map(it => <MenuItem key={it} value={it}>{it}</MenuItem>)
                 }

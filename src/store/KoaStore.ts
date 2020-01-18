@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { action, computed, observable } from 'mobx'
 
 import {
     ClusterEndpoint, ClusterName, defaultState, IHarvesterState, IUsageHistoryItem,
@@ -11,10 +11,11 @@ export class KoaStore {
     @observable public currentLoad: IWithHarvesterState<Record<ClusterName, Record<string /*type*/, IUsageHistoryItem[]>>> = { state: defaultState(), data: {} }
     @observable public resourcesUsages: Record<ClusterName, Record<string /* type */, IWithHarvesterState<IUsageHistoryItem[]>>> = {}
 
+    @computed
+    public get isClustersEmpty() { return this.clusterNames.length === 0 }
 
-    public isClustersEmpty = () => (this.clusterNames().length === 0)
-
-    public clusterNames = () => (Object.keys(this.instances.data))
+    @computed
+    public get clusterNames() { return Object.keys(this.instances.data) }
 
     @action
     public setClusters = (clusters: Record<ClusterName, ClusterEndpoint>) => {

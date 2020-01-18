@@ -86,7 +86,7 @@ const loadCurrentUsage = async (store: KoaStore, discoveryURL: string) => {
 }
 
 const loadResourcesUsage = async (store: KoaStore, discoveryURL: string) => {
-    Object.keys(store.instances.data).forEach(clusterName => { // for all clusters
+    store.clusterNames.forEach(clusterName => { // for all clusters
         seriesTypeValues.forEach(type => { // for each kind of series
             runInAction(() => {
                 const series = computeIfAbsent(store.resourcesUsages[clusterName], type, (key) => ({ state: defaultState(), data: [] }))
