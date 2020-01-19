@@ -1,6 +1,7 @@
 import '../scheduler/currentusage'
 import '../scheduler/discovery'
 import '../scheduler/resources'
+import '../scheduler/usagehistory'
 
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
