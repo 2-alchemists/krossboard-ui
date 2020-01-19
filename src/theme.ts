@@ -10,7 +10,12 @@ export const theme = createMuiTheme({
 })
 
 // Color schema for chart fills.
-export const koaColorSchema = [
+export const greenRedColorScheme = [
+  "#32CD32",
+  "#CD5C5C"
+]
+
+export const seriesColorSchema = [
   "#6600ff",
   "#9966ff",
   "#cc66ff",

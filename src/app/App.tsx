@@ -1,3 +1,9 @@
+import '../scheduler/currentusage'
+import '../scheduler/discovery'
+import '../scheduler/resources'
+import '../scheduler/usagehistory'
+
+import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react-router-dom'
 
@@ -15,9 +21,9 @@ import Typography from '@material-ui/core/Typography'
 
 import { ClusterView } from '../pages/ClusterView'
 import { CurrentLoadView } from '../pages/CurrentLoadView'
-import { MulticlusterView } from '../pages/MulticlusterView'
+import { MultiClusterView } from '../pages/MultiClusterView'
+import { useStore } from '../store/storeProvider'
 import { theme as mytheme } from '../theme'
-import { IClusters, IHarvesterState, ISeriesSet, useHarvester } from './harvester'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -46,7 +52,7 @@ const useStyles = makeStyles(theme => ({
       textDecoration: 'none',
       borderBottom: `1px solid ${theme.palette.text.hint}`
     }
-  },  
+  },
   selected: {
     borderBottom: `1px solid ${theme.palette.text.primary}`
   },
@@ -66,19 +72,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export const App = () => {
-
-  const [ loadingState, clusters, seriesSet ] = useHarvester({
-    discoveryURL: "",
-    pollingInterval: 30000
-  })
-
   return (
     <ThemeProvider theme={mytheme}>
       <CssBaseline />
       <Router>
         <Header />
-        <ProgressBar loadingState={loadingState} />
-        <Content clusters={clusters} seriesSet={seriesSet} />
+        <ProgressBar />
+        <Content />
       </Router>
       <Footer />
     </ThemeProvider>
@@ -103,32 +103,35 @@ const Header = () => {
   </AppBar>
 }
 
-const ProgressBar: React.FC<{ loadingState: IHarvesterState }> = ({ loadingState }) => {
+const ProgressBar = () => {
   const classes = useStyles()
+  const store = useStore()
 
-  return (
+  return useObserver(() => (
     <div className={classes.progress}>
-      { loadingState.loading && <LinearProgress color="secondary" className={classes.progress} value={loadingState.progress} variant={loadingState.progress ? "determinate" : "indeterminate"}/> }
+      {store.state.loading && <LinearProgress color="secondary" className={classes.progress} variant={"indeterminate"} />}
     </div>
-  )
+  ))
 }
 
-const Content: React.FC<{ clusters: Readonly<IClusters>, seriesSet: Readonly<ISeriesSet> }> = ({ clusters, seriesSet }) => (
-  <Switch>
-    <Route path="/multicluster-view">
-      <MulticlusterView seriesSet={seriesSet} />
-    </Route>
-    <Route path="/cluster-view">
-      <ClusterView seriesSet={seriesSet} />
-    </Route>
-    <Route exact path="/">
-      <CurrentLoadView clusters={clusters} />
-    </Route>
-    <Route path="*">
-      <Redirect to="/" />
-    </Route>
-  </Switch>
-)
+const Content = () => {
+  return (
+    <Switch>
+      <Route path="/multicluster-view">
+        <MultiClusterView />
+      </Route>
+      <Route path="/cluster-view">
+        <ClusterView />
+      </Route>
+      <Route exact path="/">
+        <CurrentLoadView />
+      </Route>
+      <Route path="*">
+        <Redirect to="/" />
+      </Route>
+    </Switch>
+  )
+}
 
 const Footer = () => {
   const classes = useStyles()
