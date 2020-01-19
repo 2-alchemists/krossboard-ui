@@ -7,29 +7,30 @@ import { computeIfAbsent, defaultState, IUsageHistoryItem } from '../store/model
 autorun(() => {
     koaStore.clusterNames.forEach(clusterName => { // for all clusters
         seriesTypeValues.forEach(type => { // for each kind of series
+            const resourceUsages = koaStore.resourcesUsages[clusterName]
+
             runInAction(() => {
-                const series = computeIfAbsent(koaStore.resourcesUsages[clusterName], type, (key) => ({ state: defaultState(), data: [] }))
-
-                series.state.loading = true
-        
-                fetchSeries(koaStore.discoveryURL, type)
-                    .then(res => {
-                        runInAction(() => {
-                            const values: Record<string, IUsageHistoryItem> = {}
-                            res.forEach(measurement => {
-                                const item = computeIfAbsent(values, measurement.dateUTC.toISOString(), (key) => ({ tag: measurement.dateUTC }))
-
-                                item[measurement.name] = measurement.usage
-                            })
-
-                            series.data = Object.keys(values).map(it => values[it]) // TODO: is there a better idiomatic way of retrieving values
-                            series.state.updatedAt = new Date()
-                        })
-                    })
-                    .finally(() => {
-                        runInAction(() => series.state.loading = false)
-                    })
+                computeIfAbsent(resourceUsages, type, (key) => ({ state: defaultState(), data: [] }))
+                    .state.loading = true
             })
+            const series = resourceUsages[type]
+            fetchSeries(koaStore.discoveryURL, type)
+                .then(res => {
+                    const values: Record<string, IUsageHistoryItem> = {}
+                    res.forEach(measurement => {
+                        const item = computeIfAbsent(values, measurement.dateUTC.toISOString(), (key) => ({ tag: measurement.dateUTC }))
+
+                        item[measurement.name] = measurement.usage
+                    })
+                    runInAction(() => {
+                        series.data = Object.keys(values).map(it => values[it]) // TODO: is there a better idiomatic way of retrieving values
+                        series.state.updatedAt = new Date()
+                    })
+                })
+                .finally(() => {
+                    runInAction(() => series.state.loading = false)
+                })
+
         })
     })
 }, { scheduler: (run: any) => { run(); setInterval(run, koaStore.pollingInterval) } })
