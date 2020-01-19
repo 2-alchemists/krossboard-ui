@@ -5,7 +5,9 @@ import { koaStore } from '../store/KoaStore'
 
 autorun(async () => {
     if (koaStore.discoveryURL !== "") {
-        koaStore.currentLoad.state.loading = true
+        runInAction(() => {
+            koaStore.currentLoad.state.loading = true
+        })
 
         const data = koaStore.currentLoad.data
 

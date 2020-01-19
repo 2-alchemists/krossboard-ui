@@ -5,7 +5,9 @@ import { koaStore } from '../store/KoaStore'
 
 autorun(async () => {
     if (koaStore.discoveryURL !== "") {
-        koaStore.instances.state.loading = true
+        runInAction(() => {
+            koaStore.instances.state.loading = true
+        })
         const data = await getDiscovery(koaStore.discoveryURL)
 
         runInAction(() => {
@@ -14,6 +16,8 @@ autorun(async () => {
                 data.instances?.forEach(it => instances[it.clusterName] = it.endpoint)
             }
             koaStore.setClusters(instances)
+            koaStore.instances.state.loading = false
+            koaStore.instances.state.updatedAt = new Date()
         })
     }
 }, { scheduler: (run: any) => { run(); setInterval(run, koaStore.pollingInterval) } })

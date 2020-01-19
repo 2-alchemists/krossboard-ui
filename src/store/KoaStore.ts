@@ -1,5 +1,5 @@
 import { sub } from 'date-fns'
-import { action, computed, observable } from 'mobx'
+import { action, autorun, computed, observable, runInAction } from 'mobx'
 
 import {
     ClusterEndpoint, ClusterName, defaultState, IHarvesterState, IUsageHistoryItem,
@@ -8,7 +8,7 @@ import {
 
 export class KoaStore {
     @observable public discoveryURL: string = "http://localhost:8080/discovery"
-    @observable public pollingInterval: number = 6000
+    @observable public pollingInterval: number = 15000
 
     @observable public state: IHarvesterState = defaultState()
     @observable public instances: IWithHarvesterState<Record<ClusterName, ClusterEndpoint>> = { state: defaultState(), data: {} }
@@ -64,3 +64,38 @@ export class KoaStore {
 }
 
 export const koaStore = new KoaStore()
+
+autorun(() => {
+    // FIXME: not efficient but does the job for now
+    const state = (() => {
+        if (koaStore.instances.state.loading) {
+            return true
+        }
+        if (koaStore.currentLoad.state.loading) {
+            return true
+        }
+
+        if (Object.keys(koaStore.resourcesUsages)
+            .map(it => koaStore.resourcesUsages[it])
+            .flatMap(it => Object.keys(it).map(ot => it[ot]))
+            .map(it => it.state.loading)
+            .reduce((a, b) => a || b, false)) {
+            return true
+        }
+
+        if (koaStore.usageHistory.state.loading) {
+            return true
+        }
+
+        return false
+    })()
+
+    if (koaStore.state.loading !== state) {
+        runInAction(() => {
+            if (koaStore.state.loading) {
+                koaStore.state.updatedAt = new Date()
+            }
+            koaStore.state.loading = state
+        })
+    }
+})
