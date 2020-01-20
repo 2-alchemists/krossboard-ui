@@ -22,14 +22,6 @@ export const defaultState = (): IHarvesterState => ({
     updatedAt: new Date()
 })
 
-export function withInitializedState<T>(withState: IWithHarvesterState<T>): IWithHarvesterState<T> {
-    if (!withState.state) {
-        withState.state = defaultState()
-    }
-
-    return withState
-}
-
 /* If the specified key is not already associated with a value (or is mapped to null), 
  * attempts to compute its value using the given mapping function and enters it into this map unless null.
  */
