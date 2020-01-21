@@ -6,7 +6,10 @@ import { IUsageHistoryItem } from '../store/model'
 
 autorun(async () => {
     if (koaStore.discoveryURL !== "") {
-        koaStore.usageHistory.state.loading = true
+        runInAction(() => {
+            koaStore.usageHistory.state.loading = true
+        })
+
         const data = await getUsageHistory(koaStore.discoveryURL, koaStore.usageHistoryDateRange.start as Date, koaStore.usageHistoryDateRange.end as Date)
 
         runInAction(() => {
