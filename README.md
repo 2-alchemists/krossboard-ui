@@ -16,9 +16,16 @@ Type the following command line:
 
 ## Start "develop" mode
 
+In develop mode, you'll need a backend to serve the data on port 1519. A mocked one is available by typing the following command:
+
+```sh
+> yarn start-server
+```
+
+Then launch the front with the following command:
+
 ```sh
 > yarn develop
-
 ```
 
 Open `http://localhost:1234`.
