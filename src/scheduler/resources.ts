@@ -14,7 +14,7 @@ autorun(() => {
                     .state.loading = true
             })
             const series = resourceUsages[type]
-            fetchSeries(koaStore.discoveryURL, type)
+            fetchSeries(koaStore.instances.data[clusterName], type)
                 .then(res => {
                     const values: Record<string, IUsageHistoryItem> = {}
                     res.forEach(measurement => {
