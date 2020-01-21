@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export interface IMeasurementPayload {
     name: string
     dateUTC: Date
@@ -24,37 +26,8 @@ export const seriesTypeValues = [
     SeriesType.memory_usage_period_31968000,
 ]
 
-const fetchSeriesFaked = async (): Promise<ISeriesPayload> => {
-    const payload = [
-        { "name": "kube-system", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-        { "name": "kube-system", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-        { "name": "kube-system", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
-        { "name": "non-allocatable", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 50 },
-        { "name": "non-allocatable", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 50 },
-        { "name": "non-allocatable", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 50 },
-        { "name": "default", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
-        { "name": "default", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
-        { "name": "default", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
-        { "name": "linkerd", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
-        { "name": "linkerd", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
-        { "name": "linkerd", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
-        { "name": "argo", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-        { "name": "argo", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-        { "name": "argo", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
-        { "name": "monitoring", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-        { "name": "monitoring", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-        { "name": "monitoring", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
-        { "name": "kubeless", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-        { "name": "kubeless", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-        { "name": "kubeless", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() }
-    ]
-
-    return new Promise((resolve, _) => {
-        setTimeout(() => resolve(
-            payload.map(it => ({ ...it, dateUTC: new Date(it.dateUTC) }))
-        ), 20  /* ms */)
-    })
-}
-
 export const fetchSeries = async (endpoint: string, type: SeriesType): Promise<ISeriesPayload> =>
-    fetchSeriesFaked()
+    axios
+        .get(endpoint + `/resource/${type}.json`)
+        .then(res => res.data as ISeriesPayload)
+        .then(data => data.map(it => ({ ...it, dateUTC: new Date(it.dateUTC) })))
