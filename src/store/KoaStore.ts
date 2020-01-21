@@ -6,9 +6,11 @@ import {
     IWithHarvesterState
 } from './model'
 
+
+
 export class KoaStore {
-    @observable public discoveryURL: string = "http://localhost:8080/discovery"
-    @observable public pollingInterval: number = 15000
+    public get discoveryURL(): string { return `http://${window.location.hostname}:1519` }
+    @observable public pollingInterval: number = 30000
 
     @observable public state: IHarvesterState = defaultState()
     @observable public instances: IWithHarvesterState<Record<ClusterName, ClusterEndpoint>> = { state: defaultState(), data: {} }
