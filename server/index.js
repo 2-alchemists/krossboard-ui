@@ -101,32 +101,69 @@ app.get('/usagehistory', (req, res) => {
         })
 })
 
-app.get('/:c/resource/:type', (req, res) => {
-    // resourceType: cpu_usage_trends memory_usage_trends cpu_usage_period_14d memory_usage_period_14d cpu_usage_period_12m memory_usage_period_12m
-    const resourceType = req.params.type ? req.params.type.replace(/\.json$/, "") : ""
+app.get('/:c/dataset/:type', (req, res) => {
+    switch (req.params.type) {
+        case 'cpu_usage_trends.json':
+            res.json(
+                [
+                    { "name": "kube-system", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
+                    { "name": "kube-system", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
+                    { "name": "kube-system", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
+                    { "name": "non-allocatable", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 50 },
+                    { "name": "non-allocatable", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 50 },
+                    { "name": "non-allocatable", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 50 },
+                    { "name": "default", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "default", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "default", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "linkerd", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "linkerd", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "linkerd", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "argo", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
+                    { "name": "argo", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
+                    { "name": "argo", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
+                    { "name": "monitoring", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
+                    { "name": "monitoring", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
+                    { "name": "monitoring", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
+                    { "name": "kubeless", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
+                    { "name": "kubeless", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
+                    { "name": "kubeless", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() }
+                ])
+        case 'memory_usage_trends.json':
+            res.json(
+                [
+                    { "name": "kube-system", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
+                    { "name": "kube-system", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
+                    { "name": "kube-system", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
+                    { "name": "non-allocatable", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 50 },
+                    { "name": "non-allocatable", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 50 },
+                    { "name": "non-allocatable", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 50 },
+                    { "name": "default", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "default", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "default", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "linkerd", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "linkerd", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "linkerd", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
+                    { "name": "argo", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
+                    { "name": "argo", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
+                    { "name": "argo", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
+                    { "name": "monitoring", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
+                    { "name": "monitoring", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
+                    { "name": "monitoring", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
+                    { "name": "kubeless", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
+                    { "name": "kubeless", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
+                    { "name": "kubeless", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() }
+                ])
+        case 'memory_usage_period_1209600.json':
+            res.json([{ "stack": "non-allocatable", "usage": 200.653026, "date": "22 Jan" }, { "stack": ".usagehistory", "usage": 501.790922, "date": "22 Jan" }, { "stack": "kube-system", "usage": 59.101217, "date": "22 Jan" }])
+        case 'cpu_usage_period_1209600.json':
+            res.json([{ "stack": "non-allocatable", "usage": 42.000000, "date": "22 Jan" }, { "stack": ".usagehistory", "usage": 110.169476, "date": "22 Jan" }, { "stack": "kube-system", "usage": 10.402329, "date": "22 Jan" }])
+        case 'memory_usage_period_31968000.json':
+            res.json([{ "stack": "non-allocatable", "usage": 200.653026, "date": "Jan 2020" }, { "stack": ".usagehistory", "usage": 501.790922, "date": "Jan 2020" }, { "stack": "kube-system", "usage": 59.101217, "date": "Jan 2020" }])
+        case 'cpu_usage_period_31968000.json':
+            res.json([{ "stack": "non-allocatable", "usage": 42.000000, "date": "Jan 2020" }, { "stack": ".usagehistory", "usage": 110.169476, "date": "Jan 2020" }, { "stack": "kube-system", "usage": 10.402329, "date": "Jan 2020" }])
+        default:
+            res.send(404)
+    }
 
-    res.json(
-        [
-            { "name": "kube-system", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-            { "name": "kube-system", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-            { "name": "kube-system", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
-            { "name": "non-allocatable", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 50 },
-            { "name": "non-allocatable", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 50 },
-            { "name": "non-allocatable", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 50 },
-            { "name": "default", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
-            { "name": "default", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
-            { "name": "default", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
-            { "name": "linkerd", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
-            { "name": "linkerd", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
-            { "name": "linkerd", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
-            { "name": "argo", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-            { "name": "argo", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-            { "name": "argo", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
-            { "name": "monitoring", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-            { "name": "monitoring", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-            { "name": "monitoring", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
-            { "name": "kubeless", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-            { "name": "kubeless", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-            { "name": "kubeless", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() }
-        ])
+
 })

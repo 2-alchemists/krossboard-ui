@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { parse } from 'date-fns'
+
 export interface IMeasurementPayload {
     name: string
     dateUTC: Date
@@ -28,6 +30,30 @@ export const seriesTypeValues = [
 
 export const fetchSeries = async (endpoint: string, type: SeriesType): Promise<ISeriesPayload> =>
     axios
-        .get(endpoint + `/resource/${type}.json`)
-        .then(res => res.data as ISeriesPayload)
+        .get(endpoint + `/dataset/${type}.json`)
+        .then(res => res.data)
+        .then(data => {
+            switch (type) {
+                case SeriesType.cpu_usage_trends:
+                case SeriesType.memory_usage_trends:
+                    // e.g.:
+                    return data.map((it: any) => ({ ...it, dateUTC: new Date(it.dateUTC) }))
+
+                case SeriesType.cpu_usage_period_1209600:
+                case SeriesType.memory_usage_period_1209600: {
+                    const year = new Date().getFullYear()
+                    const defaultDate = new Date(year, 0)
+                    // e.g.: 22 Jan
+                    return data.map((it: any) => ({ name: it.stack, dateUTC: parse(`${it.date} (Z)`, 'd MMM (x)', defaultDate), usage: it.usage }))
+                }
+                case SeriesType.cpu_usage_period_31968000:
+                case SeriesType.memory_usage_period_31968000: {
+                    const year = new Date().getFullYear()
+                    const defaultDate = new Date(year, 0, 1)
+                    // e.g.: Jan 2020
+                    return data.map((it: any) => ({ name: it.stack, dateUTC: parse(`${it.date} (Z)`, 'MMM yyyy (x)', defaultDate), usage: it.usage }))
+                }
+            }
+        })
+        .then(data => data as ISeriesPayload)
         .then(data => data.map(it => ({ ...it, dateUTC: new Date(it.dateUTC) })))
