@@ -6,7 +6,10 @@ import { IUsageHistoryItem } from '../store/model'
 
 autorun(async () => {
     if (koaStore.discoveryURL !== "") {
-        koaStore.usageHistory.state.loading = true
+        runInAction(() => {
+            koaStore.usageHistory.state.loading = true
+        })
+
         const data = await getUsageHistory(koaStore.discoveryURL, koaStore.usageHistoryDateRange.start as Date, koaStore.usageHistoryDateRange.end as Date)
 
         runInAction(() => {
@@ -21,7 +24,7 @@ autorun(async () => {
                     .forEach( clusterName => {
                         if (cpus.length === 0) {
                             history[clusterName].cpuUsage.forEach(v => {
-                                cpus.push( { tag: new Date(v.dateUTC), [clusterName]: v.value } )
+                                cpus.push( { tag: new Date(v.dateUTC).getTime(), [clusterName]: v.value } )
                             })
                         } else {
                             history[clusterName].cpuUsage.forEach( (v, idx) => {
@@ -30,7 +33,7 @@ autorun(async () => {
                         }
                         if (mems.length === 0) {
                             history[clusterName].memUsage.forEach(v => {
-                                mems.push( { tag: new Date(v.dateUTC), [clusterName]: v.value } )
+                                mems.push( { tag: new Date(v.dateUTC).getTime(), [clusterName]: v.value } )
                             })
                         } else {
                             history[clusterName].memUsage.forEach( (v, idx) => {

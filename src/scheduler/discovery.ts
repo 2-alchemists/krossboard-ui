@@ -8,16 +8,20 @@ autorun(async () => {
         runInAction(() => {
             koaStore.instances.state.loading = true
         })
-        const data = await getDiscovery(koaStore.discoveryURL)
 
-        runInAction(() => {
-            const instances: Record<string, string> = {}
-            if (data.instances) {
-                data.instances?.forEach(it => instances[it.clusterName] = it.endpoint)
-            }
-            koaStore.setClusters(instances)
-            koaStore.instances.state.loading = false
-            koaStore.instances.state.updatedAt = new Date()
-        })
+        getDiscovery(koaStore.discoveryURL)
+            .then(data => {
+                runInAction(() => {
+                    const instances: Record<string, string> = {}
+                    if (data.instances) {
+                        data.instances?.forEach(it => instances[it.clusterName] = it.endpoint)
+                    }
+                    koaStore.setClusters(instances)
+                    koaStore.instances.state.updatedAt = new Date()
+                })
+            })
+            .finally(() => {
+                runInAction(() => koaStore.instances.state.loading = false)
+            })
     }
 }, { scheduler: (run: any) => { run(); setInterval(run, koaStore.pollingInterval) } })

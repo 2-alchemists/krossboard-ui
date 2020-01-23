@@ -14,11 +14,11 @@ autorun(() => {
                     .state.loading = true
             })
             const series = resourceUsages[type]
-            fetchSeries(koaStore.discoveryURL, type)
+            fetchSeries(koaStore.instances.data[clusterName], type)
                 .then(res => {
                     const values: Record<string, IUsageHistoryItem> = {}
                     res.forEach(measurement => {
-                        const item = computeIfAbsent(values, measurement.dateUTC.toISOString(), (key) => ({ tag: measurement.dateUTC }))
+                        const item = computeIfAbsent(values, measurement.dateUTC.toISOString(), (key) => ({ tag: measurement.dateUTC.getTime() }))
 
                         item[measurement.name] = measurement.usage
                     })

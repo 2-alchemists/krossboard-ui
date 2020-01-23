@@ -1,3 +1,7 @@
+import axios from 'axios'
+
+import { parse } from 'date-fns'
+
 export interface IMeasurementPayload {
     name: string
     dateUTC: Date
@@ -24,37 +28,32 @@ export const seriesTypeValues = [
     SeriesType.memory_usage_period_31968000,
 ]
 
-const fetchSeriesFaked = async (): Promise<ISeriesPayload> => {
-    const payload = [
-        { "name": "kube-system", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-        { "name": "kube-system", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-        { "name": "kube-system", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
-        { "name": "non-allocatable", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 50 },
-        { "name": "non-allocatable", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 50 },
-        { "name": "non-allocatable", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 50 },
-        { "name": "default", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
-        { "name": "default", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
-        { "name": "default", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
-        { "name": "linkerd", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() * 25 },
-        { "name": "linkerd", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() * 25 },
-        { "name": "linkerd", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() * 25 },
-        { "name": "argo", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-        { "name": "argo", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-        { "name": "argo", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
-        { "name": "monitoring", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-        { "name": "monitoring", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-        { "name": "monitoring", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() },
-        { "name": "kubeless", "dateUTC": "2019-11-24T18:00:00Z", "usage": Math.random() },
-        { "name": "kubeless", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
-        { "name": "kubeless", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() }
-    ]
-
-    return new Promise((resolve, _) => {
-        setTimeout(() => resolve(
-            payload.map(it => ({ ...it, dateUTC: new Date(it.dateUTC) }))
-        ), 20  /* ms */)
-    })
-}
-
 export const fetchSeries = async (endpoint: string, type: SeriesType): Promise<ISeriesPayload> =>
-    fetchSeriesFaked()
+    axios
+        .get(endpoint + `/dataset/${type}.json`)
+        .then(res => res.data)
+        .then(data => {
+            switch (type) {
+                case SeriesType.cpu_usage_trends:
+                case SeriesType.memory_usage_trends:
+                    // e.g.:
+                    return data.map((it: any) => ({ ...it, dateUTC: new Date(it.dateUTC) }))
+
+                case SeriesType.cpu_usage_period_1209600:
+                case SeriesType.memory_usage_period_1209600: {
+                    const year = new Date().getFullYear()
+                    const defaultDate = new Date(year, 0)
+                    // e.g.: 22 Jan
+                    return data.map((it: any) => ({ name: it.stack, dateUTC: parse(`${it.date} (Z)`, 'dd MMM (x)', defaultDate), usage: it.usage }))
+                }
+                case SeriesType.cpu_usage_period_31968000:
+                case SeriesType.memory_usage_period_31968000: {
+                    const year = new Date().getFullYear()
+                    const defaultDate = new Date(year, 0, 1)
+                    // e.g.: Jan 2020
+                    return data.map((it: any) => ({ name: it.stack, dateUTC: parse(`${it.date} (Z)`, 'MMM yyyy (x)', defaultDate), usage: it.usage }))
+                }
+            }
+        })
+        .then(data => data as ISeriesPayload)
+        .then(data => data.map(it => ({ ...it, dateUTC: new Date(it.dateUTC) })))
