@@ -1,4 +1,4 @@
-import { timeFormat } from 'd3-time-format'
+import { format } from 'date-fns'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import {
@@ -57,7 +57,7 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="tag" tickFormatter={(tick: Date) => timeFormat("%b %d %H:%M")(tick)} />
+            <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, "dd hh:mm")} />
             <YAxis>
               <Label value={label(type)} angle={-90} position="insideBottomLeft" />
             </YAxis>

@@ -1,4 +1,4 @@
-import { timeFormat } from 'd3-time-format'
+import { format } from 'date-fns'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import {
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function label(type: SeriesType): string {
+const label = (type: SeriesType): string => {
   switch (type) {
     case SeriesType.cpu_usage_trends:
       return "CPU Usage"
@@ -41,6 +41,22 @@ function label(type: SeriesType): string {
       return "Cumulative CPU Usage"
     case SeriesType.memory_usage_period_31968000:
       return "Cumulative Memory Usage"
+  }
+}
+
+const dateFormat = (type: SeriesType): string => {
+  switch (type) {
+    case SeriesType.cpu_usage_trends:
+    case SeriesType.memory_usage_trends:
+      return "MMM dd hh:mm"
+    case SeriesType.cpu_usage_period_1209600:
+    case SeriesType.memory_usage_period_1209600:
+      return "dd MMM"
+    case SeriesType.cpu_usage_period_31968000:
+    case SeriesType.memory_usage_period_31968000:
+      return "MMM yyyy"
+    default:
+      return "dd MMM yyyy"
   }
 }
 
@@ -66,7 +82,7 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="tag" tickFormatter={(tick: Date) => timeFormat("%b %d %H:%M")(tick)} />
+                <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(type))} />
                 <YAxis>
                   <Label value={label(type)} angle={-90} position="insideBottomLeft" />
                 </YAxis>
@@ -86,7 +102,7 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="tag" tickFormatter={(tick: Date) => timeFormat("%b %d")(tick)} />
+                <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(type))} />
                 <YAxis>
                   <Label value={label(type)} angle={-90} position="insideBottomLeft" />
                 </YAxis>
@@ -103,3 +119,4 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
     </Card>
   ))
 }
+

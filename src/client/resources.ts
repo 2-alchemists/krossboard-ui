@@ -44,7 +44,7 @@ export const fetchSeries = async (endpoint: string, type: SeriesType): Promise<I
                     const year = new Date().getFullYear()
                     const defaultDate = new Date(year, 0)
                     // e.g.: 22 Jan
-                    return data.map((it: any) => ({ name: it.stack, dateUTC: parse(`${it.date} (Z)`, 'd MMM (x)', defaultDate), usage: it.usage }))
+                    return data.map((it: any) => ({ name: it.stack, dateUTC: parse(`${it.date} (Z)`, 'dd MMM (x)', defaultDate), usage: it.usage }))
                 }
                 case SeriesType.cpu_usage_period_31968000:
                 case SeriesType.memory_usage_period_31968000: {

@@ -24,7 +24,7 @@ autorun(async () => {
                     .forEach( clusterName => {
                         if (cpus.length === 0) {
                             history[clusterName].cpuUsage.forEach(v => {
-                                cpus.push( { tag: new Date(v.dateUTC), [clusterName]: v.value } )
+                                cpus.push( { tag: new Date(v.dateUTC).getTime(), [clusterName]: v.value } )
                             })
                         } else {
                             history[clusterName].cpuUsage.forEach( (v, idx) => {
@@ -33,7 +33,7 @@ autorun(async () => {
                         }
                         if (mems.length === 0) {
                             history[clusterName].memUsage.forEach(v => {
-                                mems.push( { tag: new Date(v.dateUTC), [clusterName]: v.value } )
+                                mems.push( { tag: new Date(v.dateUTC).getTime(), [clusterName]: v.value } )
                             })
                         } else {
                             history[clusterName].memUsage.forEach( (v, idx) => {

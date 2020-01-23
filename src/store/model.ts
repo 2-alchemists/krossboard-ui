@@ -13,7 +13,7 @@ export type ClusterName = string
 export type ClusterEndpoint = string
 
 export interface IUsageHistoryItem {
-    tag: string | Date | number
+    tag: string | number
     [_: string]: string | Date | number
 }
 
