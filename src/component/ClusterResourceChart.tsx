@@ -86,7 +86,7 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
                 <YAxis>
                   <Label value={label(type)} angle={-90} position="insideBottomLeft" />
                 </YAxis>
-                <Tooltip />
+                <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, dateFormat(type))}</p>)} />
                 {
                   names.map((name, idx) => (
                     <Area key={name} type="monotone" dataKey={name} stackId="1" stroke={seriesColorSchema[idx % seriesColorSchema.length]} fill={seriesColorSchema[idx % seriesColorSchema.length]} />
@@ -106,7 +106,7 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
                 <YAxis>
                   <Label value={label(type)} angle={-90} position="insideBottomLeft" />
                 </YAxis>
-                <Tooltip />
+                <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, dateFormat(type))}</p>)} />
                 {
                   names.map((name, idx) => (
                     <Bar key={name} dataKey={name} stackId="1" fill={seriesColorSchema[idx % seriesColorSchema.length]} />

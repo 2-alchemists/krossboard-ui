@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function label(type: Type): string {
+const label = (type: Type): string => {
   switch (type) {
     case "cpu":
       return "CPU Usage"
@@ -36,6 +36,8 @@ function label(type: Type): string {
       return "Memory Usage"
   }
 }
+
+const xFormat = "dd hh:mm"
 
 export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
   const classes = useStyles()
@@ -48,7 +50,6 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
         <Typography className={classes.name} color="textSecondary" gutterBottom>{label(type)}</Typography>
         <Divider className={classes.divider} />
         <ResponsiveContainer width="100%" height={300}>
-
           <AreaChart
             height={400}
             data={data}
@@ -57,11 +58,11 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, "dd hh:mm")} />
+            <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, xFormat)} />
             <YAxis>
               <Label value={label(type)} angle={-90} position="insideBottomLeft" />
             </YAxis>
-            <Tooltip />
+            <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, xFormat)}</p>)} />
             {
               names.map((name, idx) => (
                 <Area key={name} type="monotone" dataKey={name} stackId="1" stroke={seriesColorSchema[idx % seriesColorSchema.length]} fill={seriesColorSchema[idx % seriesColorSchema.length]} />
