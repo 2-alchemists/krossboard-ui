@@ -44,6 +44,23 @@ const label = (type: SeriesType): string => {
   }
 }
 
+const title = (type: SeriesType): string => {
+  switch (type) {
+    case SeriesType.cpu_usage_trends:
+      return "Hourly CPU Usage"
+    case SeriesType.memory_usage_trends:
+      return "Hourly Memory Usage"
+    case SeriesType.cpu_usage_period_1209600:
+      return "Daily CPU Usage"
+    case SeriesType.memory_usage_period_1209600:
+      return "Daily Memory Usage"
+    case SeriesType.cpu_usage_period_31968000:
+      return "Monthly CPU Usage"
+    case SeriesType.memory_usage_period_31968000:
+      return "Monthly Memory Usage"
+  }
+}
+
 const dateFormat = (type: SeriesType): string => {
   switch (type) {
     case SeriesType.cpu_usage_trends:
@@ -68,7 +85,7 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
   return useObserver(() => (
     <Card>
       <CardContent>
-        <Typography className={classes.name} color="textSecondary" gutterBottom>{label(type)}</Typography>
+        <Typography className={classes.name} color="textSecondary" gutterBottom>{title(type)}</Typography>
         <Divider className={classes.divider} />
         <ResponsiveContainer width="100%" height={300}>
           {
