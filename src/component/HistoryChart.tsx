@@ -25,15 +25,27 @@ const useStyles = makeStyles(theme => ({
   },
   divider: {
     marginBottom: '7px'
+  },
+  label: {
+    fill: theme.palette.text.secondary,
   }
 }))
 
-const label = (type: Type): string => {
+const title = (type: Type): string => {
   switch (type) {
     case "cpu":
       return "Hourly Usage"
     case "mem":
       return "Hourly Usage"
+  }
+}
+
+const label = (type: Type): string => {
+  switch (type) {
+    case "cpu":
+      return "Hourly usage"
+    case "mem":
+      return "Hourly usage"
   }
 }
 
@@ -47,7 +59,7 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
   return useObserver(() => (
     <Card>
       <CardContent>
-        <Typography className={classes.name} color="textSecondary" gutterBottom>{label(type)}</Typography>
+        <Typography className={classes.name} color="textSecondary" gutterBottom>{title(type)}</Typography>
         <Divider className={classes.divider} />
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart
@@ -60,7 +72,7 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, xFormat)} />
             <YAxis>
-              <Label value={label(type)} angle={-90} position="insideBottomLeft" />
+              <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
             </YAxis>
             <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, xFormat)}</p>)} />
             {

@@ -24,6 +24,9 @@ const useStyles = makeStyles(theme => ({
   },
   divider: {
     marginBottom: '7px'
+  },
+  label: {
+    fill: theme.palette.text.secondary,
   }
 }))
 
@@ -101,7 +104,7 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(type))} />
                 <YAxis>
-                  <Label value={label(type)} angle={-90} position="insideBottomLeft" />
+                  <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
                 </YAxis>
                 <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, dateFormat(type))}</p>)} />
                 {
@@ -121,7 +124,7 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(type))} />
                 <YAxis>
-                  <Label value={label(type)} angle={-90} position="insideBottomLeft" />
+                  <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
                 </YAxis>
                 <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, dateFormat(type))}</p>)} />
                 {
