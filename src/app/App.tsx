@@ -92,9 +92,9 @@ const Header = () => {
     <Toolbar className={classes.toolbar}>
       <Typography variant="h6" noWrap className={classes.toolbarTitle}>Company name</Typography>
       <nav>
-        <Link to="/" exact color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Current Load Overview</Link>
-        <Link to="/multicluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Multi-cluster charts</Link>
-        <Link to="/cluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>By cluster charts</Link>
+        <Link to="/" exact color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Current usage</Link>
+        <Link to="/multicluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Consolidated usage & History</Link>
+        <Link to="/cluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Usage trends & Accounting</Link>
       </nav>
       <Button href="#" variant="outlined" className={classes.link}>
         Login
