@@ -31,9 +31,9 @@ const useStyles = makeStyles(theme => ({
 const label = (type: Type): string => {
   switch (type) {
     case "cpu":
-      return "CPU Usage"
+      return "Hourly Usage"
     case "mem":
-      return "Memory Usage"
+      return "Hourly Usage"
   }
 }
 
