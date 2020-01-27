@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import {
-  Area, AreaChart, CartesianGrid, Label, ResponsiveContainer, Tooltip, XAxis, YAxis
+  Area, AreaChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from 'recharts'
 
 import { Card, CardContent, Divider } from '@material-ui/core'
@@ -70,6 +70,7 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
+            <Legend verticalAlign="bottom" height={26} />
             <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, xFormat)} />
             <YAxis>
               <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
