@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import {
-  Area, AreaChart, Bar, BarChart, CartesianGrid, Label, ResponsiveContainer, Tooltip, XAxis, YAxis
+  Area, AreaChart, Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from 'recharts'
 
 import { Card, CardContent, Divider } from '@material-ui/core'
@@ -102,6 +102,7 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
+                <Legend verticalAlign="bottom" height={26} />
                 <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(type))} />
                 <YAxis>
                   <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
@@ -122,6 +123,7 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
+                <Legend verticalAlign="bottom" height={26} />
                 <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(type))} />
                 <YAxis>
                   <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
