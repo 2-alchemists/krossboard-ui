@@ -84,7 +84,7 @@ app.get('/usagehistory', (req, res) => {
     res.json(
         {
             "status": "ok",
-            "clustersUsageHistory": {
+            "usageHistory": {
                 "gke_kubernetes-opex-analytics_us-central1-a_koa-dev": {
                     "cpuUsage": series(),
                     "memUsage": series()

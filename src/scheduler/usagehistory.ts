@@ -18,8 +18,8 @@ autorun(async () => {
 
             const cpus: IUsageHistoryItem[] = []
             const mems: IUsageHistoryItem[] = []
-            if (data.clustersUsageHistory) {
-                const history = data.clustersUsageHistory
+            if (data.usageHistory) {
+                const history = data.usageHistory
                 Object.keys(history)
                     .forEach( clusterName => {
                         if (cpus.length === 0) {
