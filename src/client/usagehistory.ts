@@ -8,7 +8,7 @@ export interface IUsageHistoryItem {
 export interface IGetUsageHistoryPayload {
 	status: string
 	message?: string
-	clustersUsageHistory?: Record<string /* clustername*/, {
+	usageHistory?: Record<string /* clustername*/, {
 		cpuUsage: IUsageHistoryItem[]
 		memUsage: IUsageHistoryItem[]
 	}>
