@@ -12,7 +12,8 @@ export const theme = createMuiTheme({
 // Color schema for chart fills.
 export const greenRedColorScheme = [
   "#32CD32",
-  "#CD5C5C"
+  "#CD5C5C",
+  "#D3D3D3"
 ]
 
 export const seriesColorSchema = [

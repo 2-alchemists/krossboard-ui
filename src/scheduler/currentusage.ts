@@ -25,6 +25,9 @@ autorun(async () => {
                                     { tag: "used", value: it.memUsed },
                                     { tag: "available", value: 100 - it.memUsed }
                                 ]
+                                data[it.clusterName]["outToDate"] = [
+                                    { tag: "outToDate", value: it.outToDate ? 1 : 0 }
+                                ]
                             }
                         })
                         koaStore.currentLoad.state.updatedAt = new Date()

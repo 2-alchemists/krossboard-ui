@@ -1,6 +1,7 @@
+import clsx from 'clsx'
 import * as React from 'react'
 import {
-    Cell, Legend, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Sector
+  Cell, Legend, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Sector
 } from 'recharts'
 
 import { Card, CardContent, Divider } from '@material-ui/core'
@@ -13,8 +14,11 @@ import { greenRedColorScheme } from '../theme'
 export interface IClusterCurrentLoadProps {
   clusterName: string
   resourceType: string
+  outToDate: boolean
   data: IUsageHistoryItem[]
 }
+
+const chartHeight = 300
 
 const useStyles = makeStyles(theme => ({
   chartContainer: {
@@ -30,10 +34,18 @@ const useStyles = makeStyles(theme => ({
   type: {
     letterSpacing: '0.02857em',
     textTransform: 'uppercase',
+  },
+  outToDate: {
+    filter: 'blur(3px)'
+  },
+  outToDateText: {
+    top: `-${chartHeight / 1.7}px`,
+    position: 'relative',
+    textAlign: 'center',
   }
 }))
 
-export const ClusterCurrentLoad: React.FC<IClusterCurrentLoadProps> = ({ clusterName, resourceType, data }) => {
+export const ClusterCurrentLoad: React.FC<IClusterCurrentLoadProps> = ({ clusterName, resourceType, outToDate, data }) => {
   const classes = useStyles()
   const [activeIndex, setActiveIndex] = React.useState(0)
 
@@ -43,12 +55,12 @@ export const ClusterCurrentLoad: React.FC<IClusterCurrentLoadProps> = ({ cluster
         <Typography className={classes.name} color="textSecondary" gutterBottom>{clusterName}</Typography>
         <Typography className={classes.type} variant="body2" component="p">{resourceType}</Typography>
         <Divider />
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+        <ResponsiveContainer width="100%" height={chartHeight}>
+          <PieChart className={clsx(outToDate && classes.outToDate)} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
             <Legend verticalAlign="bottom" height={26} />
             <Pie
-              activeIndex={activeIndex}
-              activeShape={renderActiveShape}
+              activeIndex={outToDate ? undefined : activeIndex}
+              activeShape={outToDate ? undefined : renderActiveShape}
               legendType="circle"
               data={data}
               dataKey="value"
@@ -56,13 +68,20 @@ export const ClusterCurrentLoad: React.FC<IClusterCurrentLoadProps> = ({ cluster
               innerRadius="35%"
               outerRadius="70%"
               onMouseEnter={(_, index) => setActiveIndex(index)}
-
             >
               <Cell fill={greenRedColorScheme[1]} />
-              <Cell fill={greenRedColorScheme[0]} />
+              <Cell fill={outToDate ? greenRedColorScheme[2] : greenRedColorScheme[0]} />
             </Pie>
           </PieChart>
         </ResponsiveContainer>
+        {
+          outToDate &&
+          <div className={classes.outToDateText}>
+            <Typography variant="h5" component="span" color="textSecondary">&#10521;</Typography>
+            <Typography variant="h6" component="span">outtodate</Typography>
+            <Typography variant="h5" component="span" color="textSecondary">&#10522;</Typography>
+          </div>
+        }
       </CardContent>
     </Card>
   )

@@ -43,7 +43,7 @@ app.get('/currentusage', (req, res) => {
                     "memUsed": randomUsage(),
                     "cpuNonAllocatable": 0,
                     "memNonAllocatable": 0,
-                    "outToDate": true
+                    "outToDate": false
                 },
                 {
                     "clusterName": "gke_kubernetes-opex-analytics_us-central1-a_koamc-test-1",
@@ -55,8 +55,8 @@ app.get('/currentusage', (req, res) => {
                 },
                 {
                     "clusterName": "gke_kubernetes-opex-analytics_us-central1-a_koamc-test-2",
-                    "cpuUsed": randomUsage(),
-                    "memUsed": randomUsage(),
+                    "cpuUsed": 0,
+                    "memUsed": 0,
                     "cpuNonAllocatable": 0,
                     "memNonAllocatable": 0,
                     "outToDate": true
