@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
     filter: 'blur(3px)'
   },
   outToDateText: {
+    height: '0px',
     top: `-${chartHeight / 1.7}px`,
     position: 'relative',
     textAlign: 'center',
