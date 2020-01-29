@@ -14,7 +14,7 @@ export const greenRedColorScheme = [
   "#CD5C5C",
   "#FF6347",
   "#32CD32",
-  "#D3D3D3",
+  "#F5F5F5"
 
 ]
 

@@ -42,6 +42,8 @@ const useStyles = makeStyles(theme => ({
     top: `-${chartHeight / 1.7}px`,
     position: 'relative',
     textAlign: 'center',
+    letterSpacing: '0.02857em',
+    textTransform: 'uppercase',
   }
 }))
 
@@ -78,9 +80,7 @@ export const ClusterCurrentLoad: React.FC<IClusterCurrentLoadProps> = ({ cluster
         {
           outToDate &&
           <div className={classes.outToDateText}>
-            <Typography variant="h5" component="span" color="textSecondary">&#10521;</Typography>
-            <Typography variant="h6" component="span">outtodate</Typography>
-            <Typography variant="h5" component="span" color="textSecondary">&#10522;</Typography>
+            <Typography variant="body2" component="span">no recent data</Typography>
           </div>
         }
       </CardContent>
