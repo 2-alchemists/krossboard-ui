@@ -69,8 +69,9 @@ export const ClusterCurrentLoad: React.FC<IClusterCurrentLoadProps> = ({ cluster
               outerRadius="70%"
               onMouseEnter={(_, index) => setActiveIndex(index)}
             >
+              <Cell fill={greenRedColorScheme[0]} />
               <Cell fill={greenRedColorScheme[1]} />
-              <Cell fill={outToDate ? greenRedColorScheme[2] : greenRedColorScheme[0]} />
+              <Cell fill={outToDate ? greenRedColorScheme[3] : greenRedColorScheme[2]} />
             </Pie>
           </PieChart>
         </ResponsiveContainer>

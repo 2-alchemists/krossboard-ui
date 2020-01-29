@@ -19,11 +19,13 @@ autorun(async () => {
                             if (data[it.clusterName]) {
                                 data[it.clusterName]["cpu"] = [
                                     { tag: "used", value: it.cpuUsed },
-                                    { tag: "available", value: 100 - it.cpuUsed }
+                                    { tag: "nonAllocatable", value: it.cpuNonAllocatable },
+                                    { tag: "available", value: 100 - it.cpuUsed - it.cpuNonAllocatable }
                                 ]
                                 data[it.clusterName]["mem"] = [
                                     { tag: "used", value: it.memUsed },
-                                    { tag: "available", value: 100 - it.memUsed }
+                                    { tag: "nonAllocatable", value: it.memNonAllocatable },
+                                    { tag: "available", value: 100 - it.memUsed - it.memNonAllocatable }
                                 ]
                                 data[it.clusterName]["outToDate"] = [
                                     { tag: "outToDate", value: it.outToDate ? 1 : 0 }

@@ -32,7 +32,7 @@ app.get('/discovery', (req, res) => {
 })
 
 app.get('/currentusage', (req, res) => {
-    const randomUsage = () => Math.floor(Math.random() * 100)
+    const randomUsage = () => Math.floor(Math.random() * 70)
     res.json(
         {
             "status": "ok",
@@ -41,8 +41,8 @@ app.get('/currentusage', (req, res) => {
                     "clusterName": "gke_kubernetes-opex-analytics_us-central1-a_koa-dev",
                     "cpuUsed": randomUsage(),
                     "memUsed": randomUsage(),
-                    "cpuNonAllocatable": 0,
-                    "memNonAllocatable": 0,
+                    "cpuNonAllocatable": 15.4356,
+                    "memNonAllocatable": 9.0909,
                     "outToDate": false
                 },
                 {
