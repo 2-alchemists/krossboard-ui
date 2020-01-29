@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import * as React from 'react'
 import {
-  Cell, Legend, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Sector
+  Cell, Legend, LegendPayload, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Sector
 } from 'recharts'
 
 import { Card, CardContent, Divider } from '@material-ui/core'
@@ -47,6 +47,15 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const legend = (value?: LegendPayload['value'], entry?: LegendPayload, i?: number) => {
+  switch(i) {
+    case 0: return 'used'
+    case 1: return 'non-allocatable'
+    case 2: return 'available'
+    default: return '?'
+  }
+}
+
 export const ClusterCurrentLoad: React.FC<IClusterCurrentLoadProps> = ({ clusterName, resourceType, outToDate, data }) => {
   const classes = useStyles()
   const [activeIndex, setActiveIndex] = React.useState(0)
@@ -59,7 +68,7 @@ export const ClusterCurrentLoad: React.FC<IClusterCurrentLoadProps> = ({ cluster
         <Divider />
         <ResponsiveContainer width="100%" height={chartHeight}>
           <PieChart className={clsx(outToDate && classes.outToDate)} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
-            <Legend verticalAlign="bottom" height={26} />
+            <Legend verticalAlign="bottom" height={26} formatter={legend}/>
             <Pie
               activeIndex={outToDate ? undefined : activeIndex}
               activeShape={outToDate ? undefined : renderActiveShape}
