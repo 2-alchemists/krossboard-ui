@@ -1,8 +1,11 @@
 image: node:10.16.3
 
+# Below $DOCKER_HUB_USERNAME and $DOCKER_HUB_PASSWORD are set as environment variables in project/repository settings
+
 pipelines:
   default:
     - step:
+        name: Test and build
         caches:
           - node
           - yarncustom
@@ -12,6 +15,58 @@ pipelines:
           - yarn
           - yarn lint
           - yarn build
+  custom:
+    docker-release:
+      - step:
+          name: Test and build
+          caches:
+            - node
+            - yarncustom
+          script:
+            - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
+            - export PATH=$HOME/.yarn/bin:$PATH
+            - yarn
+            - yarn lint
+            - yarn build
+          artifacts: 
+            - dist/*  
+      - step:
+          name: Build Docker image
+          services:
+            - docker
+          script:
+            - export IMAGE_NAME=koamc/kubernetes-opex-analytics-web
+            - export IMAGE_VERSION=$BITBUCKET_COMMIT
+            - docker build -t $IMAGE_NAME:$IMAGE_VERSION .
+            - docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
+            - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+            - docker push $IMAGE_NAME
+  tags:
+    '*':
+      - step:
+          name: Test and build
+          caches:
+            - node
+            - yarncustom
+          script:
+            - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
+            - export PATH=$HOME/.yarn/bin:$PATH
+            - yarn
+            - yarn lint
+            - yarn build
+          artifacts: 
+            - dist/*  
+      - step:
+          name: Build Docker image
+          services:
+            - docker
+          script:
+            - export IMAGE_NAME=koamc/kubernetes-opex-analytics-web
+            - export IMAGE_VERSION=$BITBUCKET_TAG-$BITBUCKET_COMMIT
+            - docker build -t $IMAGE_NAME:$IMAGE_VERSION .
+            - docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
+            - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+            - docker push $IMAGE_NAME          
 definitions:
   caches:
     yarncustom: /usr/local/share/.cache/yarn/v1
