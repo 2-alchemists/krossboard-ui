@@ -138,20 +138,20 @@ const Footer = () => {
 
   const footers = [
     {
-      title: 'Company',
-      description: ['Team', 'History', 'Contact us', 'Locations'],
+      title: 'Krossboard UI vXX.YY.ZZ',
+      link: 'https://krossboard.app/releases',
     },
     {
-      title: 'Features',
-      description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
+      title: 'Documentation',
+      link: 'https://krossboard.app/docs'
     },
     {
-      title: 'Resources',
-      description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
+      title: 'Issues & support',
+      link: 'https://krossboard.app/support',
     },
     {
-      title: 'Legal',
-      description: ['Privacy policy', 'Terms of use'],
+      title: 'Terms of use',
+      link: 'https://krossboard.app/terms-of-use',
     },
   ]
 
@@ -160,25 +160,18 @@ const Footer = () => {
       {footers.map(footer => (
         <Grid item xs={6} sm={3} key={footer.title}>
           <Typography variant="h6" color="textPrimary" gutterBottom>
-            {footer.title}
+            <Link href={footer.link} variant="subtitle1" color="textSecondary">
+              {footer.title}
+            </Link>
           </Typography>
-          <ul>
-            {footer.description.map(item => (
-              <li key={item}>
-                <Link href="#" variant="subtitle1" color="textSecondary">
-                  {item}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </Grid>
       ))}
     </Grid>
     <Box mt={5}>
       <Typography variant="body2" color="textSecondary" align="center">
         {'Copyright © '}
-        <Link color="inherit" href="https://material-ui.com/">
-          Your Website
+        <Link color="inherit" href="https://krossboard.app/company">
+          Company Name
       </Link>{' '}
         {new Date().getFullYear()}
         {'.'}
