@@ -1,8 +1,9 @@
 {
-  "name": "kube-opex-analytics-mc-frontend",
+  "name": "krossboard-ui",
   "version": "0.1.0",
-  "description": "Frontend for kube-opex-analytics-mc",
+  "description": "Frontend for Krossboard",
   "author": "(c) Company 2019",
+  "homepage": "https://krossboard.app",
   "license": "UNLICENSED",
   "main": "src/index.tsx",
   "scripts": {
