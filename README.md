@@ -38,3 +38,37 @@ Open `http://localhost:1234`.
 ```
 
 Generated files are then available in the `dist` folder.
+
+## Commits
+
+The project follow [Conventional Commits](https://www.conventionalcommits.org/), a set of rules regarding how you should commit your code to bring you the great benefit.
+
+ℹ The type of the commits are used to determine the next version of the product following semantic versionning.
+
+For this, rules are enforced by a pre-commit hook mananaged by [husky](https://github.com/typicode/husky).
+
+## Release
+
+The process of releasing the product is managed by [standard-version](https://github.com/conventional-changelog/standard-version).
+
+The tool is responsible to establish the next release version based on the commits from the previous release made, then bump this version in the `package.json` file and finally tag the repository.
+
+ℹ The version contained in the `package.json` is the previous one (the last available one).
+
+Perform the release is pretty straight-forward:
+
+```sh
+> yarn release
+```
+
+⚠️ For the very first release, the following command line must be exected instead:
+
+```sh
+> yarn release --first-release
+```
+
+ℹ Note that a dry mode is available to test the release process safely:
+
+```sh
+> yarn release --dry-run
+```
