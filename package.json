@@ -14,7 +14,8 @@
     "start-server": "nodemon server/index.js",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch",
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'src/**/*.tsx' 'test/**/*.ts'"
+    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'src/**/*.tsx' 'test/**/*.ts'",
+    "release": "standard-version"
   },
   "engines": {
     "node": ">= 10.19.0"
@@ -76,6 +77,7 @@
     "parcel-bundler": "^1.12.3",
     "parcel-plugin-clean-dist": "^0.0.6",
     "prettier": "^1.17.0",
+    "standard-version": "^7.1.0",
     "ts-jest": "^24.0.2",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
@@ -90,6 +92,11 @@
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-     }
+    }
+  },
+  "standard-version": {
+    "skip": {
+      "changelog": true
+    }
   }
 }
