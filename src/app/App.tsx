@@ -1,3 +1,4 @@
+import * as pckg from '../../package.json'
 import '../scheduler/currentusage'
 import '../scheduler/discovery'
 import '../scheduler/resources'
@@ -138,7 +139,7 @@ const Footer = () => {
 
   const footers = [
     {
-      title: 'Krossboard UI vXX.YY.ZZ',
+      title: `Krossboard UI v${pckg['version']}`,
       link: 'https://krossboard.app/releases',
     },
     {
