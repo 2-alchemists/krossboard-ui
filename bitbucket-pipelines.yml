@@ -43,7 +43,7 @@ pipelines:
             - export IMAGE_VERSION=$BITBUCKET_COMMIT
             - docker build -t $IMAGE_NAME:$IMAGE_VERSION .
             - docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
-            - docker login --username $${CONTAINER_REGISTRY_USERNAME} --password $${CONTAINER_REGISTRY_PASSWORD
+            - docker login --username ${CONTAINER_REGISTRY_USERNAME} --password ${CONTAINER_REGISTRY_PASSWORD}
             - docker push $IMAGE_NAME
   tags:
     '*':
@@ -69,7 +69,7 @@ pipelines:
             - export IMAGE_VERSION=$BITBUCKET_TAG-$BITBUCKET_COMMIT
             - docker build -t $IMAGE_NAME:$IMAGE_VERSION .
             - docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
-            - docker login --username ${CONTAINER_REGISTRY_USERNAME} --password ${CONTAINER_REGISTRY_PASSWORD
+            - docker login --username ${CONTAINER_REGISTRY_USERNAME} --password ${CONTAINER_REGISTRY_PASSWORD}
             - docker push $IMAGE_NAME          
 definitions:
   caches:
