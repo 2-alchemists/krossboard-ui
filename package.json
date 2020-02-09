@@ -16,7 +16,7 @@
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'src/**/*.tsx' 'test/**/*.ts'"
   },
   "engines": {
-    "node": ">= 10.13.0"
+    "node": ">= 10.19.0"
   },
   "jest": {
     "preset": "ts-jest",
