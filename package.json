@@ -1,6 +1,6 @@
 {
   "name": "kube-opex-analytics-mc-frontend",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Frontend for kube-opex-analytics-mc",
   "author": "(c) Company 2019",
   "license": "UNLICENSED",
