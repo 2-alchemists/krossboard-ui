@@ -1,6 +1,10 @@
 image: node:10.16.3
 
-# Below $DOCKER_HUB_USERNAME and $DOCKER_HUB_PASSWORD are set as environment variables in project/repository settings
+# Below the following variables:
+#  - $CONTAINER_REGISTRY $
+#  - $CONTAINER_REGISTRY_USERNAME
+#  - $CONTAINER_REGISTRY_PASSWORD 
+# are environment variables set either in the project or the repository settings
 
 pipelines:
   default:
@@ -35,11 +39,11 @@ pipelines:
           services:
             - docker
           script:
-            - export IMAGE_NAME=koamc/kubernetes-opex-analytics-web
+            - export IMAGE_NAME=${CONTAINER_REGISTRY}/krossboard-ui
             - export IMAGE_VERSION=$BITBUCKET_COMMIT
             - docker build -t $IMAGE_NAME:$IMAGE_VERSION .
             - docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
-            - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+            - docker login --username $${CONTAINER_REGISTRY_USERNAME} --password $${CONTAINER_REGISTRY_PASSWORD
             - docker push $IMAGE_NAME
   tags:
     '*':
@@ -61,11 +65,11 @@ pipelines:
           services:
             - docker
           script:
-            - export IMAGE_NAME=koamc/kubernetes-opex-analytics-web
+            - export IMAGE_NAME=${CONTAINER_REGISTRY}/krossboard-ui
             - export IMAGE_VERSION=$BITBUCKET_TAG-$BITBUCKET_COMMIT
             - docker build -t $IMAGE_NAME:$IMAGE_VERSION .
             - docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
-            - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+            - docker login --username ${CONTAINER_REGISTRY_USERNAME} --password ${CONTAINER_REGISTRY_PASSWORD
             - docker push $IMAGE_NAME          
 definitions:
   caches:
