@@ -1,0 +1,11 @@
+node_modules
+src
+server
+assets
+.cache
+.prettierrc
+*.json
+*.lock
+.vscode
+README
+Dockerfile
