@@ -1,8 +1,11 @@
 import { format } from 'date-fns'
+import { TFunction } from 'i18next'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import {
-  Area, AreaChart, Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis
+    Area, AreaChart, Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip,
+    XAxis, YAxis
 } from 'recharts'
 
 import { Card, CardContent, Divider } from '@material-ui/core'
@@ -64,24 +67,25 @@ const title = (type: SeriesType): string => {
   }
 }
 
-const dateFormat = (type: SeriesType): string => {
+const dateFormat = (t: TFunction, type: SeriesType): string => {
   switch (type) {
     case SeriesType.cpu_usage_trends:
     case SeriesType.memory_usage_trends:
-      return "MMM dd hh:mm"
+      return t('format.day-month-hour')
     case SeriesType.cpu_usage_period_1209600:
     case SeriesType.memory_usage_period_1209600:
-      return "dd MMM"
+      return t('format.day-month')
     case SeriesType.cpu_usage_period_31968000:
     case SeriesType.memory_usage_period_31968000:
-      return "MMM yyyy"
+      return t('format.month-year')
     default:
-      return "dd MMM yyyy"
+      return t('format.day-month-year')
   }
 }
 
 export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, data }) => {
   const classes = useStyles()
+  const { t } = useTranslation()
 
   const names = Array.from(new Set(data.flatMap(it => Object.keys(it)).filter(it => it !== "tag")).values()).sort()
 
@@ -103,11 +107,11 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <Legend verticalAlign="bottom" height={26} />
-                <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(type))} />
+                <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(t, type))} />
                 <YAxis>
                   <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
                 </YAxis>
-                <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, dateFormat(type))}</p>)} />
+                <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, dateFormat(t, type))}</p>)} />
                 {
                   names.map((name, idx) => (
                     <Area key={name} type="monotone" dataKey={name} stackId="1" stroke={seriesColorSchema[idx % seriesColorSchema.length]} fill={seriesColorSchema[idx % seriesColorSchema.length]} />
@@ -124,11 +128,11 @@ export const ClusterResourceChart: React.FC<IClusterResourceProps> = ({ type, da
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <Legend verticalAlign="bottom" height={26} />
-                <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(type))} />
+                <XAxis dataKey="tag" tickFormatter={(tick: Date) => format(tick, dateFormat(t, type))} />
                 <YAxis>
                   <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
                 </YAxis>
-                <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, dateFormat(type))}</p>)} />
+                <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, dateFormat(t, type))}</p>)} />
                 {
                   names.map((name, idx) => (
                     <Bar key={name} dataKey={name} stackId="1" fill={seriesColorSchema[idx % seriesColorSchema.length]} />

@@ -5,6 +5,8 @@ import {
   Area, AreaChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis
 } from 'recharts'
 
+import { useTranslation } from 'react-i18next'
+
 import { Card, CardContent, Divider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -49,10 +51,9 @@ const label = (type: Type): string => {
   }
 }
 
-const xFormat = "dd hh:mm"
-
 export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
   const classes = useStyles()
+  const { t } = useTranslation()
 
   const names = Array.from(new Set(data.flatMap(it => Object.keys(it)).filter(it => it !== "tag")).values()).sort()
 
@@ -71,11 +72,11 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <Legend verticalAlign="bottom" height={26} />
-            <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, xFormat)} />
+            <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, t('format.day-hour'))} />
             <YAxis>
               <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
             </YAxis>
-            <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, xFormat)}</p>)} />
+            <Tooltip labelFormatter={(tick: number | string) => (<p>{format(tick as number, t('format.day-hour'))}</p>)} />
             {
               names.map((name, idx) => (
                 <Area key={name} type="monotone" dataKey={name} stackId="1" stroke={seriesColorSchema[idx % seriesColorSchema.length]} fill={seriesColorSchema[idx % seriesColorSchema.length]} />
