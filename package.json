@@ -1,8 +1,9 @@
 {
-  "name": "kube-opex-analytics-mc-frontend",
-  "version": "1.0.0",
-  "description": "Frontend for kube-opex-analytics-mc",
+  "name": "krossboard-ui",
+  "version": "0.1.0",
+  "description": "Frontend for Krossboard",
   "author": "(c) Company 2019",
+  "homepage": "https://krossboard.app",
   "license": "UNLICENSED",
   "main": "src/index.tsx",
   "scripts": {
@@ -13,10 +14,11 @@
     "start-server": "nodemon server/index.js",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch",
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'src/**/*.tsx' 'test/**/*.ts'"
+    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'src/**/*.tsx' 'test/**/*.ts'",
+    "release": "standard-version"
   },
   "engines": {
-    "node": ">= 10.13.0"
+    "node": ">= 10.19.0"
   },
   "jest": {
     "preset": "ts-jest",
@@ -64,14 +66,18 @@
     "recharts": "1.8.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
     "@types/node": "^11.13.6",
     "@types/react": "^16.8.14",
     "@types/react-dom": "^16.8.4",
     "concurrently": "^4.1.0",
+    "husky": "^4.2.1",
     "nodemon": "^2.0.2",
     "parcel-bundler": "^1.12.3",
     "parcel-plugin-clean-dist": "^0.0.6",
     "prettier": "^1.17.0",
+    "standard-version": "^7.1.0",
     "ts-jest": "^24.0.2",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
@@ -82,5 +88,10 @@
   },
   "peerDependencies": {
     "prop-types": "^15.7.2"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }
