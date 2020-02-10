@@ -1,8 +1,15 @@
 image: node:10.16.3
 
+# Below the following variables:
+#  - $CONTAINER_REGISTRY $
+#  - $CONTAINER_REGISTRY_USERNAME
+#  - $CONTAINER_REGISTRY_PASSWORD 
+# are environment variables set either in the project or the repository settings
+
 pipelines:
   default:
     - step:
+        name: Test and build
         caches:
           - node
           - yarncustom
@@ -12,6 +19,58 @@ pipelines:
           - yarn
           - yarn lint
           - yarn build
+  custom:
+    docker-release:
+      - step:
+          name: Test and build
+          caches:
+            - node
+            - yarncustom
+          script:
+            - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
+            - export PATH=$HOME/.yarn/bin:$PATH
+            - yarn
+            - yarn lint
+            - yarn build
+          artifacts: 
+            - dist/*  
+      - step:
+          name: Build Docker image
+          services:
+            - docker
+          script:
+            - export IMAGE_NAME=${CONTAINER_REGISTRY}/krossboard-ui
+            - export IMAGE_VERSION=$BITBUCKET_COMMIT
+            - docker build -t $IMAGE_NAME:$IMAGE_VERSION .
+            - docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
+            - docker login --username ${CONTAINER_REGISTRY_USERNAME} --password ${CONTAINER_REGISTRY_PASSWORD}
+            - docker push $IMAGE_NAME
+  tags:
+    '*':
+      - step:
+          name: Test and build
+          caches:
+            - node
+            - yarncustom
+          script:
+            - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
+            - export PATH=$HOME/.yarn/bin:$PATH
+            - yarn
+            - yarn lint
+            - yarn build
+          artifacts: 
+            - dist/*  
+      - step:
+          name: Build Docker image
+          services:
+            - docker
+          script:
+            - export IMAGE_NAME=${CONTAINER_REGISTRY}/krossboard-ui
+            - export IMAGE_VERSION=$BITBUCKET_TAG-$BITBUCKET_COMMIT
+            - docker build -t $IMAGE_NAME:$IMAGE_VERSION .
+            - docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
+            - docker login --username ${CONTAINER_REGISTRY_USERNAME} --password ${CONTAINER_REGISTRY_PASSWORD}
+            - docker push $IMAGE_NAME          
 definitions:
   caches:
     yarncustom: /usr/local/share/.cache/yarn/v1
