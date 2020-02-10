@@ -17,6 +17,7 @@ export class KoaStore {
     @observable public currentLoad: IWithHarvesterState<Record<ClusterName, Record<string /*type*/, IUsageHistoryItem[]>>> = { state: defaultState(), data: {} }
     @observable public resourcesUsages: Record<ClusterName, Record<string /* type */, IWithHarvesterState<IUsageHistoryItem[]>>> = {}
     @observable public usageHistoryDateRange: Interval = { start: sub(new Date(), { hours: 24 }), end: new Date() }
+    @observable public usageHistoryEndDate: Date | number = this.usageHistoryDateRange.end
     @observable public usageHistory: IWithHarvesterState<Record<"cpu" | "mem" /* type */, IUsageHistoryItem[]>> = { state: defaultState(), data: { cpu: [], mem: [] } }
 
     @computed
@@ -42,12 +43,19 @@ export class KoaStore {
 
     @action
     public setUsageHistoryStartDate = (date: Date) => {
-        this.usageHistoryDateRange.start = date
+        // starting from YYYY/MM/DD 00:00:00 Z
+        const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+
+        this.usageHistoryDateRange.start = target
     }
 
     @action
     public setUsageHistoryEndDate = (date: Date) => {
-        this.usageHistoryDateRange.end = date
+        // ending to YYYY/MM/DD 23:59:59 Z
+        const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999))
+
+        this.usageHistoryDateRange.end = target
+        this.usageHistoryEndDate = target
     }
 
     protected addCluster = (name: string, endpoint: string) => {
