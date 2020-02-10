@@ -41,7 +41,7 @@ export const MultiClusterView = () => {
     }),
     setEndDate: action((date: Date | null) => {
       if (date) {
-          dateRange.endDate = date
+        dateRange.endDate = date
       }
     }),
     isDirty: () =>
@@ -55,46 +55,52 @@ export const MultiClusterView = () => {
   return useObserver(() => {
     return (
       <div className={classes.root}>
-        <Grid container spacing={3}>
-          <Grid container justify="center" alignItems="center">
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid item xs={6} sm={3}>
-                <KeyboardDatePicker
-                  disableToolbar
-                  variant="inline"
-                  format="MM/dd/yyyy"
-                  margin="normal"
-                  id="date-start"
-                  label="Start date"
-                  value={dateRange.startDate}
-                  onChange={dateRange.setStartDate}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <KeyboardDatePicker
-                  disableToolbar
-                  variant="inline"
-                  format="MM/dd/yyyy"
-                  margin="normal"
-                  id="date-end"
-                  label="End date"
-                  value={dateRange.endDate}
-                  onChange={dateRange.setEndDate}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
-                />
-              </Grid>
-            </MuiPickersUtilsProvider>
-            <Grid item xs={6} sm={3}>
-              <Button variant="outlined" disabled={!dateRange.isDirty()} onClick={dateRange.commit}>
-                Apply
-              </Button>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          spacing={3}
+        >
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <Grid item xs={2}>
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="date-start"
+                label="Start date"
+                value={dateRange.startDate}
+                onChange={dateRange.setStartDate}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
             </Grid>
+            <Grid item xs={2}>
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="date-end"
+                label="End date"
+                value={dateRange.endDate}
+                onChange={dateRange.setEndDate}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+            </Grid>
+          </MuiPickersUtilsProvider>
+          <Grid item xs={1}>
+            <Button variant="outlined" disabled={!dateRange.isDirty()} onClick={dateRange.commit}>
+              Apply
+              </Button>
           </Grid>
+        </Grid>
+        <Grid container>
           <Grid item xs={12} sm={12}>
             <HistoryChart type={"cpu"} data={store.usageHistory.data.cpu} />
           </Grid>
