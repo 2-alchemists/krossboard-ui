@@ -11,7 +11,6 @@ import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react
 import { LinearProgress } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
-import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
@@ -94,12 +93,9 @@ const Header = () => {
       <Typography variant="h6" noWrap className={classes.toolbarTitle}>Company name</Typography>
       <nav>
         <Link to="/" exact color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Current usage</Link>
-        <Link to="/multicluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Consolidated usage &amp; History</Link>
         <Link to="/cluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Usage trends &amp; Accounting</Link>
+        <Link to="/multicluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Consolidated usage &amp; History</Link>
       </nav>
-      <Button href="#" variant="outlined" className={classes.link}>
-        Login
-      </Button>
     </Toolbar>
   </AppBar>
 }
