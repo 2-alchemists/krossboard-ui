@@ -4,9 +4,9 @@ import { render } from 'react-dom'
 
 import { App } from './app/App'
 import { koaStore } from './store/KoaStore'
-import { StoreProvider } from './store/storeProvider'
 
 import './i18n/i18n'
+import { StoreProvider } from './store/storeProvider'
 
 configure({ enforceActions: "observed" })
 
@@ -16,7 +16,7 @@ const Loader = () => (
   </div>
 )
 
-render(<StoreProvider value={koaStore}>
+render(<StoreProvider value={ { koaStore }}>
   <Suspense fallback={<Loader />}>
     <App />
   </Suspense>

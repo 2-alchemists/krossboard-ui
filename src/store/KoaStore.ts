@@ -1,24 +1,90 @@
 import { sub } from 'date-fns'
-import { action, autorun, computed, observable, runInAction } from 'mobx'
+import { action, computed, observable } from 'mobx'
 
 import {
-    ClusterEndpoint, ClusterName, defaultState, IHarvesterState, IUsageHistoryItem,
+    ClusterEndpoint, ClusterName, defaultState, IError, IHarvesterState, IUsageHistoryItem,
     IWithHarvesterState
 } from './model'
-
-
 
 export class KoaStore {
     public get discoveryURL() { return window.location.hostname === 'localhost' ? 'http://localhost:1519' : `${window.location.protocol}//${window.location.host}` }
     @observable public pollingInterval: number = 30000
 
-    @observable public state: IHarvesterState = defaultState()
     @observable public instances: IWithHarvesterState<Record<ClusterName, ClusterEndpoint>> = { state: defaultState(), data: {} }
     @observable public currentLoad: IWithHarvesterState<Record<ClusterName, Record<string /*type*/, IUsageHistoryItem[]>>> = { state: defaultState(), data: {} }
     @observable public resourcesUsages: Record<ClusterName, Record<string /* type */, IWithHarvesterState<IUsageHistoryItem[]>>> = {}
     @observable public usageHistoryDateRange: Interval = { start: sub(new Date(), { hours: 24 }), end: new Date() }
     @observable public usageHistoryEndDate: Date | number = this.usageHistoryDateRange.end
     @observable public usageHistory: IWithHarvesterState<Record<"cpu" | "mem" /* type */, IUsageHistoryItem[]>> = { state: defaultState(), data: { cpu: [], mem: [] } }
+
+    @action public setError = (state: IHarvesterState, e: any) => {
+        const error: IError = {
+            message: (() => {
+                if (typeof e === "string") {
+                    return e as string
+                }
+                if (e.message) {
+                    return e.message as string
+                }
+                return e.toString()
+            })(),
+
+            date: e.date ? e.date as Date : new Date(),
+            resource: e.resource ? e.resource as string : null,
+            seen: false,
+        }
+
+        state.error = error
+    }
+
+    @action public clearError = (state: IHarvesterState) => {
+        state.error = null
+    }
+
+    @action public markErrorsSeen = () => {
+        return this
+            .errors
+            .forEach(err => err.seen = true)
+    }
+    
+    @computed public get errors() {
+        return this
+            .states
+            .map(it => it.error)
+            .filter( it => it !== null ) as IError[]
+    }
+
+    @computed public get hasErrors() {
+        return this
+            .errors
+            .length > 0
+    }
+
+    @computed public get hasErrorsNotSeen() {
+        return this
+            .errors
+            .filter(it => !it?.seen)
+            .length > 0
+    }
+
+    @computed public get loading() {
+        return this
+            .states
+            .map(it => it.loading)
+            .reduce((a, b) => a || b, false)
+    }
+
+    @computed public get states() {
+        return [
+            this.instances.state,
+            this.currentLoad.state,
+            ...Object.keys(this.resourcesUsages)
+                .map(it => this.resourcesUsages[it])
+                .flatMap(it => Object.keys(it).map(ot => it[ot]))
+                .map(it => it.state),
+            this.usageHistory.state
+        ]
+    }
 
     @computed
     public get isClustersEmpty() { return this.clusterNames.length === 0 }
@@ -74,38 +140,3 @@ export class KoaStore {
 }
 
 export const koaStore = new KoaStore()
-
-autorun(() => {
-    // FIXME: not efficient but does the job for now
-    const state = (() => {
-        if (koaStore.instances.state.loading) {
-            return true
-        }
-        if (koaStore.currentLoad.state.loading) {
-            return true
-        }
-
-        if (Object.keys(koaStore.resourcesUsages)
-            .map(it => koaStore.resourcesUsages[it])
-            .flatMap(it => Object.keys(it).map(ot => it[ot]))
-            .map(it => it.state.loading)
-            .reduce((a, b) => a || b, false)) {
-            return true
-        }
-
-        if (koaStore.usageHistory.state.loading) {
-            return true
-        }
-
-        return false
-    })()
-
-    if (koaStore.state.loading !== state) {
-        runInAction(() => {
-            if (koaStore.state.loading) {
-                koaStore.state.updatedAt = new Date()
-            }
-            koaStore.state.loading = state
-        })
-    }
-})

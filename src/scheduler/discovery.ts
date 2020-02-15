@@ -18,10 +18,18 @@ autorun(async () => {
                     }
                     koaStore.setClusters(instances)
                     koaStore.instances.state.updatedAt = new Date()
+                    koaStore.clearError(koaStore.instances.state)
+                })
+            })
+            .catch((e) => {
+                runInAction(() => {
+                    koaStore.setError(koaStore.instances.state, e)
                 })
             })
             .finally(() => {
-                runInAction(() => koaStore.instances.state.loading = false)
+                runInAction(() => {
+                    koaStore.instances.state.loading = false
+                })
             })
     }
 }, { scheduler: (run: any) => { run(); setInterval(run, koaStore.pollingInterval) } })

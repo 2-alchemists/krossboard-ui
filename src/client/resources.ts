@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { parse } from 'date-fns'
+import { ResourceError } from '../store/model'
 
 export interface IMeasurementPayload {
     name: string
@@ -28,8 +29,10 @@ export const seriesTypeValues = [
     SeriesType.memory_usage_period_31968000,
 ]
 
-export const fetchSeries = async (endpoint: string, clusterName: string, type: SeriesType): Promise<ISeriesPayload> =>
-    axios
+export const fetchSeries = async (endpoint: string, clusterName: string, type: SeriesType): Promise<ISeriesPayload> => {
+    const resource = `/dataset/${type}`
+
+    return axios
         .get(endpoint + `/api/dataset/${type}.json`, { headers: { 'X-Krossboard-Cluster': clusterName } })
         .then(res => res.data)
         .then(data => {
@@ -57,3 +60,5 @@ export const fetchSeries = async (endpoint: string, clusterName: string, type: S
         })
         .then(data => data as ISeriesPayload)
         .then(data => data.map(it => ({ ...it, dateUTC: new Date(it.dateUTC) })))
+        .catch(e => { throw new ResourceError(e.toString(), resource) })
+    }
