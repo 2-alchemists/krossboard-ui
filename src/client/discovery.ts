@@ -10,5 +10,5 @@ export interface IGetDiscoveryPayload {
 }
 
 export const getDiscovery = async (endpoint: string): Promise<IGetDiscoveryPayload> =>
-	axios.get(endpoint + '/discovery')
+	axios.get(endpoint + '/api/discovery')
 		.then(res => res.data)

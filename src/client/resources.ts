@@ -28,9 +28,9 @@ export const seriesTypeValues = [
     SeriesType.memory_usage_period_31968000,
 ]
 
-export const fetchSeries = async (endpoint: string, type: SeriesType): Promise<ISeriesPayload> =>
+export const fetchSeries = async (endpoint: string, clusterName: string, type: SeriesType): Promise<ISeriesPayload> =>
     axios
-        .get(endpoint + `/dataset/${type}.json`)
+        .get(endpoint + `/api/dataset/${type}.json`, { headers: { 'X-Krossboard-Cluster': clusterName } })
         .then(res => res.data)
         .then(data => {
             switch (type) {
