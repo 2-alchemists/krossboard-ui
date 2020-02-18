@@ -25,6 +25,8 @@ import { MultiClusterView } from '../pages/MultiClusterView'
 import { useStore } from '../store/storeProvider'
 import { theme as mytheme } from '../theme'
 
+const Logo = require("../../assets/krossboard-logo.png")
+
 const useStyles = makeStyles(theme => ({
   '@global': {
     ul: {
@@ -90,7 +92,7 @@ const Header = () => {
 
   return <AppBar position="static" elevation={0} className={classes.appBar}>
     <Toolbar className={classes.toolbar}>
-      <Typography variant="h6" noWrap className={classes.toolbarTitle}>Company name</Typography>
+      <Typography variant="h6" noWrap className={classes.toolbarTitle}><img src={Logo} alt="Krossboard logo" /></Typography>
       <nav>
         <Link to="/" exact color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Current usage</Link>
         <Link to="/cluster-view" color="textSecondary" className={classes.link} component={NavLink} activeClassName={classes.selected}>Usage trends &amp; Accounting</Link>
