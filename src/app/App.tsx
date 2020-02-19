@@ -28,7 +28,7 @@ import { MultiClusterView } from '../pages/MultiClusterView'
 import { useStore } from '../store/storeProvider'
 import { theme as mytheme } from '../theme'
 
-const Logo = require("../../assets/krossboard-logo.png")
+import Logo from '../../assets/krossboard-logo.png'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
