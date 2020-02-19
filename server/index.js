@@ -128,6 +128,7 @@ app.get('/api/dataset/:type', (req, res) => {
                     { "name": "kubeless", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
                     { "name": "kubeless", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() }
                 ])
+                break
         case 'memory_usage_trends.json':
             res.json(
                 [
@@ -153,14 +154,19 @@ app.get('/api/dataset/:type', (req, res) => {
                     { "name": "kubeless", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
                     { "name": "kubeless", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() }
                 ])
+                break
         case 'memory_usage_period_1209600.json':
             res.json([{ "stack": "non-allocatable", "usage": 200.653026, "date": "22 Jan" }, { "stack": ".usagehistory", "usage": 501.790922, "date": "22 Jan" }, { "stack": "kube-system", "usage": 59.101217, "date": "22 Jan" }])
+            break
         case 'cpu_usage_period_1209600.json':
             res.json([{ "stack": "non-allocatable", "usage": 42.000000, "date": "22 Jan" }, { "stack": ".usagehistory", "usage": 110.169476, "date": "22 Jan" }, { "stack": "kube-system", "usage": 10.402329, "date": "22 Jan" }])
+            break
         case 'memory_usage_period_31968000.json':
             res.json([{ "stack": "non-allocatable", "usage": 200.653026, "date": "Jan 2020" }, { "stack": ".usagehistory", "usage": 501.790922, "date": "Jan 2020" }, { "stack": "kube-system", "usage": 59.101217, "date": "Jan 2020" }])
+            break
         case 'cpu_usage_period_31968000.json':
             res.json([{ "stack": "non-allocatable", "usage": 42.000000, "date": "Jan 2020" }, { "stack": ".usagehistory", "usage": 110.169476, "date": "Jan 2020" }, { "stack": "kube-system", "usage": 10.402329, "date": "Jan 2020" }])
+            break
         default:
             res.send(404)
     }
