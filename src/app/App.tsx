@@ -65,10 +65,9 @@ const useStyles = makeStyles(theme => ({
     height: '5px'
   },
   errors: {
-    position: 'sticky',
-    float: 'right',
-    bottom: '10px',
-    right: '10px'
+    position: 'fixed',
+    top: '78px',
+    right: '15px'
   },
   errorsIcon: {
     cursor: 'pointer'
@@ -100,11 +99,11 @@ export const App = () => {
       <CssBaseline />
       <Router>
         <Header />
+        <Errors />
         <ProgressBar />
         <Content />
       </Router>
       <Footer />
-      <Errors />
     </ThemeProvider>
   )
 }
@@ -143,17 +142,17 @@ const Errors = () => {
   const [visible, setVisible] = React.useState(false)
 
   return useObserver(() => (
-    <div className={classes.errors}>
+    <span className={classes.errors}>
       {store.hasErrors &&
         <ClickAwayListener onClickAway={() => setVisible(false)}>
           <Tooltip
-            placement="top-end"
+            placement="bottom-end"
             title={
               <>
                 {
                   store.errors.map((err, idx) => (
                     <Typography className={classes.errorsDescription} key={idx} variant="caption" display="block" gutterBottom>
-                      {format(err.date, t('format.day-month-year-hour'))} - {err.message}
+                      {format(err.date, t('format.day-month-year-hour'))} - {err.message} ({err.resource})
                     </Typography>
                   ))
                 }
@@ -168,7 +167,7 @@ const Errors = () => {
           </Tooltip>
         </ClickAwayListener>
       }
-    </div>
+    </span>
   ))
 }
 
