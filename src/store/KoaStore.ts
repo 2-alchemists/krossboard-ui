@@ -9,7 +9,7 @@ import {
 
 
 export class KoaStore {
-    public get discoveryURL(): string { return `http://${window.location.hostname}:1519` }
+    public get discoveryURL() { return window.location.hostname === 'localhost' ? 'http://localhost:1519' : `${window.location.protocol}//${window.location.host}` }
     @observable public pollingInterval: number = 30000
 
     @observable public state: IHarvesterState = defaultState()

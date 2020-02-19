@@ -16,7 +16,7 @@ export interface IGetUsageHistoryPayload {
 
 export const getUsageHistory = async (endpoint: string, startDateUTC?: Date, endDateUTC?: Date): Promise<IGetUsageHistoryPayload> =>
 	axios
-		.get(endpoint + '/usagehistory',
+		.get(endpoint + '/api/usagehistory',
 			{ params: { startDate: startDateUTC?.toISOString(), endDate: endDateUTC?.toISOString() } }
 		)
 		.then(res => res.data)

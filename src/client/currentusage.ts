@@ -14,5 +14,5 @@ export interface IGetCurrentUsagePayload {
 }
 
 export const getCurrentusage = async (endpoint: string): Promise<IGetCurrentUsagePayload> =>
-	axios.get(endpoint + '/currentusage')
+	axios.get(endpoint + '/api/currentusage')
 		.then(res => res.data)

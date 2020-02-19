@@ -10,28 +10,28 @@ app.listen(1519, () => console.log(`Listening on port ${port}!`))
 
 app.get('/', (req, res) => res.send('I\m running!'))
 
-app.get('/discovery', (req, res) => {
+app.get('/api/discovery', (req, res) => {
     res.json(
         {
             status: 'ok',
             instances: [
                 {
                     clusterName: 'gke_kubernetes-opex-analytics_us-central1-a_koa-dev',
-                    endpoint: `http://${req.hostname}:${port}/49008`
+                    endpoint: `http://${req.hostname}:${port}` // no more used
                 },
                 {
                     clusterName: 'gke_kubernetes-opex-analytics_us-central1-a_koamc-test-1',
-                    endpoint: `http://${req.hostname}:${port}/49009`
+                    endpoint: `http://${req.hostname}:${port}` // no more used
                 },
                 {
                     clusterName: 'gke_kubernetes-opex-analytics_us-central1-a_koamc-test-2',
-                    endpoint: `http://${req.hostname}:${port}/49010`
+                    endpoint: `http://${req.hostname}:${port}/` // no more used
                 }
             ]
         })
 })
 
-app.get('/currentusage', (req, res) => {
+app.get('/api/currentusage', (req, res) => {
     const randomUsage = () => Math.floor(Math.random() * 70)
     res.json(
         {
@@ -66,7 +66,7 @@ app.get('/currentusage', (req, res) => {
     )
 })
 
-app.get('/usagehistory', (req, res) => {
+app.get('/api/usagehistory', (req, res) => {
     const startDate = req.query.startDate ? new Date(req.query.startDate) : new Date(Date.now() - 86400000)
     const endDate = req.query.endDate ? new Date(req.query.endDate) : new Date()
 
@@ -101,7 +101,7 @@ app.get('/usagehistory', (req, res) => {
         })
 })
 
-app.get('/:c/dataset/:type', (req, res) => {
+app.get('/api/dataset/:type', (req, res) => {
     switch (req.params.type) {
         case 'cpu_usage_trends.json':
             res.json(
@@ -164,6 +164,4 @@ app.get('/:c/dataset/:type', (req, res) => {
         default:
             res.send(404)
     }
-
-
 })
