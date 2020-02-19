@@ -14,7 +14,6 @@ import { useStore } from '../store/storeProvider'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
     padding: theme.spacing(4),
     paddingTop: 0
   },
