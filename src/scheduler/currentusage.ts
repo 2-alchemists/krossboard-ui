@@ -5,13 +5,13 @@ import { koaStore } from '../store/KoaStore'
 
 autorun(async () => {
     if (koaStore.discoveryURL !== "") {
-        runInAction(() => {
-            koaStore.currentLoad.state.loading = true
-        })
-
         const data = koaStore.currentLoad.data
 
         if (koaStore.clusterNames.length > 0) {
+            runInAction(() => {
+                koaStore.currentLoad.state.loading = true
+            })
+
             getCurrentusage(koaStore.discoveryURL)
                 .then(res => {
                     runInAction(() => {
@@ -33,6 +33,12 @@ autorun(async () => {
                             }
                         })
                         koaStore.currentLoad.state.updatedAt = new Date()
+                        koaStore.clearError(koaStore.currentLoad.state)
+                    })
+                })
+                .catch((e) => {
+                    runInAction(() => {
+                        koaStore.setError(koaStore.currentLoad.state, e)
                     })
                 })
                 .finally(() => {

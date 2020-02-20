@@ -1,8 +1,12 @@
 import { createContext, useContext } from 'react'
 
-import { KoaStore } from "./KoaStore"
+import { KoaStore } from './KoaStore'
 
-export const StoreContext = createContext<KoaStore>({} as KoaStore)
+interface IStore {
+    koaStore: KoaStore
+}
+
+export const StoreContext = createContext<IStore>({} as IStore)
 export const StoreProvider = StoreContext.Provider
 
-export const useStore = (): KoaStore => useContext(StoreContext)
+export const useStore = (): KoaStore => useContext(StoreContext).koaStore

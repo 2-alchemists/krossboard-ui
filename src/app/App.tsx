@@ -1,14 +1,15 @@
-import * as pckg from '../../package.json'
 import '../scheduler/currentusage'
 import '../scheduler/discovery'
 import '../scheduler/resources'
 import '../scheduler/usagehistory'
 
+import { format } from 'date-fns'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react-router-dom'
 
-import { LinearProgress } from '@material-ui/core'
+import { ClickAwayListener, LinearProgress, Tooltip } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
@@ -18,14 +19,16 @@ import Link from '@material-ui/core/Link'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
 
+import * as pckg from '../../package.json'
 import { ClusterView } from '../pages/ClusterView'
 import { CurrentLoadView } from '../pages/CurrentLoadView'
 import { MultiClusterView } from '../pages/MultiClusterView'
 import { useStore } from '../store/storeProvider'
 import { theme as mytheme } from '../theme'
 
-const Logo = require("../../assets/krossboard-logo.png")
+import Logo from '../../assets/krossboard-logo.png'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -61,14 +64,31 @@ const useStyles = makeStyles(theme => ({
   progress: {
     height: '5px'
   },
+  errors: {
+    position: 'fixed',
+    top: '78px',
+    right: '15px'
+  },
+  errorsIcon: {
+    cursor: 'pointer'
+  },
+  errorsIconSeen: {
+    color: theme.palette.text.primary
+  },
+  errorsIconUnseen: {
+    color: '#cd5c5c'
+  },
+  errorsDescription: {
+    lineHeight: 'normal'
+  },
   footer: {
     borderTop: `1px solid ${theme.palette.divider}`,
-    marginTop: theme.spacing(8),
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
+    marginTop: theme.spacing(4),
+    paddingTop: theme.spacing(1),
+    paddingBottom: '0px',
     [theme.breakpoints.up('sm')]: {
-      paddingTop: theme.spacing(6),
-      paddingBottom: theme.spacing(6),
+      paddingTop: theme.spacing(2),
+      paddingBottom: '0px',
     },
   },
 }))
@@ -79,6 +99,7 @@ export const App = () => {
       <CssBaseline />
       <Router>
         <Header />
+        <Errors />
         <ProgressBar />
         <Content />
       </Router>
@@ -108,8 +129,45 @@ const ProgressBar = () => {
 
   return useObserver(() => (
     <div className={classes.progress}>
-      {store.state.loading && <LinearProgress color="secondary" className={classes.progress} variant={"indeterminate"} />}
+      {store.loading && <LinearProgress color="secondary" className={classes.progress} variant={"indeterminate"} />}
     </div>
+  ))
+}
+
+const Errors = () => {
+  const classes = useStyles()
+  const store = useStore()
+  const { t } = useTranslation()
+
+  const [visible, setVisible] = React.useState(false)
+
+  return useObserver(() => (
+    <span className={classes.errors}>
+      {store.hasErrors &&
+        <ClickAwayListener onClickAway={() => setVisible(false)}>
+          <Tooltip
+            placement="bottom-end"
+            title={
+              <>
+                {
+                  store.errors.map((err, idx) => (
+                    <Typography className={classes.errorsDescription} key={idx} variant="caption" display="block" gutterBottom>
+                      {format(err.date, t('format.day-month-year-hour'))} - {err.message} ({err.resource})
+                    </Typography>
+                  ))
+                }
+              </>
+            }
+            open={visible}
+          >
+            <InfoOutlinedIcon
+              className={`${classes.errorsIcon} ${store.hasErrorsNotSeen ? classes.errorsIconUnseen : classes.errorsIconSeen} `}
+              onClick={() => { setVisible(!visible); store.markErrorsSeen() }}
+            />
+          </Tooltip>
+        </ClickAwayListener>
+      }
+    </span>
   ))
 }
 

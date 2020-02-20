@@ -1,6 +1,24 @@
+export class ResourceError extends Error {
+    public readonly resource: string
+    public readonly date: Date
+    constructor(message: string, resource: string) {
+        super(message)
+        Object.setPrototypeOf(this, new.target.prototype)
+        this.resource = resource
+        this.date = new Date()
+    }
+}
+
+export interface IError {
+    date: Date
+    message: string
+    resource: string | null
+    seen?: boolean
+}
+
 export interface IHarvesterState {
     loading: boolean
-    error?: string
+    error: IError | null
     updatedAt: Date
 }
 
@@ -19,6 +37,7 @@ export interface IUsageHistoryItem {
 
 export const defaultState = (): IHarvesterState => ({
     loading: false,
+    error: null,
     updatedAt: new Date()
 })
 
@@ -36,3 +55,4 @@ export function computeIfAbsent<K extends keyof any, V>(record: Record<K, V>, ke
     }
     return value
 }
+

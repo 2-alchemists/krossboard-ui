@@ -25,6 +25,12 @@ autorun(() => {
                     runInAction(() => {
                         series.data = Object.keys(values).map(it => values[it]) // TODO: is there a better idiomatic way of retrieving values
                         series.state.updatedAt = new Date()
+                        koaStore.clearError(series.state)
+                    })
+                })
+                .catch((e) => {
+                    runInAction(() => {
+                        koaStore.setError(series.state, e)
                     })
                 })
                 .finally(() => {
