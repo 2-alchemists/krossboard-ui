@@ -47,7 +47,7 @@ export const CurrentLoadView = () => {
                         const outToDate = usages.outToDate ? (usages.outToDate[0].value as number) === 1 : false
                         return (
                             <React.Fragment key={clusterName}>
-                                <Grid item xs={12} sm={3}>
+                                <Grid item xs={12} sm={6} md={3}>
                                     <ClusterCurrentLoad
                                         clusterName={clusterName}
                                         resourceType="CPU"
@@ -55,7 +55,7 @@ export const CurrentLoadView = () => {
                                         data={usages.cpu}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={3}>
+                                <Grid item xs={12} sm={6} md={3}>
                                     <ClusterCurrentLoad
                                         clusterName={clusterName}
                                         resourceType="Memory"

@@ -55,7 +55,7 @@ export const MultiClusterView = () => {
             <div className={classes.root}>
                 <Grid container direction="row" justify="center" alignItems="center" spacing={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid item xs={2}>
+                        <Grid item xs={10} sm={4} md={2}>
                             <KeyboardDatePicker
                                 disableToolbar
                                 variant="inline"
@@ -70,7 +70,7 @@ export const MultiClusterView = () => {
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={2}>
+                        <Grid item xs={10} sm={4} md={2}>
                             <KeyboardDatePicker
                                 disableToolbar
                                 variant="inline"
@@ -86,13 +86,13 @@ export const MultiClusterView = () => {
                             />
                         </Grid>
                     </MuiPickersUtilsProvider>
-                    <Grid item xs={1}>
+                    <Grid item xs={4} sm={2} md={1}>
                         <Button variant="outlined" disabled={!dateRange.isDirty()} onClick={dateRange.commit}>
                             Apply
                         </Button>
                     </Grid>
                 </Grid>
-                <Grid container>
+                <Grid container spacing={3}>
                     <Grid item xs={12} sm={12}>
                         <HistoryChart type={'cpu'} data={store.usageHistory.data.cpu} />
                     </Grid>

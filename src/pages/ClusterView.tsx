@@ -46,7 +46,7 @@ export const ClusterView = () => {
         return (
             <div className={classes.root}>
                 <Grid container justify="center" alignItems="center">
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} md={6}>
                         <FormControl className={classes.formControl}>
                             <InputLabel id="cluster-label">Cluster</InputLabel>
                             <Select labelId="cluster-label" id="cluster" value={selectedCluster} onChange={onClusterChange}>
@@ -63,7 +63,7 @@ export const ClusterView = () => {
                 </Grid>
                 <Grid container spacing={3}>
                     {types.map(it => (
-                        <Grid key={`${selectedCluster}-${it}`} item xs={12} sm={6}>
+                        <Grid key={`${selectedCluster}-${it}`} item xs={12} md={6}>
                             <ClusterResourceChart type={SeriesType[it as keyof typeof SeriesType]} data={histories[it].data} />
                         </Grid>
                     ))}
