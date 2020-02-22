@@ -12,12 +12,12 @@ export interface IMeasurementPayload {
 export type ISeriesPayload = IMeasurementPayload[]
 
 export enum SeriesType {
-    cpu_usage_trends = "cpu_usage_trends",
-    memory_usage_trends = "memory_usage_trends",
-    cpu_usage_period_1209600 = "cpu_usage_period_1209600",
-    memory_usage_period_1209600 = "memory_usage_period_1209600",
-    cpu_usage_period_31968000 = "cpu_usage_period_31968000",
-    memory_usage_period_31968000 = "memory_usage_period_31968000"
+    cpu_usage_trends = 'cpu_usage_trends',
+    memory_usage_trends = 'memory_usage_trends',
+    cpu_usage_period_1209600 = 'cpu_usage_period_1209600',
+    memory_usage_period_1209600 = 'memory_usage_period_1209600',
+    cpu_usage_period_31968000 = 'cpu_usage_period_31968000',
+    memory_usage_period_31968000 = 'memory_usage_period_31968000'
 }
 
 export const seriesTypeValues = [
@@ -26,7 +26,7 @@ export const seriesTypeValues = [
     SeriesType.cpu_usage_period_1209600,
     SeriesType.memory_usage_period_1209600,
     SeriesType.cpu_usage_period_31968000,
-    SeriesType.memory_usage_period_31968000,
+    SeriesType.memory_usage_period_31968000
 ]
 
 export const fetchSeries = async (endpoint: string, clusterName: string, type: SeriesType): Promise<ISeriesPayload> => {
@@ -47,18 +47,28 @@ export const fetchSeries = async (endpoint: string, clusterName: string, type: S
                     const year = new Date().getFullYear()
                     const defaultDate = new Date(year, 0)
                     // e.g.: 22 Jan
-                    return data.map((it: any) => ({ name: it.stack, dateUTC: parse(`${it.date} (Z)`, 'dd MMM (x)', defaultDate), usage: it.usage }))
+                    return data.map((it: any) => ({
+                        name: it.stack,
+                        dateUTC: parse(`${it.date} (Z)`, 'dd MMM (x)', defaultDate),
+                        usage: it.usage
+                    }))
                 }
                 case SeriesType.cpu_usage_period_31968000:
                 case SeriesType.memory_usage_period_31968000: {
                     const year = new Date().getFullYear()
                     const defaultDate = new Date(year, 0, 1)
                     // e.g.: Jan 2020
-                    return data.map((it: any) => ({ name: it.stack, dateUTC: parse(`${it.date} (Z)`, 'MMM yyyy (x)', defaultDate), usage: it.usage }))
+                    return data.map((it: any) => ({
+                        name: it.stack,
+                        dateUTC: parse(`${it.date} (Z)`, 'MMM yyyy (x)', defaultDate),
+                        usage: it.usage
+                    }))
                 }
             }
         })
         .then(data => data as ISeriesPayload)
         .then(data => data.map(it => ({ ...it, dateUTC: new Date(it.dateUTC) })))
-        .catch(e => { throw new ResourceError(e.toString(), resource) })
-    }
+        .catch(e => {
+            throw new ResourceError(e.toString(), resource)
+        })
+}

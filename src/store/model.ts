@@ -41,7 +41,7 @@ export const defaultState = (): IHarvesterState => ({
     updatedAt: new Date()
 })
 
-/* If the specified key is not already associated with a value (or is mapped to null), 
+/* If the specified key is not already associated with a value (or is mapped to null),
  * attempts to compute its value using the given mapping function and enters it into this map unless null.
  */
 export function computeIfAbsent<K extends keyof any, V>(record: Record<K, V>, key: K, mappingFunction: (key: K) => V): V {
@@ -55,4 +55,3 @@ export function computeIfAbsent<K extends keyof any, V>(record: Record<K, V>, ke
     }
     return value
 }
-

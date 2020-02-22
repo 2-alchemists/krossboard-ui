@@ -1,26 +1,31 @@
 import { sub } from 'date-fns'
 import { action, computed, observable } from 'mobx'
 
-import {
-    ClusterEndpoint, ClusterName, defaultState, IError, IHarvesterState, IUsageHistoryItem,
-    IWithHarvesterState
-} from './model'
+import { ClusterEndpoint, ClusterName, defaultState, IError, IHarvesterState, IUsageHistoryItem, IWithHarvesterState } from './model'
 
 export class KoaStore {
-    public get discoveryURL() { return window.location.hostname === 'localhost' ? 'http://localhost:1519' : `${window.location.protocol}//${window.location.host}` }
+    public get discoveryURL() {
+        return window.location.hostname === 'localhost' ? 'http://localhost:1519' : `${window.location.protocol}//${window.location.host}`
+    }
     @observable public pollingInterval: number = 30000
 
     @observable public instances: IWithHarvesterState<Record<ClusterName, ClusterEndpoint>> = { state: defaultState(), data: {} }
-    @observable public currentLoad: IWithHarvesterState<Record<ClusterName, Record<string /*type*/, IUsageHistoryItem[]>>> = { state: defaultState(), data: {} }
+    @observable public currentLoad: IWithHarvesterState<Record<ClusterName, Record<string /*type*/, IUsageHistoryItem[]>>> = {
+        state: defaultState(),
+        data: {}
+    }
     @observable public resourcesUsages: Record<ClusterName, Record<string /* type */, IWithHarvesterState<IUsageHistoryItem[]>>> = {}
     @observable public usageHistoryDateRange: Interval = { start: sub(new Date(), { hours: 24 }), end: new Date() }
     @observable public usageHistoryEndDate: Date | number = this.usageHistoryDateRange.end
-    @observable public usageHistory: IWithHarvesterState<Record<"cpu" | "mem" /* type */, IUsageHistoryItem[]>> = { state: defaultState(), data: { cpu: [], mem: [] } }
+    @observable public usageHistory: IWithHarvesterState<Record<'cpu' | 'mem' /* type */, IUsageHistoryItem[]>> = {
+        state: defaultState(),
+        data: { cpu: [], mem: [] }
+    }
 
     @action public setError = (state: IHarvesterState, e: any) => {
         const error: IError = {
             message: (() => {
-                if (typeof e === "string") {
+                if (typeof e === 'string') {
                     return e as string
                 }
                 if (e.message) {
@@ -29,9 +34,9 @@ export class KoaStore {
                 return e.toString()
             })(),
 
-            date: e.date ? e.date as Date : new Date(),
-            resource: e.resource ? e.resource as string : null,
-            seen: false,
+            date: e.date ? (e.date as Date) : new Date(),
+            resource: e.resource ? (e.resource as string) : null,
+            seen: false
         }
 
         state.error = error
@@ -42,36 +47,23 @@ export class KoaStore {
     }
 
     @action public markErrorsSeen = () => {
-        return this
-            .errors
-            .forEach(err => err.seen = true)
+        return this.errors.forEach(err => (err.seen = true))
     }
-    
+
     @computed public get errors() {
-        return this
-            .states
-            .map(it => it.error)
-            .filter( it => it !== null ) as IError[]
+        return this.states.map(it => it.error).filter(it => it !== null) as IError[]
     }
 
     @computed public get hasErrors() {
-        return this
-            .errors
-            .length > 0
+        return this.errors.length > 0
     }
 
     @computed public get hasErrorsNotSeen() {
-        return this
-            .errors
-            .filter(it => !it?.seen)
-            .length > 0
+        return this.errors.filter(it => !it?.seen).length > 0
     }
 
     @computed public get loading() {
-        return this
-            .states
-            .map(it => it.loading)
-            .reduce((a, b) => a || b, false)
+        return this.states.map(it => it.loading).reduce((a, b) => a || b, false)
     }
 
     @computed public get states() {
@@ -87,14 +79,18 @@ export class KoaStore {
     }
 
     @computed
-    public get isClustersEmpty() { return this.clusterNames.length === 0 }
+    public get isClustersEmpty() {
+        return this.clusterNames.length === 0
+    }
 
     @computed
-    public get clusterNames() { return Object.keys(this.instances.data) }
+    public get clusterNames() {
+        return Object.keys(this.instances.data)
+    }
 
     @action
     public setClusters = (clusters: Record<ClusterName, ClusterEndpoint>) => {
-        // remove old clusters not existing in new ones    
+        // remove old clusters not existing in new ones
         for (const key of Object.keys(this.instances.data)) {
             if (!clusters[key]) {
                 this.deleteCluster(key)

@@ -8,17 +8,19 @@ import { koaStore } from './store/KoaStore'
 import './i18n/i18n'
 import { StoreProvider } from './store/storeProvider'
 
-configure({ enforceActions: "observed" })
+configure({ enforceActions: 'observed' })
 
 const Loader = () => (
-  <div className="App">
-    <div>loading...</div>
-  </div>
+    <div className="App">
+        <div>loading...</div>
+    </div>
 )
 
-render(<StoreProvider value={ { koaStore }}>
-  <Suspense fallback={<Loader />}>
-    <App />
-  </Suspense>
-</StoreProvider>,
-  document.getElementById('root'))
+render(
+    <StoreProvider value={{ koaStore }}>
+        <Suspense fallback={<Loader />}>
+            <App />
+        </Suspense>
+    </StoreProvider>,
+    document.getElementById('root')
+)
