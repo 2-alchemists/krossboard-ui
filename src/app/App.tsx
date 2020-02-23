@@ -9,7 +9,7 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react-router-dom'
 
-import { ClickAwayListener, LinearProgress, Tooltip } from '@material-ui/core'
+import { ClickAwayListener, Drawer, Hidden, IconButton, LinearProgress, List, ListItem, ListItemText, Tooltip } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
@@ -20,7 +20,9 @@ import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
+import MenuIcon from '@material-ui/icons/Menu'
 
+import Logo from '../../assets/krossboard-logo.png'
 import * as pckg from '../../package.json'
 import { ClusterView } from '../pages/ClusterView'
 import { CurrentLoadView } from '../pages/CurrentLoadView'
@@ -28,7 +30,7 @@ import { MultiClusterView } from '../pages/MultiClusterView'
 import { useStore } from '../store/storeProvider'
 import { theme as mytheme } from '../theme'
 
-import Logo from '../../assets/krossboard-logo.png'
+const drawerWidth = 240
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -41,8 +43,21 @@ const useStyles = makeStyles(theme => ({
         }
     },
     appBar: {
-        borderBottom: `1px solid ${theme.palette.divider}`
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        zIndex: theme.zIndex.drawer + 1
     },
+    menuButton: {
+        marginRight: theme.spacing(2),
+        [theme.breakpoints.up('md')]: {
+            display: 'none'
+        }
+    },
+    drawer: {},
+    drawerPaper: {
+        width: drawerWidth,
+        backgroundColor: theme.palette.primary.main
+    },
+    drawerModal: {},
     toolbar: {
         flexWrap: 'wrap'
     },
@@ -60,6 +75,11 @@ const useStyles = makeStyles(theme => ({
     },
     selected: {
         borderBottom: `1px solid ${theme.palette.text.primary}`
+    },
+    itemSelected: {
+        borderLeftColor: theme.palette.primary.dark,
+        borderLeftStyle: 'solid',
+        borderLeftWidth: 'thick'
     },
     progress: {
         height: '5px'
@@ -110,42 +130,84 @@ export const App = () => {
 
 const Header = () => {
     const classes = useStyles()
+    const [drawerOpened, setDrawerOpened] = React.useState(false)
+
+    const links = [
+        {
+            to: '/',
+            exact: true,
+            text: 'Current usage'
+        },
+        {
+            to: '/cluster-view',
+            text: 'Usage trends & Accounting'
+        },
+        {
+            to: '/multicluster-view',
+            text: 'Consolidated usage & History'
+        }
+    ]
 
     return (
         <AppBar position="static" elevation={0} className={classes.appBar}>
             <Toolbar className={classes.toolbar}>
+                <IconButton
+                    color="inherit"
+                    aria-label="Open drawer"
+                    edge="start"
+                    onClick={() => setDrawerOpened(true)}
+                    className={classes.menuButton}
+                >
+                    <MenuIcon />
+                </IconButton>
                 <Typography variant="h6" noWrap className={classes.toolbarTitle}>
                     <img src={Logo} alt="Krossboard logo" />
                 </Typography>
                 <nav>
-                    <Link
-                        to="/"
-                        exact
-                        color="textSecondary"
-                        className={classes.link}
-                        component={NavLink}
-                        activeClassName={classes.selected}
+                    <Drawer
+                        open={drawerOpened}
+                        onClose={() => setDrawerOpened(false)}
+                        classes={{
+                            paper: classes.drawerPaper,
+                            modal: classes.drawerModal
+                        }}
+                        ModalProps={{
+                            keepMounted: true // Better open performance on mobile.
+                        }}
                     >
-                        Current usage
-                    </Link>
-                    <Link
-                        to="/cluster-view"
-                        color="textSecondary"
-                        className={classes.link}
-                        component={NavLink}
-                        activeClassName={classes.selected}
-                    >
-                        Usage trends &amp; Accounting
-                    </Link>
-                    <Link
-                        to="/multicluster-view"
-                        color="textSecondary"
-                        className={classes.link}
-                        component={NavLink}
-                        activeClassName={classes.selected}
-                    >
-                        Consolidated usage &amp; History
-                    </Link>
+                        <List>
+                            {links.map(it => (
+                                <ListItem
+                                    key={it.to}
+                                    button
+                                    component={NavLink}
+                                    to={it.to}
+                                    color="textSecondary"
+                                    activeClassName={classes.itemSelected}
+                                    exact={it.exact}
+                                    onClick={() => setDrawerOpened(false)}
+                                >
+                                    <ListItemText primary={it.text} />
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Drawer>
+
+                    <Hidden smDown>
+                        {links.map(it => (
+                            <Link
+                                key={it.to}
+                                to={it.to}
+                                component={NavLink}
+                                color="textSecondary"
+                                className={classes.link}
+                                exact={it.exact}
+                                activeClassName={classes.selected}
+                            >
+                                {it.text}
+                            </Link>
+                        ))}
+                    </Hidden>
                 </nav>
             </Toolbar>
         </AppBar>
