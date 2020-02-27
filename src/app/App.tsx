@@ -168,7 +168,9 @@ const Header = () => {
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" noWrap className={classes.toolbarTitle}>
-                    <img className={classes.brandIcon} src={Logo} alt="Krossboard logo" />
+                    <NavLink to="/">
+                        <img className={classes.brandIcon} src={Logo} alt="Krossboard logo" />
+                    </NavLink>
                 </Typography>
                 <nav>
                     <Drawer
