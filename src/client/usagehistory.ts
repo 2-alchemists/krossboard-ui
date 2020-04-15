@@ -18,6 +18,11 @@ export interface IGetUsageHistoryPayload {
     >
 }
 
+export enum FormatType {
+    JSON = 'json',
+    CSV = 'csv'
+}
+
 export const getUsageHistory = async (endpoint: string, startDateUTC?: Date, endDateUTC?: Date): Promise<IGetUsageHistoryPayload> => {
     const resource = '/usagehistory'
 
@@ -33,4 +38,20 @@ export const getUsageHistory = async (endpoint: string, startDateUTC?: Date, end
         .catch(e => {
             throw new ResourceError(e.toString(), resource)
         })
+}
+
+export const getUsageHistoryDownloadLink = (endpoint: string, startDateUTC?: Date, endDateUTC?: Date, formatType?: FormatType) => {
+    let url = endpoint + '/api/usagehistory'
+
+    url = url + `?format=${formatType ? formatType : FormatType.JSON}`
+
+    if (startDateUTC) {
+        url = url + `&startDate=${startDateUTC?.toISOString()}`
+    }
+
+    if (endDateUTC) {
+        url = url + `&endDate=${endDateUTC?.toISOString()}`
+    }
+
+    return url
 }
