@@ -1,4 +1,6 @@
-# kube-opex-analytics-mc-frontend
+# Krossboard UI
+
+![build](https://github.com/2-alchemists/krossboard-ui/workflows/build/badge.svg)
 
 ## Initialization
 
