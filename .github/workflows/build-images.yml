@@ -38,7 +38,7 @@ jobs:
 
     - name: Build and push Docker image
       env:
-        IMAGE_NAME: "krossboard/krossboard-ui"
+        IMAGE_NAME: "${{ secrets.CONTAINER_REGISTRY }}/krossboard/krossboard-ui"
         CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
         REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         REGISTRY_PASSWORD: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
@@ -50,7 +50,6 @@ jobs:
           export IMAGE_VERSION=$(echo $LATEST_TAG | sed 's/v//')
         fi
         echo "building image with tag => ${IMAGE_NAME}:${IMAGE_VERSION}"
-        echo "container registry => ${CONTAINER_REGISTRY}"
         docker build -t ${IMAGE_NAME}:${IMAGE_VERSION} .
         docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
         docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
