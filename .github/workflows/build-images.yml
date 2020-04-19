@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2.1.0
-    
+
     - uses: actions/setup-node@v1.4.1
       with:
         node-version: '10.19.0'
@@ -38,11 +38,12 @@ jobs:
 
     - name: Build and push Docker image
       env:
-        IMAGE_NAME: ${{ secrets.CONTAINER_REGISTRY }}/krossboard-ui
-        REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
-        REGISTRY_PASSWORD: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+        IMAGE_NAME: "${{ secrets.CONTAINER_REGISTRY }}/krossboard-ui"
+        REGISTRY_USERNAME: "${{ secrets.CONTAINER_REGISTRY_USERNAME }}"
+        REGISTRY_PASSWORD: "${{ secrets.CONTAINER_REGISTRY_PASSWORD }}"
       run: |
-        export IMAGE_VERSION=$BITBUCKET_COMMIT
+        export LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+        export IMAGE_VERSION=$(echo $LATEST_TAG | sed 's/v//')-$(git rev-parse --short HEAD)
         docker build -t $IMAGE_NAME:$IMAGE_VERSION .
         docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
         docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
