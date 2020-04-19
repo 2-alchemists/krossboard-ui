@@ -7,5 +7,6 @@ assets
 *.json
 *.lock
 .vscode
+.github
 README
 Dockerfile
