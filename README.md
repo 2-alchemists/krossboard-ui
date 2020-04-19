@@ -6,14 +6,33 @@
 
 As prerequisites, the following tools must be properly installed:
 
-- [Node.js](https://nodejs.org/en/download/) LTS v10.16.3 (including [npm](https://www.npmjs.com/) v6.9.0)
+- [Node.js](https://nodejs.org/en/download/) LTS v12.16.2 - codename `Erbium` (including [npm](https://www.npmjs.com/) v6.14.4)
 - [yarn](https://yarnpkg.com/lang/en/)
 
-Type the following command line:
+[Node.js][Node.js] environment can be checked with the following command line:
+
+```sh
+> node --version
+v12.16.2
+```
+
+To ease with [Node.js][Node.js] installation, you can use [nvm](https://github.com/nvm-sh/nvm), a version manager for [Node.js][Node.js], designed to be installed per-user, and invoked per-shell.
+
+Once installed, you can then configure the [Node.js][Node.js] environment this way:
+
+```sh
+> nvm install 12.16.2
+Now using node v12.16.2 (npm v6.14.4)
+```
+
+## Initialization
+
+Install all the dependencies required by the project by typing the following command line (this can take a while):
 
 ```sh
 > yarn
-
+...
+✨  Done in 33.90s.
 ```
 
 ## Start "develop" mode
@@ -74,3 +93,5 @@ Perform the release is pretty straight-forward:
 ```sh
 > yarn release --dry-run
 ```
+
+[Node.js]: https://nodejs.org/
