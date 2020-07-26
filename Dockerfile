@@ -1,7 +1,3 @@
-FROM abiosoft/caddy:1.0.3
+FROM caddy:2.1.1
 
-EXPOSE 80 443 2015
-VOLUME /root/.caddy /srv
-WORKDIR /srv
-
-COPY ./dist/* /srv/
+COPY ./dist/* /var/www/html/
