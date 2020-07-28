@@ -23,34 +23,36 @@ autorun(async () => {
                 koaStore.usageHistory.state.updatedAt = new Date()
                 koaStore.clearError(koaStore.usageHistory.state)
 
-                const cpus: IUsageHistoryItem[] = []
-                const mems: IUsageHistoryItem[] = []
+                const cpus: Map<string | number, IUsageHistoryItem> = new Map()
+                const mems: Map<string | number, IUsageHistoryItem> = new Map()
+                
                 if (data.usageHistory) {
                     const history = data.usageHistory
                     Object.keys(history).forEach(clusterName => {
-                        if (cpus.length === 0) {
-                            history[clusterName].cpuUsage.forEach(v => {
-                                cpus.push({ tag: new Date(v.dateUTC).getTime(), [clusterName]: v.value })
-                            })
-                        } else {
-                            history[clusterName].cpuUsage.forEach((v, idx) => {
-                                cpus[idx][clusterName] = v.value
-                            })
-                        }
-                        if (mems.length === 0) {
-                            history[clusterName].memUsage.forEach(v => {
-                                mems.push({ tag: new Date(v.dateUTC).getTime(), [clusterName]: v.value })
-                            })
-                        } else {
-                            history[clusterName].memUsage.forEach((v, idx) => {
-                                mems[idx][clusterName] = v.value
-                            })
-                        }
+                        history[clusterName].cpuUsage.forEach(v => {
+                            const tag = new Date(v.dateUTC).getTime()
+                            const entry = cpus.get(tag)
+                            if(entry === undefined) {
+                                cpus.set(tag, { tag, [clusterName]: v.value })
+                            } else {
+                                entry[clusterName] = v.value
+                            }
+                        })
+
+                        history[clusterName].memUsage.forEach(v => {
+                            const tag = new Date(v.dateUTC).getTime()
+                            const entry = mems.get(tag)
+                            if(entry === undefined) {
+                                mems.set(tag, { tag, [clusterName]: v.value })
+                            } else {
+                                entry[clusterName] = v.value
+                            }
+                        })
                     })
                 }
 
-                koaStore.usageHistory.data.cpu = cpus
-                koaStore.usageHistory.data.mem = mems
+                koaStore.usageHistory.data.cpu = Array.from(cpus.values())
+                koaStore.usageHistory.data.mem = Array.from(mems.values())
             })
         })
         .catch(e => {
