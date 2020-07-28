@@ -296,7 +296,7 @@ const Footer = () => {
     const footers = [
         {
             title: `Krossboard UI v${pckg['version']}`,
-            link: 'https://krossboard.app/releases'
+            link: 'https://krossboard.app/docs/releases/'
         },
         {
             title: 'Documentation',
@@ -304,7 +304,7 @@ const Footer = () => {
         },
         {
             title: 'Issues & support',
-            link: 'https://krossboard.app/support'
+            link: 'https://github.com/2-alchemists/krossboard'
         },
         {
             title: 'Terms of use',
@@ -328,8 +328,8 @@ const Footer = () => {
             <Box mt={5}>
                 <Typography variant="body2" color="textSecondary" align="center">
                     {'Copyright © '}
-                    <Link color="inherit" href="https://krossboard.app/company">
-                        Company Name
+                    <Link color="inherit" href="https://krossboard.app/aboutus/">
+                        2Alchemists SAS
                     </Link>{' '}
                     {new Date().getFullYear()}
                     {'.'}
