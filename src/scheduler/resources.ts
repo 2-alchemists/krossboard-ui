@@ -27,7 +27,7 @@ autorun(
                             item[measurement.name] = measurement.usage
                         })
                         runInAction(() => {
-                            series.data = Object.keys(values).map(it => values[it]) // TODO: is there a better idiomatic way of retrieving values
+                            series.data = Object.keys(values).sort().map(it => values[it]) // TODO: is there a better idiomatic way of retrieving values
                             series.state.updatedAt = new Date()
                             koaStore.clearError(series.state)
                         })
