@@ -27,7 +27,7 @@ export const getUsageHistory = async (endpoint: string, startDateUTC?: Date, end
     const resource = '/usagehistory'
 
     return axios
-        .get(endpoint + '/api/usagehistory', { params: { startDate: startDateUTC?.toISOString(), endDate: endDateUTC?.toISOString() } })
+        .get(getUsageHistoryDownloadLink(endpoint, startDateUTC, endDateUTC))
         .then(res => res.data)
         .then(data => {
             if (data.status !== 'ok') {
@@ -41,17 +41,27 @@ export const getUsageHistory = async (endpoint: string, startDateUTC?: Date, end
 }
 
 export const getUsageHistoryDownloadLink = (endpoint: string, startDateUTC?: Date, endDateUTC?: Date, formatType?: FormatType) => {
-    let url = endpoint + '/api/usagehistory'
+    let url = endpoint + '/api/usagehistory?'
 
-    url = url + `?format=${formatType ? formatType : FormatType.JSON}`
+    let prepend = ''
 
     if (startDateUTC) {
-        url = url + `&startDate=${startDateUTC?.toISOString()}`
+        url = url + `${prepend}startDateUTC=${toUTC(startDateUTC)}`
+        prepend = '&'
     }
 
     if (endDateUTC) {
-        url = url + `&endDate=${endDateUTC?.toISOString()}`
+        url = url + `${prepend}endDateUTC=${toUTC(endDateUTC)}`
+        prepend = '&'
+    }
+
+    if (formatType) {
+        url = url + `${prepend}format=${formatType}`
+        prepend = '&'
     }
 
     return url
 }
+
+const toUTC = (date?: Date) =>
+    date?.toISOString().replace(/(\.\d*)?Z/, "")
