@@ -27,6 +27,19 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-yarn-
 
+    - name: Patch version
+      run: |
+        export GIT_LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+        if [ -z "$GIT_LATEST_TAG" ]; then
+          export KB_RELEASE_VERSION=$(git rev-parse --short HEAD)
+        else
+          export KB_RELEASE_VERSION=$(echo $GIT_LATEST_TAG | sed 's/v//')
+        fi
+        VERSION_LINE=$(grep -n '"version":' package.json | cut -f1 -d:)
+        VERSION_ORIG=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')
+        sed -i "${VERSION_LINE}s/${VERSION_ORIG}/${KB_RELEASE_VERSION}/" package.json
+        cat package.json
+        
     - name: install dependencies
       run: yarn
 
@@ -43,14 +56,9 @@ jobs:
         REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         REGISTRY_PASSWORD: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
       run: |
-        export LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-        if [ -z "$LATEST_TAG" ]; then
-          export IMAGE_VERSION=$(git rev-parse --short HEAD)
-        else
-          export IMAGE_VERSION=$(echo $LATEST_TAG | sed 's/v//')
-        fi
-        echo "building image with tag => ${IMAGE_NAME}:${IMAGE_VERSION}"
-        docker build -t ${IMAGE_NAME}:${IMAGE_VERSION} .
-        docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_NAME:latest
+        KB_RELEASE_VERSION=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')
+        echo "building image with tag => ${IMAGE_NAME}:${KB_RELEASE_VERSION}"
+        docker build -t ${IMAGE_NAME}:${KB_RELEASE_VERSION} .
+        docker tag $IMAGE_NAME:${KB_RELEASE_VERSION} ${IMAGE_NAME}:latest
         docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
         docker push $IMAGE_NAME
