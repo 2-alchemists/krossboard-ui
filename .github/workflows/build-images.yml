@@ -29,11 +29,16 @@ jobs:
 
     - name: Patch version
       run: |
-        export GIT_LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+        GIT_LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` | echo "")
+        GIT_LATEST_SHA=$(git rev-parse --short HEAD)
         if [ -z "$GIT_LATEST_TAG" ]; then
-          export KB_RELEASE_VERSION=$(git rev-parse --short HEAD)
+          KB_RELEASE_VERSION=$GIT_LATEST_SHA
         else
-          export KB_RELEASE_VERSION=$(echo $GIT_LATEST_TAG | sed 's/v//')
+          MATCHED_TAG=$(git describe --exact-match $GIT_LATEST_SHA)
+          KB_RELEASE_VERSION=$(echo $GIT_LATEST_TAG | sed 's/v//')
+          if [ "$MATCHED_TAG" != "$GIT_LATEST_TAG" ]; then
+          KB_RELEASE_VERSION="${KB_RELEASE_VERSION}-${GIT_LATEST_SHA}"
+          fi
         fi
         VERSION_LINE=$(grep -n '"version":' package.json | cut -f1 -d:)
         VERSION_ORIG=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')
