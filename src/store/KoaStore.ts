@@ -7,7 +7,7 @@ export class KoaStore {
     public get discoveryURL() {
         return window.location.hostname === 'localhost' ? 'http://localhost:1519' : `${window.location.protocol}//${window.location.host}`
     }
-    @observable public pollingInterval: number = 30000
+    @observable public pollingInterval: number = 5 * 60 * 1000 // ms
 
     @observable public instances: IWithHarvesterState<Record<ClusterName, ClusterEndpoint>> = { state: defaultState(), data: {} }
     @observable public currentLoad: IWithHarvesterState<Record<ClusterName, Record<string /*type*/, IUsageHistoryItem[]>>> = {
