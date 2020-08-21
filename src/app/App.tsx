@@ -300,15 +300,11 @@ const Footer = () => {
         },
         {
             title: 'Documentation',
-            link: 'https://krossboard.app/docs'
+            link: 'https://krossboard.app'
         },
         {
             title: 'Issues & support',
             link: 'https://github.com/2-alchemists/krossboard'
-        },
-        {
-            title: 'Terms of use',
-            link: 'https://krossboard.app/terms-of-use'
         }
     ]
 
@@ -318,7 +314,7 @@ const Footer = () => {
                 {footers.map(footer => (
                     <Grid item xs={6} sm={3} key={footer.title}>
                         <Typography variant="h6" color="textPrimary" gutterBottom>
-                            <Link href={footer.link} variant="subtitle1" color="textSecondary">
+                            <Link href={footer.link} variant="subtitle1" color="textSecondary" target="_blank">
                                 {footer.title}
                             </Link>
                         </Typography>
@@ -327,11 +323,16 @@ const Footer = () => {
             </Grid>
             <Box mt={5}>
                 <Typography variant="body2" color="textSecondary" align="center">
-                    {'Copyright © '}
-                    <Link color="inherit" href="https://krossboard.app/aboutus/">
-                        2Alchemists SAS
-                    </Link>{' '}
+                    {'Copyright © '} 
                     {new Date().getFullYear()}
+                    {' - '}
+                    <Link color="inherit" href="https://krossboard.app/aboutus/" target="_blank">
+                        2Alchemists SAS
+                    </Link>
+                    {'. '}
+                    <Link color="inherit" href="https://krossboard.app/legal/terms-of-use/" target="_blank">
+                       Terms of use
+                    </Link>
                     {'.'}
                 </Typography>
             </Box>
