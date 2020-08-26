@@ -300,7 +300,7 @@ const Footer = () => {
         },
         {
             title: 'Documentation',
-            link: 'https://krossboard.app'
+            link: 'https://krossboard.app/docs/'
         },
         {
             title: 'Issues & support',
