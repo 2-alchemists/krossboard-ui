@@ -52,6 +52,12 @@ const useStyles = makeStyles(theme => ({
             display: 'none'
         }
     },
+    brandIcon: {
+        maxHeight: '30px',
+        maxWidth: '100%',
+        marginTop: '9px',
+        marginLeft: '23px'
+    },
     drawer: {},
     drawerPaper: {
         width: drawerWidth,
@@ -65,6 +71,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1
     },
     link: {
+        color: 'rgba(255,255,255,0.8)',
         textTransform: 'uppercase',
         paddingBottom: '3px',
         margin: theme.spacing(1, 1.5),
@@ -161,7 +168,7 @@ const Header = () => {
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" noWrap className={classes.toolbarTitle}>
-                    <img src={Logo} alt="Krossboard logo" />
+                    <img className={classes.brandIcon} src={Logo} alt="Krossboard logo" />
                 </Typography>
                 <nav>
                     <Drawer
@@ -183,6 +190,7 @@ const Header = () => {
                                     component={NavLink}
                                     to={it.to}
                                     color="textSecondary"
+                                    className={classes.link}
                                     activeClassName={classes.itemSelected}
                                     exact={it.exact}
                                     onClick={() => setDrawerOpened(false)}
