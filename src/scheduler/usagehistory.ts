@@ -6,13 +6,10 @@ import { koaStore } from '../store/KoaStore'
 import { IUsageHistoryItem } from '../store/model'
 
 autorun(
-    /// () => (koaStore.usageHistoryDateRange.start === koaStore.usageHistoryDateRange.end),
     async () => {
         if (koaStore.discoveryURL === '') {
             return
         }
-
-        console.log("ici")
 
         const start = koaStore.usageHistoryDateRange.start as Date
         const end = koaStore.usageHistoryEndDate as Date

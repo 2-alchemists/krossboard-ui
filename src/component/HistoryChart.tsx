@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { TFunction } from 'i18next'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
-import { Area, AreaChart, BarChart, Bar, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import { useTranslation } from 'react-i18next'
 
