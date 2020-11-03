@@ -10,7 +10,7 @@ import Link from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 
-import { FormatType, getUsageHistoryDownloadLink } from '../client/usagehistory'
+import { FormatType, getUsageHistoryDownloadLink, PeriodType } from '../client/usagehistory'
 import { HistoryChart } from '../component/HistoryChart'
 import { useStore } from '../store/storeProvider'
 
@@ -106,6 +106,7 @@ export const MultiClusterView = () => {
                                     underline="always"
                                     href={getUsageHistoryDownloadLink(
                                         store.discoveryURL,
+                                        PeriodType.MONTHLY,
                                         store.usageHistoryDateRange.start as Date,
                                         store.usageHistoryDateRange.end as Date,
                                         FormatType.CSV
@@ -120,10 +121,18 @@ export const MultiClusterView = () => {
                 </Grid>
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={12}>
-                        <HistoryChart type={'cpu'} data={store.usageHistory.data.cpu}/>
+                        <HistoryChart type="cpu" period="hourly" data={store.usageHistory.hourly.data.cpu}/>
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                        <HistoryChart type={'mem'} data={store.usageHistory.data.mem}/>
+                        <HistoryChart type="mem" period="hourly" data={store.usageHistory.hourly.data.mem}/>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={12}>
+                        <HistoryChart type="cpu" period="monthly" data={store.usageHistory.monthly.data.cpu}/>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                        <HistoryChart type="mem" period="monthly" data={store.usageHistory.monthly.data.mem}/>
                     </Grid>
                 </Grid>
             </div>
