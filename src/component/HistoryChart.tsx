@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { TFunction } from 'i18next'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
-import { Area, AreaChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, BarChart, Bar, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import { useTranslation } from 'react-i18next'
 
@@ -83,6 +83,7 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data, period 
                 </Typography>
                 <Divider className={classes.divider} />
                 <ResponsiveContainer width="100%" height={300}>
+                    {period === 'hourly' ? (
                     <AreaChart
                         height={400}
                         data={data}
@@ -110,7 +111,29 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data, period 
                                 fill={seriesColorSchema[idx % seriesColorSchema.length]}
                             />
                         ))}
-                    </AreaChart>
+                    </AreaChart>) : (
+                        <BarChart
+                            height={400}
+                            data={data}
+                            margin={{
+                                top: 5,
+                                right: 0,
+                                left: 10,
+                                bottom: 0
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Legend verticalAlign="bottom" height={26} />
+                            <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, dateFormat(t, period))} />
+                            <YAxis>
+                            <Label className={classes.label} value={label(type,period)} angle={-90} position="insideBottomLeft" />
+                              </YAxis>
+                            <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, dateFormat(t, period))}</p>} />
+                            {names.map((name, idx) => (
+                                <Bar key={name} dataKey={name} stackId="1" fill={seriesColorSchema[idx % seriesColorSchema.length]} />
+                            ))}
+                        </BarChart>
+                    )}
                 </ResponsiveContainer>
             </CardContent>
         </Card>
