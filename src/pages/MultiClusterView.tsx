@@ -135,18 +135,18 @@ export const MultiClusterView = () => {
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={12} md={6}>
                         <HistoryChart type="cpu" period="hourly" data={store.usageHistory.hourly.data.cpu} />
                     </Grid>
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={12} sm={6}>
                         <HistoryChart type="mem" period="hourly" data={store.usageHistory.hourly.data.mem} />
                     </Grid>
                 </Grid>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={12} sm={6}>
                         <HistoryChart type="cpu" period="monthly" data={store.usageHistory.monthly.data.cpu} />
                     </Grid>
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={12} sm={6}>
                         <HistoryChart type="mem" period="monthly" data={store.usageHistory.monthly.data.mem} />
                     </Grid>
                 </Grid>
