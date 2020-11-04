@@ -121,8 +121,8 @@ app.get('/api/usagehistory', (req, res) => {
                     "memUsage": series()
                 },
                 "gke_kubernetes-opex-analytics_us-central1-a_koamc-test-2": {
-                    "cpuUsage": series(),
-                    "memUsage": series()
+                    "cpuUsage": null,
+                    "memUsage": null
                 }
             }
         })

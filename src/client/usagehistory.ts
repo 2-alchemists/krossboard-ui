@@ -38,6 +38,20 @@ export const getUsageHistory = async (endpoint: string, period: PeriodType, star
             if (data.status !== 'ok') {
                 throw new ResourceError(`Error returned from server: ${data.message ? data.message : 'unknown'}`, resource)
             }
+
+            // handle special case of result nullity
+            if (data.usageHistory) {
+                Object.keys(data.usageHistory).forEach(key => {
+                    const value = data.usageHistory[key]
+                    if (value.cpuUsage === null) {
+                        value.cpuUsage = []
+                    }
+                    if (value.memUsage === null) {
+                        value.memUsage = []
+                    }
+                })
+            }
+
             return data
         })
         .catch(e => {
