@@ -52,6 +52,15 @@ const periodLabel = (period: Period): string => {
     }
 }
 
+const periodTitle = (period: Period): string => {
+    switch (period) {
+        case 'hourly':
+            return 'Hourly'
+        case 'monthly':
+            return 'Monthly'
+    }
+}
+
 const dateFormat = (t: TFunction, period: Period): string => {
     switch(period) {
         case 'hourly':
@@ -62,7 +71,7 @@ const dateFormat = (t: TFunction, period: Period): string => {
 }
 
 const title = (type: Type, period: Period): string => {
-    return `${periodLabel(period)} ${typeLabel(type)} usage`
+    return `${periodTitle(period)} ${typeLabel(type)} usage`
 }
 
 const label = (type: Type, period: Period): string => {
