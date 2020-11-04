@@ -46,9 +46,9 @@ const typeLabel = (type: Type): string => {
 const periodLabel = (period: Period): string => {
     switch (period) {
         case 'hourly':
-            return 'Hourly'
+            return 'Cumulative usage ratio'
         case 'monthly':
-            return 'Monthly'
+            return 'Cumulative usage ratio'
     }
 }
 
@@ -62,7 +62,7 @@ const dateFormat = (t: TFunction, period: Period): string => {
 }
 
 const title = (type: Type, period: Period): string => {
-    return `${periodLabel(period)} ${typeLabel(type)} consumption`
+    return `${periodLabel(period)} ${typeLabel(type)} usage`
 }
 
 const label = (type: Type, period: Period): string => {
