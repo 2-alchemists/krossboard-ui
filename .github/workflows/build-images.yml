@@ -64,6 +64,6 @@ jobs:
         KB_RELEASE_VERSION=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')
         echo "building image with tag => ${IMAGE_NAME}:${KB_RELEASE_VERSION}"
         docker build -t ${IMAGE_NAME}:${KB_RELEASE_VERSION} .
-        docker tag $IMAGE_NAME:${KB_RELEASE_VERSION} ${IMAGE_NAME}:latest
+        # docker tag $IMAGE_NAME:${KB_RELEASE_VERSION} ${IMAGE_NAME}:latest
         docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
         docker push $IMAGE_NAME

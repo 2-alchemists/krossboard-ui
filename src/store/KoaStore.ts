@@ -17,9 +17,21 @@ export class KoaStore {
     @observable public resourcesUsages: Record<ClusterName, Record<string /* type */, IWithHarvesterState<IUsageHistoryItem[]>>> = {}
     @observable public usageHistoryDateRange: Interval = { start: sub(new Date(), { hours: 24 }), end: new Date() }
     @observable public usageHistoryEndDate: Date | number = this.usageHistoryDateRange.end
-    @observable public usageHistory: IWithHarvesterState<Record<'cpu' | 'mem' /* type */, IUsageHistoryItem[]>> = {
-        state: defaultState(),
-        data: { cpu: [], mem: [] }
+    @observable public usageHistory: Record<'hourly' | 'monthly' /* period */, IWithHarvesterState<Record<'cpu' | 'mem' /* type */, IUsageHistoryItem[]>>> = {
+        hourly: {
+            state: defaultState(),
+            data: {
+                cpu: [],
+                mem: []
+            }
+        },
+        monthly: {
+            state: defaultState(),
+            data: {
+                cpu: [],
+                mem: []
+            }
+        }
     }
 
     @action public setError = (state: IHarvesterState, e: any) => {
@@ -74,7 +86,8 @@ export class KoaStore {
                 .map(it => this.resourcesUsages[it])
                 .flatMap(it => Object.keys(it).map(ot => it[ot]))
                 .map(it => it.state),
-            this.usageHistory.state
+            this.usageHistory.hourly.state,
+            this.usageHistory.monthly.state,
         ]
     }
 

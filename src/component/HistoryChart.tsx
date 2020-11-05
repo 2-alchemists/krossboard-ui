@@ -1,7 +1,8 @@
 import { format } from 'date-fns'
+import { TFunction } from 'i18next'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
-import { Area, AreaChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import { useTranslation } from 'react-i18next'
 
@@ -13,9 +14,11 @@ import { IUsageHistoryItem } from '../store/model'
 import { seriesColorSchema } from '../theme'
 
 export type Type = 'cpu' | 'mem'
+export type Period = 'hourly' | 'monthly'
 
 export interface IHistoryChartProps {
     type: Type
+    period: Period
     data: IUsageHistoryItem[]
 }
 
@@ -31,25 +34,51 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const title = (type: Type): string => {
+const typeLabel = (type: Type): string => {
     switch (type) {
         case 'cpu':
-            return 'CPU consumption'
+            return 'CPU'
         case 'mem':
-            return 'Memory consumption'
+            return 'Memory'
     }
 }
 
-const label = (type: Type): string => {
-    switch (type) {
-        case 'cpu':
-            return 'Hourly usage'
-        case 'mem':
-            return 'Hourly usage'
+const periodLabel = (period: Period): string => {
+    switch (period) {
+        case 'hourly':
+            return 'Cumulative usage ratio'
+        case 'monthly':
+            return 'Cumulative usage ratio'
     }
 }
 
-export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
+const periodTitle = (period: Period): string => {
+    switch (period) {
+        case 'hourly':
+            return 'Hourly'
+        case 'monthly':
+            return 'Monthly'
+    }
+}
+
+const dateFormat = (t: TFunction, period: Period): string => {
+    switch(period) {
+        case 'hourly':
+            return t('format.day-hour')
+        case 'monthly':
+            return t('format.month-year')
+    }
+}
+
+const title = (type: Type, period: Period): string => {
+    return `${periodTitle(period)} ${typeLabel(type)} usage`
+}
+
+const label = (type: Type, period: Period): string => {
+    return `${periodLabel(period)}`
+}
+
+export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data, period }) => {
     const classes = useStyles()
     const { t } = useTranslation()
 
@@ -59,10 +88,11 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
         <Card>
             <CardContent>
                 <Typography className={classes.name} color="textSecondary" gutterBottom>
-                    {title(type)}
+                    {title(type, period)}
                 </Typography>
                 <Divider className={classes.divider} />
                 <ResponsiveContainer width="100%" height={300}>
+                    {period === 'hourly' ? (
                     <AreaChart
                         height={400}
                         data={data}
@@ -75,11 +105,11 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <Legend verticalAlign="bottom" height={26} />
-                        <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, t('format.day-hour'))} />
+                        <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, dateFormat(t, period))} />
                         <YAxis>
-                            <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
+                            <Label className={classes.label} value={label(type,period)} angle={-90} position="insideBottomLeft" />
                         </YAxis>
-                        <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, t('format.day-hour'))}</p>} />
+                        <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, dateFormat(t, period))}</p>} />
                         {names.map((name, idx) => (
                             <Area
                                 key={name}
@@ -90,7 +120,29 @@ export const HistoryChart: React.FC<IHistoryChartProps> = ({ type, data }) => {
                                 fill={seriesColorSchema[idx % seriesColorSchema.length]}
                             />
                         ))}
-                    </AreaChart>
+                    </AreaChart>) : (
+                        <BarChart
+                            height={400}
+                            data={data}
+                            margin={{
+                                top: 5,
+                                right: 0,
+                                left: 10,
+                                bottom: 0
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Legend verticalAlign="bottom" height={26} />
+                            <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, dateFormat(t, period))} />
+                            <YAxis>
+                            <Label className={classes.label} value={label(type,period)} angle={-90} position="insideBottomLeft" />
+                              </YAxis>
+                            <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, dateFormat(t, period))}</p>} />
+                            {names.map((name, idx) => (
+                                <Bar key={name} dataKey={name} stackId="1" fill={seriesColorSchema[idx % seriesColorSchema.length]} />
+                            ))}
+                        </BarChart>
+                    )}
                 </ResponsiveContainer>
             </CardContent>
         </Card>

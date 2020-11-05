@@ -23,16 +23,35 @@ export enum FormatType {
     CSV = 'csv'
 }
 
-export const getUsageHistory = async (endpoint: string, startDateUTC?: Date, endDateUTC?: Date): Promise<IGetUsageHistoryPayload> => {
+export enum PeriodType {
+    HOURLY = 'hourly',
+    MONTHLY = 'monthly'
+}
+
+export const getUsageHistory = async (endpoint: string, period: PeriodType, startDateUTC?: Date, endDateUTC?: Date): Promise<IGetUsageHistoryPayload> => {
     const resource = '/usagehistory'
 
     return axios
-        .get(getUsageHistoryDownloadLink(endpoint, startDateUTC, endDateUTC))
+        .get(getUsageHistoryDownloadLink(endpoint, period, startDateUTC, endDateUTC))
         .then(res => res.data)
         .then(data => {
             if (data.status !== 'ok') {
                 throw new ResourceError(`Error returned from server: ${data.message ? data.message : 'unknown'}`, resource)
             }
+
+            // handle special case of result nullity
+            if (data.usageHistory) {
+                Object.keys(data.usageHistory).forEach(key => {
+                    const value = data.usageHistory[key]
+                    if (value.cpuUsage === null) {
+                        value.cpuUsage = []
+                    }
+                    if (value.memUsage === null) {
+                        value.memUsage = []
+                    }
+                })
+            }
+
             return data
         })
         .catch(e => {
@@ -40,10 +59,15 @@ export const getUsageHistory = async (endpoint: string, startDateUTC?: Date, end
         })
 }
 
-export const getUsageHistoryDownloadLink = (endpoint: string, startDateUTC?: Date, endDateUTC?: Date, formatType?: FormatType) => {
+export const getUsageHistoryDownloadLink = (endpoint: string, periodType?: PeriodType, startDateUTC?: Date, endDateUTC?: Date, formatType?: FormatType) => {
     let url = endpoint + '/api/usagehistory?'
 
     let prepend = ''
+
+    if (periodType) {
+        url = url + `${prepend}period=${periodType}`
+        prepend = '&'
+    }
 
     if (startDateUTC) {
         url = url + `${prepend}startDateUTC=${toUTC(startDateUTC)}`

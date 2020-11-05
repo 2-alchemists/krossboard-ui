@@ -67,16 +67,43 @@ app.get('/api/currentusage', (req, res) => {
 })
 
 app.get('/api/usagehistory', (req, res) => {
-    const startDate = req.query.startDate ? new Date(req.query.startDate) : new Date(Date.now() - 86400000)
-    const endDate = req.query.endDate ? new Date(req.query.endDate) : new Date()
+    const startDate = req.query.startDateUTC ? new Date(req.query.startDateUTC + "Z") : new Date(Date.now() - 86400000)
+    const endDate = req.query.endDateUTC ? new Date(req.query.endDateUTC + "Z") : new Date()
+    const period = req.query.period ? req.query.period : 'hourly'
+
+    if (period !== "hourly" && period !== "monthly") {
+        res.send(401)
+    }
 
     const series = () => {
         const values = []
-        for (t = startDate.getTime(); t < endDate.getTime(); t += 3600000) {
-            values.push({
-                "dateUTC": new Date(t).toISOString(),
-                "value": Math.floor(Math.random() * 100)
-            })
+        switch (period) {
+            case "hourly":
+                for (t = startDate.getTime(); t < endDate.getTime(); t += 3600000) {
+                    values.push({
+                        "dateUTC": new Date(t).toISOString(),
+                        "value": Math.floor(Math.random() * 100)
+                    })
+                }
+            case "monthly":
+                var year = startDate.getFullYear()
+                var month = startDate.getMonth()
+
+                for (t = new Date(year, month); t.getTime() < endDate.getTime();) {
+                    values.push({
+                        "dateUTC": t.toISOString(),
+                        "value": Math.floor(Math.random() * 100)
+                    })
+
+                    if (month < 11) {
+                        month++
+                    } else {
+                        month = 0
+                        year++
+                    }
+                    console.log(t.toISOString())
+                    t = new Date(year, month)
+                }
         }
         return values
     }
@@ -94,8 +121,8 @@ app.get('/api/usagehistory', (req, res) => {
                     "memUsage": series()
                 },
                 "gke_kubernetes-opex-analytics_us-central1-a_koamc-test-2": {
-                    "cpuUsage": series(),
-                    "memUsage": series()
+                    "cpuUsage": null,
+                    "memUsage": null
                 }
             }
         })
@@ -128,7 +155,7 @@ app.get('/api/dataset/:type', (req, res) => {
                     { "name": "kubeless", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
                     { "name": "kubeless", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() }
                 ])
-                break
+            break
         case 'memory_usage_trends.json':
             res.json(
                 [
@@ -154,7 +181,7 @@ app.get('/api/dataset/:type', (req, res) => {
                     { "name": "kubeless", "dateUTC": "2019-11-24T19:00:00Z", "usage": Math.random() },
                     { "name": "kubeless", "dateUTC": "2019-11-24T20:00:00Z", "usage": Math.random() }
                 ])
-                break
+            break
         case 'memory_usage_period_1209600.json':
             res.json([{ "stack": "non-allocatable", "usage": 200.653026, "date": "22 Jan" }, { "stack": ".usagehistory", "usage": 501.790922, "date": "22 Jan" }, { "stack": "kube-system", "usage": 59.101217, "date": "22 Jan" }])
             break
