@@ -45,7 +45,7 @@
     "@material-ui/lab": "^4.0.0-alpha.42",
     "@material-ui/pickers": "^3.2.10",
     "@types/d3": "^5.7.2",
-    "@types/d3-time-format": "^2.1.1",
+    "@types/d3-time-format": "^3.0.0",
     "@types/i18next": "^13.0.0",
     "@types/react-resize-detector": "^4.0.2",
     "@types/react-router": "^5.1.2",
