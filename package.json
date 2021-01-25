@@ -61,7 +61,7 @@
     "dist": "^0.1.2",
     "express": "^4.17.1",
     "i18next": "^19.1.0",
-    "i18next-browser-languagedetector": "^4.0.1",
+    "i18next-browser-languagedetector": "^6.0.1",
     "mobx": "^5.15.2",
     "mobx-react-lite": "^1.5.2",
     "prop-types": ">=15",
