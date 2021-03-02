@@ -54,16 +54,25 @@ jobs:
     - name: build
       run: yarn build
 
-    - name: Build and push Docker image
+    - name: set Docker environment
+      run: 
+        echo "KB_RELEASE_VERSION=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')" >> $GITHUB_ENV
+        echo "IMAGE_NAME='${{ secrets.CONTAINER_REGISTRY }}/krossboard-ui'" >> $GITHUB_ENV
+ 
+    - name: build Docker images
+      run: |
+        echo "building image with tag => ${{ env.IMAGE_NAME }}:${{ env.KB_RELEASE_VERSION }}"
+        docker build -t ${{ env.IMAGE_NAME }}:${{ env.KB_RELEASE_VERSION }} .
+
+    - name: login to Docker registry
       env:
-        IMAGE_NAME: "${{ secrets.CONTAINER_REGISTRY }}/krossboard-ui"
-        CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
         REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
         REGISTRY_PASSWORD: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
       run: |
-        KB_RELEASE_VERSION=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')
-        echo "building image with tag => ${IMAGE_NAME}:${KB_RELEASE_VERSION}"
-        docker build -t ${IMAGE_NAME}:${KB_RELEASE_VERSION} .
-        # docker tag $IMAGE_NAME:${KB_RELEASE_VERSION} ${IMAGE_NAME}:latest
+        echo "login to Docker registry with user ${REGISTRY_USERNAME}"
         docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
-        docker push $IMAGE_NAME
+
+    - name: push Docker images
+      run: |
+        docker tag ${{ env.IMAGE_NAME }}:${{ env.KB_RELEASE_VERSION }}
+        docker push ${{ env.IMAGE_NAME }}:${ env.KB_RELEASE_VERSION }}
