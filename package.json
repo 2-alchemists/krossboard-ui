@@ -57,7 +57,7 @@
     "cors": "^2.8.5",
     "d3-selection": "^1.4.0",
     "d3-time-format": "^2.2.3",
-    "date-fns": "^2.9.0",
+    "date-fns": "^2.18.0",
     "dist": "^0.1.2",
     "express": "^4.17.1",
     "i18next": "^19.1.0",
