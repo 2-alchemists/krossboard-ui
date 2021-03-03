@@ -1,69 +1,69 @@
- 
+
 name: Build Docker image
 on:
   push:
     tags:
       - v*
   pull_request:
-    branches:    
-      - master 
+    branches:
+      - master
 jobs:
   build:
     runs-on: ubuntu-18.04
     steps:
-    - uses: actions/checkout@v2.1.0
+      - uses: actions/checkout@v2.1.0
 
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '12.16.2'
-    - id: yarn-cache-dir-path
-      run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.16.2'
+      - id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
 
-    - uses: actions/cache@v1
-      id: yarn-cache
-      with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+      - uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-    - name: Patch version
-      run: |
-        GIT_LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "")
-        GIT_LATEST_SHA=$(git rev-parse --short HEAD)
-        if [ -z "$GIT_LATEST_TAG" ]; then
-          KB_RELEASE_VERSION=$GIT_LATEST_SHA
-        else
-          MATCHED_TAG=$(git describe --exact-match $GIT_LATEST_SHA || echo "TAG_NOT_MATCHED")
-          KB_RELEASE_VERSION=$(echo $GIT_LATEST_TAG | sed 's/v//')
-          if [ "$MATCHED_TAG" != "$GIT_LATEST_TAG" ]; then
-            KB_RELEASE_VERSION="${KB_RELEASE_VERSION}-${GIT_LATEST_SHA}"
+      - name: Patch version
+        run: |
+          GIT_LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1` || echo "")
+          GIT_LATEST_SHA=$(git rev-parse --short HEAD)
+          if [ -z "$GIT_LATEST_TAG" ]; then
+            KB_RELEASE_VERSION=$GIT_LATEST_SHA
+          else
+            MATCHED_TAG=$(git describe --exact-match $GIT_LATEST_SHA || echo "TAG_NOT_MATCHED")
+            KB_RELEASE_VERSION=$(echo $GIT_LATEST_TAG | sed 's/v//')
+            if [ "$MATCHED_TAG" != "$GIT_LATEST_TAG" ]; then
+              KB_RELEASE_VERSION="${KB_RELEASE_VERSION}-${GIT_LATEST_SHA}"
+            fi
           fi
-        fi
-        VERSION_LINE=$(grep -n '"version":' package.json | cut -f1 -d:)
-        VERSION_ORIG=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')
-        sed -i "${VERSION_LINE}s/${VERSION_ORIG}/${KB_RELEASE_VERSION}/" package.json
-        cat package.json
-        
-    - name: install dependencies
-      run: yarn
+          VERSION_LINE=$(grep -n '"version":' package.json | cut -f1 -d:)
+          VERSION_ORIG=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')
+          sed -i "${VERSION_LINE}s/${VERSION_ORIG}/${KB_RELEASE_VERSION}/" package.json
+          cat package.json
 
-    - name: analyse code
-      run: yarn lint
+      - name: install dependencies
+        run: yarn
 
-    - name: build
-      run: yarn build
+      - name: analyse code
+        run: yarn lint
 
-    - name: Build and push Docker image
-      env:
-        IMAGE_NAME: "${{ secrets.CONTAINER_REGISTRY }}/krossboard-ui"
-        CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
-        REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
-        REGISTRY_PASSWORD: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
-      run: |
-        KB_RELEASE_VERSION=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')
-        echo "building image with tag => ${IMAGE_NAME}:${KB_RELEASE_VERSION}"
-        docker build -t ${IMAGE_NAME}:${KB_RELEASE_VERSION} .
-        # docker tag $IMAGE_NAME:${KB_RELEASE_VERSION} ${IMAGE_NAME}:latest
-        docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
-        docker push $IMAGE_NAME
+      - name: build
+        run: yarn build
+
+      - name: Build and push Docker image
+        env:
+          IMAGE_NAME: "${{ secrets.CONTAINER_REGISTRY }}/krossboard-ui"
+          CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
+          REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+        run: |
+          KB_RELEASE_VERSION=$(grep '"version":' package.json | awk -F '"' '{print $(NF-1)}')
+          echo "building image with tag => ${IMAGE_NAME}:${KB_RELEASE_VERSION}"
+          docker build -t ${IMAGE_NAME}:${KB_RELEASE_VERSION} .
+          # docker tag $IMAGE_NAME:${KB_RELEASE_VERSION} ${IMAGE_NAME}:latest
+          docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD}
+          docker push ${IMAGE_NAME}:${KB_RELEASE_VERSION}
