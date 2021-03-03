@@ -7,6 +7,18 @@ on:
     branches: [ master ]
 
 jobs:
+  check-commits:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - if: "(github.actor != 'dependabot[bot]') && !startsWith(github.head_ref, 'dependabot/')"
+        name: Check commits
+        uses: wagoid/commitlint-github-action@v2
+
   build:
     runs-on: ubuntu-18.04
 
