@@ -7,13 +7,16 @@ import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
 import { IUsageHistoryItem } from '../store/model'
-import { greenRedColorScheme } from '../theme'
 
 export interface IClusterCurrentLoadProps {
-    clusterName: string
+    resourceName: string
     resourceType: string
     outToDate: boolean
     data: IUsageHistoryItem[]
+    nameKey?: string
+    dataKey?: string
+    legend?: (item?: IUsageHistoryItem, i?: number) => string
+    color?: (item?: IUsageHistoryItem, i?: number) => string | undefined
 }
 
 const chartHeight = 300
@@ -43,53 +46,65 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center',
         letterSpacing: '0.02857em',
         textTransform: 'uppercase'
+    },
+    legend: {
+        position: 'relative'
     }
 }))
 
-const legend = (value?: LegendPayload['value'], entry?: LegendPayload, i?: number) => {
-    switch (i) {
-        case 0:
-            return 'used'
-        case 1:
-            return 'non-allocatable'
-        case 2:
-            return 'available'
-        default:
-            return '?'
-    }
-}
-
-export const ClusterCurrentLoad: React.FC<IClusterCurrentLoadProps> = ({ clusterName, resourceType, outToDate, data }) => {
+export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
+    resourceName,
+    resourceType,
+    outToDate,
+    data,
+    nameKey = 'tag',
+    dataKey = 'value',
+    legend,
+    color
+}) => {
     const classes = useStyles()
     const [activeIndex, setActiveIndex] = React.useState(0)
+
+    const legendFormatter = (value?: LegendPayload['value'], entry?: LegendPayload, i?: number) => {
+        if (legend && i && data) {
+            return legend(data[i], i)
+        }
+
+        return value
+    }
 
     return (
         <Card>
             <CardContent>
                 <Typography className={classes.name} color="textSecondary" gutterBottom>
-                    {clusterName}
+                    {resourceName}
                 </Typography>
                 <Typography className={classes.type} variant="body2" component="p">
                     {resourceType}
                 </Typography>
                 <Divider />
                 <ResponsiveContainer width="100%" height={chartHeight}>
-                    <PieChart className={clsx(outToDate && classes.outToDate)} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
-                        <Legend verticalAlign="bottom" height={26} formatter={legend} />
+                    <PieChart 
+                        className={clsx(outToDate && classes.outToDate)} margin={{ top: 5, right: 5, bottom: 5, left: 5 }} >
+                        <Legend verticalAlign="bottom" 
+                        formatter={legendFormatter}
+                        wrapperStyle={{
+                            position: "relative"
+                        }}
+                        />
                         <Pie
                             activeIndex={outToDate ? undefined : activeIndex}
                             activeShape={outToDate ? undefined : renderActiveShape}
                             legendType="circle"
                             data={data}
-                            dataKey="value"
-                            nameKey="tag"
+                            dataKey={dataKey}
+                            nameKey={nameKey}
                             innerRadius="35%"
                             outerRadius="70%"
                             onMouseEnter={(_, index) => setActiveIndex(index)}
+                            height={chartHeight}
                         >
-                            <Cell fill={greenRedColorScheme[0]} />
-                            <Cell fill={greenRedColorScheme[1]} />
-                            <Cell fill={outToDate ? greenRedColorScheme[3] : greenRedColorScheme[2]} />
+                            {color && data && data.map((it, idx) => <Cell key={`cell-${idx}`} fill={color(it, idx)} />)}
                         </Pie>
                     </PieChart>
                 </ResponsiveContainer>
