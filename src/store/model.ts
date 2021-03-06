@@ -28,6 +28,9 @@ export interface IWithHarvesterState<T> {
 }
 
 export type ClusterName = string
+export type NodeName = string
+export type PodName = string
+
 export type ClusterEndpoint = string
 
 export interface IUsageHistoryItem {
