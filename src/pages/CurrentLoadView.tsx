@@ -12,7 +12,6 @@ import { useStore } from '../store/storeProvider'
 import { greenRedColorScheme } from '../theme'
 
 import { IUsageHistoryItem } from '../store/model'
-import { style } from 'd3'
 
 const useStyles = makeStyles(theme => ({
     root: {

@@ -22,13 +22,6 @@ export interface IClusterCurrentLoadProps {
 const chartHeight = 300
 
 const useStyles = makeStyles(theme => ({
-    chartContainer: {
-        position: 'relative',
-        '& .donut-chart': {
-            display: 'block',
-            margin: '0 auto'
-        }
-    },
     name: {
         fontSize: 14
     },
@@ -46,9 +39,6 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center',
         letterSpacing: '0.02857em',
         textTransform: 'uppercase'
-    },
-    legend: {
-        position: 'relative'
     }
 }))
 
@@ -83,14 +73,10 @@ export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
                     {resourceType}
                 </Typography>
                 <Divider />
-                <ResponsiveContainer width="100%" height={chartHeight}>
+                <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
                     <PieChart 
                         className={clsx(outToDate && classes.outToDate)} margin={{ top: 5, right: 5, bottom: 5, left: 5 }} >
-                        <Legend verticalAlign="bottom" 
-                        formatter={legendFormatter}
-                        wrapperStyle={{
-                            position: "relative"
-                        }}
+                        <Legend verticalAlign="bottom" formatter={legendFormatter}
                         />
                         <Pie
                             activeIndex={outToDate ? undefined : activeIndex}
@@ -102,7 +88,6 @@ export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
                             innerRadius="35%"
                             outerRadius="70%"
                             onMouseEnter={(_, index) => setActiveIndex(index)}
-                            height={chartHeight}
                         >
                             {color && data && data.map((it, idx) => <Cell key={`cell-${idx}`} fill={color(it, idx)} />)}
                         </Pie>
