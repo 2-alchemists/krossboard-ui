@@ -32,7 +32,7 @@ export interface IPodPayload {
 }
 
 export const getCurrentNodesUsage = async (endpoint: string, clusterName: string ): Promise<IGetDatasetNodesPayload> => {
-    const resource = '/datasets/nodes.json'
+    const resource = '/dataset/nodes.json'
     return axios
         .get(endpoint + `/api${resource}`, { headers: { 'X-Krossboard-Cluster': clusterName } })
         .then(res => res.data)
