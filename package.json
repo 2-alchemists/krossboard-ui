@@ -48,7 +48,7 @@
     "@types/d3-time-format": "^2.1.1",
     "@types/i18next": "^13.0.0",
     "@types/react-resize-detector": "^4.0.2",
-    "@types/react-router": "^5.1.2",
+    "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.2",
     "@types/recharts": "^1.8.4",
     "@use-it/interval": "^0.1.3",
