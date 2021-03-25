@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import * as React from 'react'
-import { Cell, Legend, LegendPayload, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Sector } from 'recharts'
+import { Cell, LegendPayload, Pie, PieChart, PieLabelRenderProps, ResponsiveContainer, Sector } from 'recharts'
 
 import { Card, CardContent, Divider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -39,6 +39,20 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center',
         letterSpacing: '0.02857em',
         textTransform: 'uppercase'
+    },
+    chartWrapper: {
+        height: `${chartHeight}px`
+    },
+    legendItem: {
+        display: 'inline'
+    },
+    legendDot: {
+        height: '0.7em',
+        width: '0.7em',
+        borderRadius: '50%',
+        display: 'inline-block',
+        marginRight: '5px',
+        marginLeft: '7px'
     }
 }))
 
@@ -55,7 +69,7 @@ export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
     const classes = useStyles()
     const [activeIndex, setActiveIndex] = React.useState(0)
 
-    const legendFormatter = (value?: LegendPayload['value'], entry?: LegendPayload, i?: number) => {
+    const legendFormatter = (value?: LegendPayload['value'], i?: number) => {
         if (legend && i && data) {
             return legend(data[i], i)
         }
@@ -73,26 +87,40 @@ export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
                     {resourceType}
                 </Typography>
                 <Divider />
-                <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
-                    <PieChart 
-                        className={clsx(outToDate && classes.outToDate)} margin={{ top: 5, right: 5, bottom: 5, left: 5 }} >
-                        <Legend verticalAlign="bottom" formatter={legendFormatter}
-                        />
-                        <Pie
-                            activeIndex={outToDate ? undefined : activeIndex}
-                            activeShape={outToDate ? undefined : renderActiveShape}
-                            legendType="circle"
-                            data={data}
-                            dataKey={dataKey}
-                            nameKey={nameKey}
-                            innerRadius="35%"
-                            outerRadius="70%"
-                            onMouseEnter={(_, index) => setActiveIndex(index)}
+                <div className={classes.chartWrapper}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart
+                            width={100}
+                            height={200}
+                            className={clsx(outToDate && classes.outToDate)}
+                            margin={{ top: 0, right: 4, bottom: 0, left: 4 }}
                         >
-                            {color && data && data.map((it, idx) => <Cell key={`cell-${idx}`} fill={color(it, idx)} />)}
-                        </Pie>
-                    </PieChart>
-                </ResponsiveContainer>
+                            <Pie
+                                activeIndex={outToDate ? undefined : activeIndex}
+                                activeShape={outToDate ? undefined : renderActiveShape}
+                                legendType="circle"
+                                data={data}
+                                dataKey={dataKey}
+                                nameKey={nameKey}
+                                innerRadius="35%"
+                                outerRadius="70%"
+                                onMouseEnter={(_, index) => setActiveIndex(index)}
+                            >
+                                {color && data && data.map((it, idx) => <Cell key={`cell-${idx}`} fill={color(it, idx)} />)}
+                            </Pie>
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+                <ul>
+                    {color &&
+                        data &&
+                        data.map((it, idx) => (
+                            <li className={classes.legendItem} key={`cell-${idx}`}>
+                                <span className={classes.legendDot} style={{ backgroundColor: color(it, idx) }} />
+                                {legendFormatter(it[nameKey], idx)}
+                            </li>
+                        ))}
+                </ul>
                 {outToDate && (
                     <div className={classes.outToDateText}>
                         <Typography variant="body2" component="span">

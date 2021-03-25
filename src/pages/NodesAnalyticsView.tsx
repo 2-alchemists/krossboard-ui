@@ -39,7 +39,6 @@ const useStyles = makeStyles(theme => ({
         minWidth: '14rem'
     },
     grid: {
-       height: "600px"
     }
 }))
 
