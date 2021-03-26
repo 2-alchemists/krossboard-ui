@@ -121,6 +121,17 @@ export const NodesAnalyticsView = () => {
                                         color={color}
                                     />
                                 </Grid>
+                                <Grid item xs={12} sm={6} md={3} className={classes.grid}>
+                                    <CurrentLoad
+                                        resourceName={nodeName}
+                                        resourceType="Memory"
+                                        outToDate={false}
+                                        data={usages}
+                                        nameKey="tag"
+                                        dataKey="memUsage"
+                                        color={color}
+                                    />
+                                </Grid>
                             </React.Fragment>
                         )
                     })}
