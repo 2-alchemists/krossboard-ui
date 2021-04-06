@@ -194,6 +194,110 @@ app.get('/api/dataset/:type', (req, res) => {
         case 'cpu_usage_period_31968000.json':
             res.json([{ "stack": "non-allocatable", "usage": 42.000000, "date": "Jan 2020" }, { "stack": ".usagehistory", "usage": 110.169476, "date": "Jan 2020" }, { "stack": "kube-system", "usage": 10.402329, "date": "Jan 2020" }])
             break
+        case 'nodes.json':
+            res.json(
+                {
+                    "gke-cluster-1-default-pool-7f5e6673-kz41": {
+                        "id": "5016f4a1-e24d-42da-8046-40c98ff166bf",
+                        "name": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                        "state": "Ready",
+                        "message": "kubelet is posting ready status. AppArmor enabled",
+                        "cpuCapacity": 2,
+                        "cpuAllocatable": 0.9400000000000001,
+                        "cpuUsage": 0.118247216,
+                        "memCapacity": 4130848768,
+                        "memAllocatable": 2957492224,
+                        "memUsage": 743170048,
+                        "containerRuntime": "docker://19.3.9",
+                        "podsRunning": [
+                        {
+                            "id": "f7c79d88-baa7-4169-90f5-2b045c0f2087",
+                            "name": "event-exporter-gke-666b7ffbf7-cjnj4.kube-system",
+                            "nodeName": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                            "phase": "Running",
+                            "state": "Initialized",
+                            "cpuUsage": 0.000221408,
+                            "memUsage": 14426112.0
+                        },
+                        {
+                            "id": "19bc246b-f7fd-4b6b-996d-17549cfd590d",
+                            "name": "fluentbit-gke-rtsqb.kube-system",
+                            "nodeName": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                            "phase": "Running",
+                            "state": "Initialized",
+                            "cpuUsage": 0.002824047,
+                            "memUsage": 21295104.0
+                        },
+                        {
+                            "id": "81cdc542-4100-4998-9168-d09997a27410",
+                            "name": "gke-metrics-agent-ql22h.kube-system",
+                            "nodeName": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                            "phase": "Running",
+                            "state": "Initialized",
+                            "cpuUsage": 0.003870604,
+                            "memUsage": 24215552.0
+                        },
+                        {
+                            "id": "85018053-8bbe-4888-ae68-b9de564d5f86",
+                            "name": "kube-dns-6bd88c9b66-gwlkv.kube-system",
+                            "nodeName": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                            "phase": "Running",
+                            "state": "Initialized",
+                            "cpuUsage": 0.0016355050000000002,
+                            "memUsage": 34226176.0
+                        },
+                        {
+                            "id": "a5eb5ffe-2c08-4fee-bb4c-34bc13479e87",
+                            "name": "kube-dns-autoscaler-7f89fb6b79-4w75n.kube-system",
+                            "nodeName": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                            "phase": "Running",
+                            "state": "Initialized",
+                            "cpuUsage": 0.00015833400000000002,
+                            "memUsage": 13062144.0
+                        },
+                        {
+                            "id": "081e87ba-615a-4261-9ff8-d759ae3d9c9d",
+                            "name": "kube-proxy-gke-cluster-1-default-pool-7f5e6673-kz41.kube-system",
+                            "nodeName": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                            "phase": "Running",
+                            "state": "Initialized",
+                            "cpuUsage": 0.0009093730000000001,
+                            "memUsage": 28467200.0
+                        },
+                        {
+                            "id": "93249190-8cd1-46d1-893a-6755c2246707",
+                            "name": "l7-default-backend-5b76b455d-g9v4m.kube-system",
+                            "nodeName": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                            "phase": "Running",
+                            "state": "Initialized",
+                            "cpuUsage": 6.1059e-05,
+                            "memUsage": 2777088.0
+                        },
+                        {
+                            "id": "ec58fe92-7314-449e-b84b-d5c874ff085c",
+                            "name": "metrics-server-v0.3.6-7c5cb99b6f-wrm6n.kube-system",
+                            "nodeName": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                            "phase": "Running",
+                            "state": "Initialized",
+                            "cpuUsage": 0.027117170000000003,
+                            "memUsage": 40521728.0
+                        },
+                        {
+                            "id": "bf37dfa5-60ab-456d-a2a0-47207c40a12d",
+                            "name": "stackdriver-metadata-agent-cluster-level-6dc494dbcf-z98lt.kube-system",
+                            "nodeName": "gke-cluster-1-default-pool-7f5e6673-kz41",
+                            "phase": "Running",
+                            "state": "Initialized",
+                            "cpuUsage": 0.038918311000000004,
+                            "memUsage": 24064000.0
+                        }
+                        ],
+                        "podsNotRunning": [
+                        
+                        ]
+                    }
+                })
+                break;
         default:
             res.send(404)
     }

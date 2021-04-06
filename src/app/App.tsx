@@ -1,5 +1,6 @@
 import '../scheduler/currentusage'
 import '../scheduler/discovery'
+import '../scheduler/nodes'
 import '../scheduler/resources'
 import '../scheduler/usagehistory'
 
@@ -9,7 +10,10 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react-router-dom'
 
-import { ClickAwayListener, Drawer, Hidden, IconButton, LinearProgress, List, ListItem, ListItemText, Tooltip } from '@material-ui/core'
+import {
+    ClickAwayListener, Drawer, Hidden, IconButton, LinearProgress, List, ListItem, ListItemText,
+    Tooltip
+} from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
@@ -27,6 +31,7 @@ import * as pckg from '../../package.json'
 import { ClusterView } from '../pages/ClusterView'
 import { CurrentLoadView } from '../pages/CurrentLoadView'
 import { MultiClusterView } from '../pages/MultiClusterView'
+import { NodesAnalyticsView } from '../pages/NodesAnalyticsView'
 import { useStore } from '../store/storeProvider'
 import { theme as mytheme } from '../theme'
 
@@ -152,6 +157,10 @@ const Header = () => {
         {
             to: '/multicluster-view',
             text: 'Consolidated usage & History'
+        },
+        {
+            to: '/nodes-analytics-view',
+            text: 'Nodes Analytics'
         }
     ]
 
@@ -284,6 +293,9 @@ const Errors = () => {
 const Content = () => {
     return (
         <Switch>
+             <Route path="/nodes-analytics-view">
+                <NodesAnalyticsView />
+            </Route>
             <Route path="/multicluster-view">
                 <MultiClusterView />
             </Route>
