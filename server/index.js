@@ -490,3 +490,46 @@ app.get('/api/dataset/:type', (req, res) => {
             res.send(404)
     }
 })
+
+app.get('/api/nodesusage/:clustername', (req, res) => {
+    res.json(
+        [
+            {
+              "dateUTC": "2021-02-25T23:40:18",
+              "name": "gke-cluster-1-default-pool-7f5e6673-g701",
+              "state": "Ready",
+              "message": "kubelet is posting ready status. AppArmor enabled",
+              "cpuCapacity": 2,
+              "cpuAllocatable": 0.9400000000000001,
+              "cpuUsage": 0.12326822000000001,
+              "memCapacity": 4130848768,
+              "memAllocatable": 2957492224,
+              "memUsage": 726360064
+            },
+            {
+              "dateUTC": "2021-02-25T23:40:11",
+              "name": "gke-cluster-1-default-pool-7f5e6673-g701",
+              "state": "Ready",
+              "message": "kubelet is posting ready status. AppArmor enabled",
+              "cpuCapacity": 2,
+              "cpuAllocatable": 0.9400000000000001,
+              "cpuUsage": 0.12326822000000001,
+              "memCapacity": 4130848768,
+              "memAllocatable": 2957492224,
+              "memUsage": 726360064
+            },
+            {
+              "dateUTC": "2021-02-26T00:26:33",
+              "name": "gke-cluster-1-default-pool-7f5e6673-g701",
+              "state": "Ready",
+              "message": "kubelet is posting ready status. AppArmor enabled",
+              "cpuCapacity": 2,
+              "cpuAllocatable": 0.9400000000000001,
+              "cpuUsage": 0.144107164,
+              "memCapacity": 4130848768,
+              "memAllocatable": 2957492224,
+              "memUsage": 727375872
+            }
+          ]
+    )
+})
