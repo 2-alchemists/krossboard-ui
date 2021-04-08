@@ -34,6 +34,7 @@ export class KoaStore {
             }
         }
     }
+    @observable public nodesUsage: Record<ClusterName, IWithHarvesterState<IUsageHistoryItem[]>> = {}
 
     @action public setError = (state: IHarvesterState, e: any) => {
         const error: IError = {
