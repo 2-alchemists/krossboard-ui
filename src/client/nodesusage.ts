@@ -16,9 +16,9 @@ export interface INodeUsagePayload {
 }
 
 export const getNodesUsage = async (endpoint: string, clusterName: string): Promise<INodeUsagePayload[]> => {
-    const resource = `/nodesusages/${clusterName}`
+    const resource = `/nodesusage/${clusterName}`
     return axios
-        .get(endpoint + `/api/${resource}`)
+        .get(endpoint + `/api${resource}`)
         .then(res => res.data)
         .then(data => {
             if (data.status && data.status !== 'ok') {

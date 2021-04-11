@@ -98,7 +98,7 @@ app.get('/api/usagehistory', (req, res) => {
                         month = 0
                         year++
                     }
-                    console.log(t.toISOString())
+
                     t = new Date(year, month)
                 }
         }
