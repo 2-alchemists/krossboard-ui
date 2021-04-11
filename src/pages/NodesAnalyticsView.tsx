@@ -9,6 +9,7 @@ import Select from '@material-ui/core/Select'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { CurrentLoad } from '../component/CurrentLoad'
+import { NodesUsageHistoryChart } from '../component/NodesUsageHistoryChart'
 import { IUsageHistoryItem } from '../store/model'
 import { useStore } from '../store/storeProvider'
 import { seriesColorSchema } from '../theme'
@@ -42,9 +43,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 enum DashboardTypes {
-    NodesRecentOccupation = "Nodes' recent occupation",
-    NodesUsageHistory = "Nodes' usage history"
+    NodesRecentOccupation = 'NodesRecentOccupation', // = "Nodes' recent occupation",
+    NodesUsageHistory = 'NodesUsageHistory' // = "Nodes' usage history"
 }
+type DashboardTypesKeys = keyof typeof DashboardTypes
 
 export const NodesAnalyticsView = () => {
     const classes = useStyles()
@@ -54,9 +56,9 @@ export const NodesAnalyticsView = () => {
         setSelectedCluster(event.target.value as string)
     }
 
-    const [selectedDashboard, setSelectedDashboard] = React.useState(Object.keys(DashboardTypes)[0])
+    const [selectedDashboard, setSelectedDashboard] = React.useState(DashboardTypes.NodesRecentOccupation)
     const onDashboardChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedDashboard(event.target.value as string)
+        setSelectedDashboard(DashboardTypes[event.target.value as DashboardTypesKeys])
     }
 
     React.useEffect(() => {
@@ -65,52 +67,59 @@ export const NodesAnalyticsView = () => {
         }
     })
 
-    return (
-        <div className={classes.root}>
-            <Grid container>
-                <Grid item className={classes.centeredGrid} xs={12} sm={12} md={12}>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="cluster-label">cluster</InputLabel>
-                        <Select labelId="cluster-label" id="cluster" value={selectedCluster} onChange={onClusterChange}>
-                            {store.clusterNames
-                                .filter((it, index, self) => self.indexOf(it) === index)
-                                .map(it => (
-                                    <MenuItem key={it} value={it}>
-                                        {it}
-                                    </MenuItem>
-                                ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="dashboard-label">dashboard</InputLabel>
-                        <Select
-                            className={classes.dashboardForm}
-                            labelId="dashboard-label"
-                            id="dashboard"
-                            value={selectedDashboard}
-                            onChange={onDashboardChange}
-                        >
-                            {Object.keys(DashboardTypes).map(it => (
-                                <MenuItem key={it} value={it}>
-                                    {DashboardTypes[it as keyof typeof DashboardTypes]}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+    return useObserver(() => {
+        return (
+            <div className={classes.root}>
+                <Grid container>
+                    <Grid item className={classes.centeredGrid} xs={12} sm={12} md={12}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="cluster-label">cluster</InputLabel>
+                            <Select labelId="cluster-label" id="cluster" value={selectedCluster} onChange={onClusterChange}>
+                                {store.clusterNames
+                                    .filter((it, index, self) => self.indexOf(it) === index)
+                                    .map(it => (
+                                        <MenuItem key={it} value={it}>
+                                            {it}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="dashboard-label">dashboard</InputLabel>
+                            <Select
+                                className={classes.dashboardForm}
+                                labelId="dashboard-label"
+                                id="dashboard"
+                                value={selectedDashboard}
+                                onChange={onDashboardChange}
+                            >
+                                {Object.keys(DashboardTypes)
+                                    // .filter(k => typeof DashboardTypes[k as any] === "string")
+                                    .map(it => (
+                                        <MenuItem key={it} value={DashboardTypes[it as DashboardTypesKeys]}>
+                                            {DashboardTypes[it as DashboardTypesKeys]}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <NodesRecentOccupationView selectedCluster={selectedCluster}/>
-        </div>
-    )
+                {selectedDashboard === DashboardTypes.NodesRecentOccupation && (
+                    <NodesRecentOccupationView selectedCluster={selectedCluster} />
+                )}
+                {selectedDashboard === DashboardTypes.NodesUsageHistory && <NodesUsageHistoryView selectedCluster={selectedCluster} />}
+            </div>
+        )
+    })
 }
 
-const NodesRecentOccupationView: React.FC<{selectedCluster: string}> = ({selectedCluster}) => {
+const NodesRecentOccupationView: React.FC<{ selectedCluster: string }> = ({ selectedCluster }) => {
     const classes = useStyles()
     const store = useStore()
 
     return useObserver(() => {
         const data = store.currentNodesLoad[selectedCluster] ? store.currentNodesLoad[selectedCluster].data : {}
-        const color = (value?: IUsageHistoryItem, idx?: number) => seriesColorSchema[(idx || 0) % seriesColorSchema.length]
+        const color = (_?: IUsageHistoryItem, idx?: number) => seriesColorSchema[(idx || 0) % seriesColorSchema.length]
 
         return (
             <Grid container spacing={3}>
@@ -144,6 +153,28 @@ const NodesRecentOccupationView: React.FC<{selectedCluster: string}> = ({selecte
                         </React.Fragment>
                     )
                 })}
+            </Grid>
+        )
+    })
+}
+
+const NodesUsageHistoryView: React.FC<{ selectedCluster: string }> = ({ selectedCluster }) => {
+    const classes = useStyles()
+    const store = useStore()
+
+    return useObserver(() => {
+        const data = store.nodesUsages[selectedCluster] ? store.nodesUsages[selectedCluster].data : {}
+
+        return (
+            <Grid container spacing={3}>
+                <React.Fragment>
+                    <Grid item xs={12} sm={6} className={classes.grid}>
+                        <NodesUsageHistoryChart type={'cpu'} data={data} />
+                    </Grid>
+                    <Grid item xs={12} sm={6} className={classes.grid}>
+                        <NodesUsageHistoryChart type={'mem'} data={data} />
+                    </Grid>
+                </React.Fragment>
             </Grid>
         )
     })
