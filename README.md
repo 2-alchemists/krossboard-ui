@@ -3,7 +3,7 @@
 ![build](https://github.com/2-alchemists/krossboard-ui/workflows/build/badge.svg)
 ![build-docker-image](https://github.com/2-alchemists/krossboard-ui/workflows/Build%20Docker%20image/badge.svg)
 
-## Initialization
+## Setup
 
 As prerequisites, the following tools must be properly installed:
 
