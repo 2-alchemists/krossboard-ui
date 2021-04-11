@@ -1,4 +1,4 @@
-import { autorun, runInAction, toJS } from 'mobx'
+import { autorun, runInAction } from 'mobx'
 
 import { getCurrentNodesUsage } from '../client/nodes'
 import { koaStore } from '../store/KoaStore'
@@ -59,7 +59,6 @@ autorun(
                     })
                     .finally(() => {
                         runInAction(() => (koaStore.currentNodesLoad[clusterName].state.loading = false))
-                        console.log(toJS(koaStore.currentNodesLoad[clusterName]))
                     })
             })
         }

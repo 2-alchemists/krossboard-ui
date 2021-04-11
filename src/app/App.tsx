@@ -1,6 +1,7 @@
 import '../scheduler/currentusage'
 import '../scheduler/discovery'
 import '../scheduler/nodes'
+import '../scheduler/nodesusage'
 import '../scheduler/resources'
 import '../scheduler/usagehistory'
 
