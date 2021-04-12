@@ -16,17 +16,35 @@ autorun(
                     .then(nodes => {
                         const currentNodeUsage: Record<NodeName, IUsageHistoryItem[]> = {}
 
-                        Object
-                            .keys(nodes)
-                            .forEach(nodeName => {
-                                currentNodeUsage[nodeName] = 
-                                    nodes[nodeName]
-                                        .podsRunning
-                                        .map(pod => ({
-                                        tag: pod.name,
-                                        cpuUsage: pod.cpuUsage,
-                                        memUsage: pod.memUsage
-                                }))
+                        Object.keys(nodes).forEach(nodeName => {
+                            const usages: IUsageHistoryItem[] = []
+
+                            usages.push({
+                                tag: 'non-allocatable',
+                                cpuUsage: nodes[nodeName].cpuCapacity - nodes[nodeName].cpuAllocatable,
+                                memUsage: nodes[nodeName].memCapacity - nodes[nodeName].memAllocatable
+                            })
+
+                            let sumCpuPodUsage = 0
+                            let sumMemPodUsage = 0
+                            nodes[nodeName].podsRunning.forEach(pod => {
+                                usages.push({
+                                    tag: pod.name,
+                                    cpuUsage: pod.cpuUsage,
+                                    memUsage: pod.memUsage
+                                })
+
+                                sumCpuPodUsage += pod.cpuUsage
+                                sumMemPodUsage += pod.memUsage
+                            })
+
+                            usages.push({
+                                tag: 'available',
+                                cpuUsage: nodes[nodeName].cpuAllocatable - sumCpuPodUsage,
+                                memUsage: nodes[nodeName].memAllocatable - sumMemPodUsage
+                            })
+
+                            currentNodeUsage[nodeName] = usages
                         })
                         runInAction(() => {
                             koaStore.currentNodesLoad[clusterName].data = currentNodeUsage
