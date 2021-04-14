@@ -22,8 +22,20 @@ autorun(
                             nodesUsage[item.name].push({
                                 tag: new Date(item.dateUTC).getTime(),
                                 name: item.name,
+
+                                cpuCapacity: item.cpuCapacity,
+                                cpuAllocatable: item.cpuAllocatable,
                                 cpuUsage: item.cpuUsage,
-                                memUsage: item.memUsage
+                                cpuNonAllocatable: item.cpuCapacity - item.cpuAllocatable,
+                                cpuAvailable: item.cpuAllocatable - item.cpuUsage,
+                                cpuUsedResource: item.cpuUsage,
+
+                                memCapacity: item.memCapacity,
+                                memAllocatable: item.memAllocatable,
+                                memUsage: item.memUsage,
+                                memNonAllocatable: item.memCapacity - item.memAllocatable,
+                                memAvailable: item.memAllocatable - item.memUsage,
+                                memUsedResource: item.memUsage,
                             })
                         })
 
