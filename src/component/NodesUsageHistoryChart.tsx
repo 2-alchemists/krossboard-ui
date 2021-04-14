@@ -10,14 +10,14 @@ import { Card, CardContent, Divider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
-import { computeIfAbsent, IUsageHistoryItem, NodeName } from '../store/model'
-import { seriesColorSchema } from '../theme'
+import { IUsageHistoryItem } from '../store/model'
+import { greenRedColorScheme } from '../theme'
 
 export type Type = 'cpu' | 'mem'
 
 export interface INodesUsageHistoryChartProps {
     type: Type
-    data: Record<NodeName, IUsageHistoryItem[]>
+    data: IUsageHistoryItem[]
 }
 
 const useStyles = makeStyles(theme => ({
@@ -57,25 +57,6 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
     const classes = useStyles()
     const { t } = useTranslation()
 
-    const names = Object.keys(data).filter(it => it !== 'tag')
-    const dataframe: IUsageHistoryItem[] = React.useMemo(() => {
-        const series: Record<string | number, IUsageHistoryItem> = {}
-
-        Object.values(data)
-            .flatMap(it => it)
-            .forEach(it => {
-                const serie: IUsageHistoryItem = computeIfAbsent(series, it.tag, () => ({
-                    tag: it.tag
-                }))
-
-                serie[it.name as string] = type === 'cpu' ? it['cpuUsage'] : it['memUsage']
-            })
-
-        console.log(Object.values(series))
-
-        return Object.values(series)
-    }, [type, data])
-
     return useObserver(() => (
         <Card>
             <CardContent>
@@ -86,7 +67,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                 <ResponsiveContainer width="100%" height={300}>
                     <AreaChart
                         height={400}
-                        data={dataframe}
+                        data={data}
                         margin={{
                             top: 5,
                             right: 0,
@@ -101,16 +82,30 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                             <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
                         </YAxis>
                         <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, dateFormat(t))}</p>} />
-                        {names.map((name, idx) => (
-                            <Area
-                                key={name}
-                                type="monotone"
-                                dataKey={name}
-                                stackId="1"
-                                stroke={seriesColorSchema[idx % seriesColorSchema.length]}
-                                fill={seriesColorSchema[idx % seriesColorSchema.length]}
-                            />
-                        ))}
+
+                        <Area
+                            type="monotone"
+                            dataKey={`${type}NonAllocatable`}
+                            stackId="1"
+                            stroke={greenRedColorScheme[0]}
+                            fill={greenRedColorScheme[0]}
+                        />
+
+                        <Area
+                            type="monotone"
+                            dataKey={`${type}Available`}
+                            stackId="1"
+                            stroke={greenRedColorScheme[2]}
+                            fill={greenRedColorScheme[2]}
+                        />
+
+                        <Area
+                            type="monotone"
+                            dataKey={`${type}UsedResource`}
+                            stackId="1"
+                            stroke={greenRedColorScheme[1]}
+                            fill={greenRedColorScheme[1]}
+                        />
                     </AreaChart>
                 </ResponsiveContainer>
             </CardContent>

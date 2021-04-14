@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import { CurrentLoad } from '../component/CurrentLoad'
 import { NodesUsageHistoryChart } from '../component/NodesUsageHistoryChart'
-import { IUsageHistoryItem } from '../store/model'
+import { IUsageHistoryItem, NodeName } from '../store/model'
 import { useStore } from '../store/storeProvider'
 import { seriesColorSchema } from '../theme'
 
@@ -163,18 +163,24 @@ const NodesUsageHistoryView: React.FC<{ selectedCluster: string }> = ({ selected
     const store = useStore()
 
     return useObserver(() => {
-        const data = store.nodesUsages[selectedCluster] ? store.nodesUsages[selectedCluster].data : {}
+        const data: Record<NodeName, IUsageHistoryItem[]> = store.nodesUsages[selectedCluster]
+            ? store.nodesUsages[selectedCluster].data
+            : {}
 
         return (
             <Grid container spacing={3}>
-                <React.Fragment>
-                    <Grid item xs={12} sm={6} className={classes.grid}>
-                        <NodesUsageHistoryChart type={'cpu'} data={data} />
-                    </Grid>
-                    <Grid item xs={12} sm={6} className={classes.grid}>
-                        <NodesUsageHistoryChart type={'mem'} data={data} />
-                    </Grid>
-                </React.Fragment>
+                {Object.keys(data).map(nodeName => {
+                    return (
+                        <React.Fragment key={nodeName}>
+                            <Grid item xs={12} sm={6} className={classes.grid}>
+                                <NodesUsageHistoryChart type={'cpu'} data={data[nodeName]} />
+                            </Grid>
+                            <Grid item xs={12} sm={6} className={classes.grid}>
+                                <NodesUsageHistoryChart type={'mem'} data={data[nodeName]} />
+                            </Grid>
+                        </React.Fragment>
+                    )
+                })}
             </Grid>
         )
     })
