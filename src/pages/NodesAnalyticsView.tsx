@@ -48,6 +48,15 @@ enum DashboardTypes {
 }
 type DashboardTypesKeys = keyof typeof DashboardTypes
 
+const nameOfDashboardTypes = (type: DashboardTypes): string => {
+    switch (type) {
+        case DashboardTypes.NodesRecentOccupation:
+            return 'Nodes recent occupation'
+        case DashboardTypes.NodesUsageHistory:
+            return 'Nodes usage history'
+    }
+}
+
 export const NodesAnalyticsView = () => {
     const classes = useStyles()
     const store = useStore()
@@ -94,10 +103,9 @@ export const NodesAnalyticsView = () => {
                                 onChange={onDashboardChange}
                             >
                                 {Object.keys(DashboardTypes)
-                                    // .filter(k => typeof DashboardTypes[k as any] === "string")
                                     .map(it => (
                                         <MenuItem key={it} value={DashboardTypes[it as DashboardTypesKeys]}>
-                                            {DashboardTypes[it as DashboardTypesKeys]}
+                                            {nameOfDashboardTypes(it as DashboardTypes)}
                                         </MenuItem>
                                     ))}
                             </Select>
