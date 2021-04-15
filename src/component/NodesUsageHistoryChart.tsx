@@ -53,6 +53,15 @@ const label = (type: Type): string => {
     return ''
 }
 
+const yTicksFormat = ( v: number, type: Type ): string => {
+    switch (type) {
+        case 'cpu':
+            return v.toFixed(3)
+        case 'mem':
+            return v.toExponential(2)
+    }
+}
+
 export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({ type, data }) => {
     const classes = useStyles()
     const { t } = useTranslation()
@@ -78,7 +87,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                         <CartesianGrid strokeDasharray="3 3" />
                         <Legend verticalAlign="bottom" height={26} />
                         <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, dateFormat(t))} />
-                        <YAxis type="number" domain={[0, 'dataMax']}>
+                        <YAxis type="number" domain={[0, 'dataMax']} tickFormatter={(tick: number) => yTicksFormat(tick as number, type)}>
                             <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
                         </YAxis>
                         <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, dateFormat(t))}</p>} />
