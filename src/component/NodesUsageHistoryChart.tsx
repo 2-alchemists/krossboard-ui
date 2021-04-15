@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { TFunction } from 'i18next'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
-import { Area, AreaChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, CartesianGrid, Label, Legend, LegendPayload, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import { useTranslation } from 'react-i18next'
 
@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography'
 
 import { IUsageHistoryItem } from '../store/model'
 import { greenRedColorScheme } from '../theme'
+import { formatBytes } from '../util/formatters'
 
 export type Type = 'cpu' | 'mem'
 
@@ -53,12 +54,12 @@ const label = (type: Type): string => {
     return ''
 }
 
-const yTicksFormat = ( v: number, type: Type ): string => {
+const yTicksFormat = (v: number, type: Type): string => {
     switch (type) {
         case 'cpu':
-            return v.toFixed(3)
+            return v === 0 ? "0" : v.toFixed(3)
         case 'mem':
-            return v.toExponential(2)
+            return formatBytes(v)
     }
 }
 
