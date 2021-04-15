@@ -78,7 +78,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                         <CartesianGrid strokeDasharray="3 3" />
                         <Legend verticalAlign="bottom" height={26} />
                         <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, dateFormat(t))} />
-                        <YAxis>
+                        <YAxis type="number" domain={[0, 'dataMax']}>
                             <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
                         </YAxis>
                         <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, dateFormat(t))}</p>} />
