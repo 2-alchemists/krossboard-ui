@@ -63,6 +63,24 @@ const yTicksFormat = (v: number, type: Type): string => {
     }
 }
 
+const legendFormatter = (value?: LegendPayload['value'], entry?: LegendPayload, i?: number) => {
+    const legend = value?.toString() ?? ''
+
+    if(legend.endsWith('NonAllocatable')) {
+        return 'non-allocatable'
+    }
+
+    if(legend.endsWith('Available')) {
+        return 'available'
+    }
+
+    if(legend.endsWith('UsedResource')) {
+        return 'used'
+    }
+
+    return legend
+}
+
 export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({ type, data }) => {
     const classes = useStyles()
     const { t } = useTranslation()
@@ -86,7 +104,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <Legend verticalAlign="bottom" height={26} />
+                        <Legend verticalAlign="bottom" height={26} formatter={legendFormatter} />
                         <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, dateFormat(t))} />
                         <YAxis type="number" domain={[0, 'dataMax']} tickFormatter={(tick: number) => yTicksFormat(tick as number, type)}>
                             <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
