@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { TFunction } from 'i18next'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
-import { Area, AreaChart, CartesianGrid, Label, Legend, LegendPayload, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, CartesianGrid, Label, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 import { useTranslation } from 'react-i18next'
 
@@ -63,24 +63,6 @@ const yTicksFormat = (v: number, type: Type): string => {
     }
 }
 
-const legendFormatter = (value?: LegendPayload['value'], entry?: LegendPayload, i?: number) => {
-    const legend = value?.toString() ?? ''
-
-    if(legend.endsWith('NonAllocatable')) {
-        return 'non-allocatable'
-    }
-
-    if(legend.endsWith('Available')) {
-        return 'available'
-    }
-
-    if(legend.endsWith('UsedResource')) {
-        return 'used'
-    }
-
-    return legend
-}
-
 export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({ type, data }) => {
     const classes = useStyles()
     const { t } = useTranslation()
@@ -104,7 +86,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                         }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <Legend verticalAlign="bottom" height={26} formatter={legendFormatter} />
+                        <Legend verticalAlign="bottom" height={26} />
                         <XAxis dataKey="tag" tickFormatter={(tick: number) => format(tick as number, dateFormat(t))} />
                         <YAxis type="number" domain={[0, 'dataMax']} tickFormatter={(tick: number) => yTicksFormat(tick as number, type)}>
                             <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
@@ -112,6 +94,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                         <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, dateFormat(t))}</p>} />
 
                         <Area
+                            name="non-allocatable"
                             type="monotone"
                             dataKey={`${type}NonAllocatable`}
                             stackId="1"
@@ -120,6 +103,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                         />
 
                         <Area
+                            name="available"
                             type="monotone"
                             dataKey={`${type}Available`}
                             stackId="1"
@@ -128,6 +112,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                         />
 
                         <Area
+                            name="used"
                             type="monotone"
                             dataKey={`${type}UsedResource`}
                             stackId="1"
