@@ -16,6 +16,8 @@ autorun(
                     .then(items => {
                         const nodesUsage: Record<NodeName, IUsageHistoryItem[]> = {}
 
+console.log(items)
+
                         items.forEach(item => {
                             computeIfAbsent(nodesUsage, item.name, _ => [])
 
@@ -25,17 +27,15 @@ autorun(
 
                                 cpuCapacity: item.cpuCapacity,
                                 cpuAllocatable: item.cpuAllocatable,
-                                cpuUsage: item.cpuUsage,
+                                cpuUsageByPods: item.cpuUsageByPods,
                                 cpuNonAllocatable: item.cpuCapacity - item.cpuAllocatable,
-                                cpuAvailable: item.cpuAllocatable - item.cpuUsage,
-                                cpuUsedResource: item.cpuUsage,
+                                cpuAvailable: item.cpuAllocatable - item.cpuUsageByPods,
 
                                 memCapacity: item.memCapacity,
                                 memAllocatable: item.memAllocatable,
-                                memUsage: item.memUsage,
+                                memUsageByPods: item.memUsageByPods,
                                 memNonAllocatable: item.memCapacity - item.memAllocatable,
-                                memAvailable: item.memAllocatable - item.memUsage,
-                                memUsedResource: item.memUsage,
+                                memAvailable: item.memAllocatable - item.memUsageByPods,
                             })
                         })
 

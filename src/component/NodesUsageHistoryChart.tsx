@@ -114,7 +114,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                         <Area
                             name="used"
                             type="monotone"
-                            dataKey={`${type}UsedResource`}
+                            dataKey={`${type}UsageByPods`}
                             stackId="1"
                             stroke={greenRedColorScheme[1]}
                             fill={greenRedColorScheme[1]}

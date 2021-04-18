@@ -9,10 +9,10 @@ export interface INodeUsagePayload {
     message: string
     cpuCapacity: number
     cpuAllocatable: number
-    cpuUsage: number
+    cpuUsageByPods: number
     memCapacity: number
     memAllocatable: number
-    memUsage: number
+    memUsageByPods: number
 }
 
 export const getNodesUsage = async (endpoint: string, clusterName: string): Promise<INodeUsagePayload[]> => {
