@@ -492,44 +492,56 @@ app.get('/api/dataset/:type', (req, res) => {
 })
 
 app.get('/api/nodesusage/:clustername', (req, res) => {
-    res.json(
-        [
-            {
-              "dateUTC": "2021-02-25T23:40:18",
-              "name": "gke-cluster-1-default-pool-7f5e6673-g701",
-              "state": "Ready",
-              "message": "kubelet is posting ready status. AppArmor enabled",
-              "cpuCapacity": 2,
-              "cpuAllocatable": 0.9400000000000001,
-              "cpuUsage": 0.12326822000000001,
-              "memCapacity": 4130848768,
-              "memAllocatable": 2957492224,
-              "memUsage": 726360064
-            },
-            {
-              "dateUTC": "2021-02-25T23:40:11",
-              "name": "gke-cluster-1-default-pool-7f5e6673-g701",
-              "state": "Ready",
-              "message": "kubelet is posting ready status. AppArmor enabled",
-              "cpuCapacity": 2,
-              "cpuAllocatable": 0.9400000000000001,
-              "cpuUsage": 0.12326822000000001,
-              "memCapacity": 4130848768,
-              "memAllocatable": 2957492224,
-              "memUsage": 726360064
-            },
-            {
-              "dateUTC": "2021-02-26T00:26:33",
-              "name": "gke-cluster-1-default-pool-7f5e6673-g701",
-              "state": "Ready",
-              "message": "kubelet is posting ready status. AppArmor enabled",
-              "cpuCapacity": 2,
-              "cpuAllocatable": 0.9400000000000001,
-              "cpuUsage": 0.144107164,
-              "memCapacity": 4130848768,
-              "memAllocatable": 2957492224,
-              "memUsage": 727375872
-            }
-          ]
-    )
+    res.json([
+        {
+            dateUTC: '2021-04-17T22:48:14',
+            name: 'gke-cluster-1-default-pool-7f5e6673-m6so',
+            cpuCapacity: 2,
+            cpuAllocatable: 0.9400000000000001,
+            cpuUsageByPods: 0.057068408,
+            memCapacity: 4130848768,
+            memAllocatable: 2957492224,
+            memUsageByPods: 199458816
+        },
+        {
+            dateUTC: '2021-04-17T22:48:14',
+            name: 'gke-cluster-1-default-pool-7f5e6673-n8d8',
+            cpuCapacity: 2,
+            cpuAllocatable: 0.9400000000000001,
+            cpuUsageByPods: 0.006896725,
+            memCapacity: 4130848768,
+            memAllocatable: 2957492224,
+            memUsageByPods: 96665600
+        },
+        {
+            dateUTC: '2021-04-17T22:48:14',
+            name: 'gke-cluster-1-default-pool-7f5e6673-qxp1',
+            cpuCapacity: 2,
+            cpuAllocatable: 0.9400000000000001,
+            cpuUsageByPods: 0.004305296,
+            memCapacity: 4130848768,
+            memAllocatable: 2957492224,
+            memUsageByPods: 57884672
+        },
+        {
+            dateUTC: '2021-04-17T22:48:14',
+            name: 'gke-cluster-1-default-pool-7f5e6673-5g5l',
+            cpuCapacity: 2,
+            cpuAllocatable: 0.9400000000000001,
+            cpuUsageByPods: 0.005580291,
+            memCapacity: 4130848768,
+            memAllocatable: 2957492224,
+            memUsageByPods: 60694528
+        },
+        {
+            dateUTC: '2021-04-17T22:48:14',
+            name: 'gke-cluster-1-default-pool-7f5e6673-j6cj',
+            cpuCapacity: 2,
+            cpuAllocatable: 0.9400000000000001,
+            cpuUsageByPods: 0.005956893,
+            memCapacity: 4130848768,
+            memAllocatable: 2957492224,
+            memUsageByPods: 61485056
+        }
+    ])
 })
