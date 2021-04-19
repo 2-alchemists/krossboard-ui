@@ -16,8 +16,6 @@ autorun(
                     .then(items => {
                         const nodesUsage: Record<NodeName, IUsageHistoryItem[]> = {}
 
-console.log(items)
-
                         items.forEach(item => {
                             computeIfAbsent(nodesUsage, item.name, _ => [])
 
