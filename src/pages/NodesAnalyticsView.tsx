@@ -7,6 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 
 import { CurrentLoad } from '../component/CurrentLoad'
 import { NodesUsageHistoryChart } from '../component/NodesUsageHistoryChart'
@@ -39,7 +40,9 @@ const useStyles = makeStyles(theme => ({
     dashboardForm: {
         minWidth: '14rem'
     },
-    grid: {}
+    controls: {
+        marginBottom: '15px'
+    }
 }))
 
 enum DashboardTypes {
@@ -79,7 +82,7 @@ export const NodesAnalyticsView = () => {
     return useObserver(() => {
         return (
             <div className={classes.root}>
-                <Grid container>
+                <Grid container className={classes.controls}>
                     <Grid item className={classes.centeredGrid} xs={12} sm={12} md={12}>
                         <FormControl className={classes.formControl}>
                             <InputLabel id="cluster-label">cluster</InputLabel>
@@ -102,12 +105,11 @@ export const NodesAnalyticsView = () => {
                                 value={selectedDashboard}
                                 onChange={onDashboardChange}
                             >
-                                {Object.keys(DashboardTypes)
-                                    .map(it => (
-                                        <MenuItem key={it} value={DashboardTypes[it as DashboardTypesKeys]}>
-                                            {nameOfDashboardTypes(it as DashboardTypes)}
-                                        </MenuItem>
-                                    ))}
+                                {Object.keys(DashboardTypes).map(it => (
+                                    <MenuItem key={it} value={DashboardTypes[it as DashboardTypesKeys]}>
+                                        {nameOfDashboardTypes(it as DashboardTypes)}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -122,7 +124,6 @@ export const NodesAnalyticsView = () => {
 }
 
 const NodesRecentOccupationView: React.FC<{ selectedCluster: string }> = ({ selectedCluster }) => {
-    const classes = useStyles()
     const store = useStore()
 
     return useObserver(() => {
@@ -136,7 +137,7 @@ const NodesRecentOccupationView: React.FC<{ selectedCluster: string }> = ({ sele
 
                     return (
                         <React.Fragment key={nodeName}>
-                            <Grid item xs={12} sm={6} md={3} className={classes.grid}>
+                            <Grid item xs={12} sm={6} md={3}>
                                 <CurrentLoad
                                     resourceName={nodeName}
                                     resourceType="CPU"
@@ -147,7 +148,7 @@ const NodesRecentOccupationView: React.FC<{ selectedCluster: string }> = ({ sele
                                     color={color}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={3} className={classes.grid}>
+                            <Grid item xs={12} sm={6} md={3}>
                                 <CurrentLoad
                                     resourceName={nodeName}
                                     resourceType="Memory"
@@ -167,7 +168,6 @@ const NodesRecentOccupationView: React.FC<{ selectedCluster: string }> = ({ sele
 }
 
 const NodesUsageHistoryView: React.FC<{ selectedCluster: string }> = ({ selectedCluster }) => {
-    const classes = useStyles()
     const store = useStore()
 
     return useObserver(() => {
@@ -180,10 +180,16 @@ const NodesUsageHistoryView: React.FC<{ selectedCluster: string }> = ({ selected
                 {Object.keys(data).map(nodeName => {
                     return (
                         <React.Fragment key={nodeName}>
-                            <Grid item xs={12} sm={6} className={classes.grid}>
+                            <Grid item xs={12}>
+                                <Typography color="textPrimary" gutterBottom>
+                                    {nodeName}
+                                </Typography>{' '}
+                                <hr />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
                                 <NodesUsageHistoryChart type={'cpu'} data={data[nodeName]} />
                             </Grid>
-                            <Grid item xs={12} sm={6} className={classes.grid}>
+                            <Grid item xs={12} sm={6}>
                                 <NodesUsageHistoryChart type={'mem'} data={data[nodeName]} />
                             </Grid>
                         </React.Fragment>
