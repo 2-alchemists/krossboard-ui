@@ -7,9 +7,11 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 
 import { CurrentLoad } from '../component/CurrentLoad'
-import { IUsageHistoryItem } from '../store/model'
+import { NodesUsageHistoryChart } from '../component/NodesUsageHistoryChart'
+import { IUsageHistoryItem, NodeName } from '../store/model'
 import { useStore } from '../store/storeProvider'
 import { seriesColorSchema } from '../theme'
 
@@ -38,27 +40,37 @@ const useStyles = makeStyles(theme => ({
     dashboardForm: {
         minWidth: '14rem'
     },
-    grid: {
+    controls: {
+        marginBottom: '15px'
     }
 }))
 
 enum DashboardTypes {
-    NodesRecentOccupation = "Nodes' recent occupation",
-    NodesUsageHistory = "Nodes' usage history",
+    NodesRecentOccupation = 'NodesRecentOccupation', // = "Nodes' recent occupation",
+    NodesUsageHistory = 'NodesUsageHistory' // = "Nodes' usage history"
+}
+type DashboardTypesKeys = keyof typeof DashboardTypes
+
+const nameOfDashboardTypes = (type: DashboardTypes): string => {
+    switch (type) {
+        case DashboardTypes.NodesRecentOccupation:
+            return 'Nodes recent occupation'
+        case DashboardTypes.NodesUsageHistory:
+            return 'Nodes usage history'
+    }
 }
 
 export const NodesAnalyticsView = () => {
     const classes = useStyles()
     const store = useStore()
-
     const [selectedCluster, setSelectedCluster] = React.useState(store.clusterNames.length === 0 ? '' : store.clusterNames[0])
     const onClusterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedCluster(event.target.value as string)
     }
 
-    const [selectedDashboard, setSelectedDashboard] = React.useState(Object.keys(DashboardTypes)[0])
+    const [selectedDashboard, setSelectedDashboard] = React.useState(DashboardTypes.NodesRecentOccupation)
     const onDashboardChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setSelectedDashboard(event.target.value as string)
+        setSelectedDashboard(DashboardTypes[event.target.value as DashboardTypesKeys])
     }
 
     React.useEffect(() => {
@@ -68,14 +80,9 @@ export const NodesAnalyticsView = () => {
     })
 
     return useObserver(() => {
-        const data = store.currentNodesLoad[selectedCluster] ? store.currentNodesLoad[selectedCluster].data : {}
-        const color = (value?: IUsageHistoryItem, idx?: number) => (
-            seriesColorSchema[ (idx || 0) % seriesColorSchema.length]
-        )
-
         return (
             <div className={classes.root}>
-                <Grid container>
+                <Grid container className={classes.controls}>
                     <Grid item className={classes.centeredGrid} xs={12} sm={12} md={12}>
                         <FormControl className={classes.formControl}>
                             <InputLabel id="cluster-label">cluster</InputLabel>
@@ -91,52 +98,104 @@ export const NodesAnalyticsView = () => {
                         </FormControl>
                         <FormControl className={classes.formControl}>
                             <InputLabel id="dashboard-label">dashboard</InputLabel>
-                            <Select  className={classes.dashboardForm} labelId="dashboard-label" id="dashboard" value={selectedDashboard} onChange={onDashboardChange}>
-                                {Object.keys(DashboardTypes)
-                                    .map(it => (
-                                        <MenuItem key={it} value={it}>
-                                            {DashboardTypes[it as keyof typeof DashboardTypes]}
-                                        </MenuItem>
-                                    ))}
+                            <Select
+                                className={classes.dashboardForm}
+                                labelId="dashboard-label"
+                                id="dashboard"
+                                value={selectedDashboard}
+                                onChange={onDashboardChange}
+                            >
+                                {Object.keys(DashboardTypes).map(it => (
+                                    <MenuItem key={it} value={DashboardTypes[it as DashboardTypesKeys]}>
+                                        {nameOfDashboardTypes(it as DashboardTypes)}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>
                 </Grid>
-                <Grid container spacing={3}>
-                    {
-                    Object.keys(data)                 
-                      .map(nodeName => {
-                          const usages = data[nodeName]
-                       
-                        return (
-                            <React.Fragment key={nodeName}>
-                                <Grid item xs={12} sm={6} md={3} className={classes.grid}>
-                                    <CurrentLoad
-                                        resourceName={nodeName}
-                                        resourceType="CPU"
-                                        outToDate={false}
-                                        data={usages}
-                                        nameKey="tag"
-                                        dataKey="cpuUsage"
-                                        color={color}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={3} className={classes.grid}>
-                                    <CurrentLoad
-                                        resourceName={nodeName}
-                                        resourceType="Memory"
-                                        outToDate={false}
-                                        data={usages}
-                                        nameKey="tag"
-                                        dataKey="memUsage"
-                                        color={color}
-                                    />
-                                </Grid>
-                            </React.Fragment>
-                        )
-                    })}
-                </Grid>
+                {selectedDashboard === DashboardTypes.NodesRecentOccupation && (
+                    <NodesRecentOccupationView selectedCluster={selectedCluster} />
+                )}
+                {selectedDashboard === DashboardTypes.NodesUsageHistory && <NodesUsageHistoryView selectedCluster={selectedCluster} />}
             </div>
+        )
+    })
+}
+
+const NodesRecentOccupationView: React.FC<{ selectedCluster: string }> = ({ selectedCluster }) => {
+    const store = useStore()
+
+    return useObserver(() => {
+        const data = store.currentNodesLoad[selectedCluster] ? store.currentNodesLoad[selectedCluster].data : {}
+        const color = (_?: IUsageHistoryItem, idx?: number) => seriesColorSchema[(idx || 0) % seriesColorSchema.length]
+
+        return (
+            <Grid container spacing={3}>
+                {Object.keys(data).map(nodeName => {
+                    const usages = data[nodeName]
+
+                    return (
+                        <React.Fragment key={nodeName}>
+                            <Grid item xs={12} sm={6} md={3}>
+                                <CurrentLoad
+                                    resourceName={nodeName}
+                                    resourceType="CPU"
+                                    outToDate={false}
+                                    data={usages}
+                                    nameKey="tag"
+                                    dataKey="cpuUsage"
+                                    color={color}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6} md={3}>
+                                <CurrentLoad
+                                    resourceName={nodeName}
+                                    resourceType="Memory"
+                                    outToDate={false}
+                                    data={usages}
+                                    nameKey="tag"
+                                    dataKey="memUsage"
+                                    color={color}
+                                />
+                            </Grid>
+                        </React.Fragment>
+                    )
+                })}
+            </Grid>
+        )
+    })
+}
+
+const NodesUsageHistoryView: React.FC<{ selectedCluster: string }> = ({ selectedCluster }) => {
+    const store = useStore()
+
+    return useObserver(() => {
+        const data: Record<NodeName, IUsageHistoryItem[]> = store.nodesUsages[selectedCluster]
+            ? store.nodesUsages[selectedCluster].data
+            : {}
+
+        return (
+            <Grid container spacing={3}>
+                {Object.keys(data).map(nodeName => {
+                    return (
+                        <React.Fragment key={nodeName}>
+                            <Grid item xs={12}>
+                                <Typography color="textPrimary" gutterBottom>
+                                    {nodeName}
+                                </Typography>{' '}
+                                <hr />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <NodesUsageHistoryChart type={'cpu'} data={data[nodeName]} />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <NodesUsageHistoryChart type={'mem'} data={data[nodeName]} />
+                            </Grid>
+                        </React.Fragment>
+                    )
+                })}
+            </Grid>
         )
     })
 }

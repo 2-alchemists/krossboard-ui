@@ -1,7 +1,16 @@
 import { sub } from 'date-fns'
 import { action, computed, observable } from 'mobx'
 
-import { ClusterEndpoint, ClusterName, defaultState, IError, IHarvesterState, IUsageHistoryItem, IWithHarvesterState, NodeName } from './model'
+import {
+    ClusterEndpoint,
+    ClusterName,
+    defaultState,
+    IError,
+    IHarvesterState,
+    IUsageHistoryItem,
+    IWithHarvesterState,
+    NodeName
+} from './model'
 
 export class KoaStore {
     public get discoveryURL() {
@@ -15,10 +24,14 @@ export class KoaStore {
         data: {}
     }
     @observable public currentNodesLoad: Record<ClusterName, IWithHarvesterState<Record<NodeName, IUsageHistoryItem[]>>> = {}
+    @observable public nodesUsages: Record<ClusterName, IWithHarvesterState<Record<NodeName, IUsageHistoryItem[]>>> = {}
     @observable public resourcesUsages: Record<ClusterName, Record<string /* type */, IWithHarvesterState<IUsageHistoryItem[]>>> = {}
     @observable public usageHistoryDateRange: Interval = { start: sub(new Date(), { hours: 24 }), end: new Date() }
     @observable public usageHistoryEndDate: Date | number = this.usageHistoryDateRange.end
-    @observable public usageHistory: Record<'hourly' | 'monthly' /* period */, IWithHarvesterState<Record<'cpu' | 'mem' /* type */, IUsageHistoryItem[]>>> = {
+    @observable public usageHistory: Record<
+        'hourly' | 'monthly' /* period */,
+        IWithHarvesterState<Record<'cpu' | 'mem' /* type */, IUsageHistoryItem[]>>
+    > = {
         hourly: {
             state: defaultState(),
             data: {
@@ -90,8 +103,11 @@ export class KoaStore {
             this.usageHistory.hourly.state,
             this.usageHistory.monthly.state,
             ...Object.keys(this.currentNodesLoad)
-               .map(it => this.currentNodesLoad[it])
-               .map(it => it.state)
+                .map(it => this.currentNodesLoad[it])
+                .map(it => it.state),
+            ...Object.keys(this.nodesUsages)
+                .map(it => this.nodesUsages[it])
+                .map(it => it.state)
         ]
     }
 
