@@ -44,7 +44,8 @@ const useStyles = makeStyles(theme => ({
         height: `${chartHeight}px`
     },
     legendItem: {
-        display: 'inline'
+        display: 'inline',
+        whiteSpace: 'nowrap'
     },
     legendDot: {
         height: '0.7em',
@@ -53,7 +54,14 @@ const useStyles = makeStyles(theme => ({
         display: 'inline-block',
         marginRight: '5px',
         marginLeft: '7px'
+    },
+    legendText: {
+        whiteSpace: 'normal'
+    },
+    legendActive: {
+        fontWeight: 'bold'
     }
+
 }))
 
 export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
@@ -93,7 +101,7 @@ export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
                             width={100}
                             height={200}
                             className={clsx(outToDate && classes.outToDate)}
-                            margin={{ top: 0, right: 4, bottom: 0, left: 4 }}
+                            margin={{ top: 0, right: 5, bottom: 0, left: 5 }}
                         >
                             <Pie
                                 activeIndex={outToDate ? undefined : activeIndex}
@@ -102,8 +110,8 @@ export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
                                 data={data}
                                 dataKey={dataKey}
                                 nameKey={nameKey}
-                                innerRadius="35%"
-                                outerRadius="70%"
+                                innerRadius="30%"
+                                outerRadius="65%"
                                 onMouseEnter={(_, index) => setActiveIndex(index)}
                             >
                                 {color && data && data.map((it, idx) => <Cell key={`cell-${idx}`} fill={color(it, idx)} />)}
@@ -111,13 +119,16 @@ export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
+
                 <ul>
                     {color &&
                         data &&
                         data.map((it, idx) => (
                             <li className={classes.legendItem} key={`cell-${idx}`}>
                                 <span className={classes.legendDot} style={{ backgroundColor: color(it, idx) }} />
-                                {legendFormatter(it[nameKey], idx)}
+                                <span className={clsx(classes.legendText, idx === activeIndex && classes.legendActive)}>
+                                    {legendFormatter(it[nameKey], idx)}
+                                </span>
                             </li>
                         ))}
                 </ul>
@@ -135,21 +146,18 @@ export const CurrentLoad: React.FC<IClusterCurrentLoadProps> = ({
 
 const renderActiveShape = (props: PieLabelRenderProps) => {
     const RADIAN = Math.PI / 180
-    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent } = props
+    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, percent } = props
 
     const sin = Math.sin(-RADIAN * (midAngle ?? 0))
     const cos = Math.cos(-RADIAN * (midAngle ?? 0))
-    const mx = Number(cx) + (Number(outerRadius) + 30) * cos
-    const my = Number(cy) + (Number(outerRadius) + 30) * sin
-    const ex = mx + (cos >= 0 ? 1 : -1) * 22
-    const ey = my
-    const textAnchor = cos < 0 ? 'start' : 'end'
+
+    const tx = Number(cx) + (Number(outerRadius) + 15) * cos
+    const ty = Number(cy) + (Number(outerRadius) + 20) * sin
+
+    const textAnchor = cos >= 0 ? 'start' : 'end'
 
     return (
         <g>
-            <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-                {payload.name}
-            </text>
             <Sector
                 cx={Number(cx)}
                 cy={Number(cy)}
@@ -169,8 +177,7 @@ const renderActiveShape = (props: PieLabelRenderProps) => {
                 fill={fill}
             />
 
-            <text x={ex} y={ey - 10 * (sin >= 0 ? 1 : -1)} textAnchor={textAnchor} fill="#333">
-                {' '}
+            <text x={tx} y={ty} dy={3} textAnchor={textAnchor} fill="#999">
                 {`${((percent ?? 0) * 100).toFixed(1)}%`}
             </text>
         </g>
