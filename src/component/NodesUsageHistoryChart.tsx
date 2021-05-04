@@ -46,6 +46,10 @@ const dateFormat = (t: TFunction): string => {
     return t('format.day-month-year')
 }
 
+const dateFormatWithTime = (t: TFunction): string => {
+    return t('format.day-month-year-hour')
+}
+
 const title = (type: Type): string => {
     return `${typeLabel(type)} usage`
 }
@@ -91,7 +95,7 @@ export const NodesUsageHistoryChart: React.FC<INodesUsageHistoryChartProps> = ({
                         <YAxis type="number" domain={[0, 'dataMax']} tickFormatter={(tick: number) => yTicksFormat(tick as number, type)}>
                             <Label className={classes.label} value={label(type)} angle={-90} position="insideBottomLeft" />
                         </YAxis>
-                        <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, dateFormat(t))}</p>} />
+                        <Tooltip labelFormatter={(tick: number | string) => <p>{format(tick as number, dateFormatWithTime(t))}</p>} />
 
                         <Area
                             name="non-allocatable"
