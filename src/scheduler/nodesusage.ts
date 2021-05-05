@@ -27,13 +27,13 @@ autorun(
                                 cpuAllocatable: item.cpuAllocatable,
                                 cpuUsageByPods: item.cpuUsageByPods,
                                 cpuNonAllocatable: item.cpuCapacity - item.cpuAllocatable,
-                                cpuAvailable: item.cpuAllocatable - item.cpuUsageByPods,
+                                cpuAvailable: Math.max(0., item.cpuAllocatable - item.cpuUsageByPods),
 
                                 memCapacity: item.memCapacity,
                                 memAllocatable: item.memAllocatable,
                                 memUsageByPods: item.memUsageByPods,
                                 memNonAllocatable: item.memCapacity - item.memAllocatable,
-                                memAvailable: item.memAllocatable - item.memUsageByPods,
+                                memAvailable: Math.max(0., item.memAllocatable - item.memUsageByPods),
                             })
                         })
 
