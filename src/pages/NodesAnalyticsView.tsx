@@ -1,13 +1,18 @@
-import { useObserver } from 'mobx-react-lite'
+import { action } from 'mobx'
+import { useLocalStore, useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 
+import DateFnsUtils from '@date-io/date-fns'
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 
 import { CurrentLoad } from '../component/CurrentLoad'
 import { NodesUsageHistoryChart } from '../component/NodesUsageHistoryChart'
@@ -40,6 +45,14 @@ const useStyles = makeStyles(theme => ({
     dashboardForm: {
         minWidth: '14rem'
     },
+    dateField: {
+        minWidth: '8em',
+        maxWidth: '10em',
+        margin: theme.spacing(0, 1)
+    },
+    dateRangeApply: {
+        marginTop: '12px'
+    },
     controls: {
         marginBottom: '15px'
     }
@@ -63,6 +76,25 @@ const nameOfDashboardTypes = (type: DashboardTypes): string => {
 export const NodesAnalyticsView = () => {
     const classes = useStyles()
     const store = useStore()
+    const dateRange = useLocalStore(() => ({
+        startDate: store.nodesUsagesDateRange.start,
+        endDate: store.nodesUsagesDateRange.end,
+        setStartDate: action((date: Date | null) => {
+            if (date) {
+                dateRange.startDate = date
+            }
+        }),
+        setEndDate: action((date: Date | null) => {
+            if (date) {
+                dateRange.endDate = date
+            }
+        }),
+        isDirty: () => dateRange.startDate !== store.nodesUsagesDateRange.start || dateRange.endDate !== store.nodesUsagesDateRange.end,
+        commit: action(() => {
+            store.nodesUsagesDateRange.start = dateRange.startDate
+            store.nodesUsagesDateRange.end = dateRange.endDate
+        })
+    }))
     const [selectedCluster, setSelectedCluster] = React.useState(store.clusterNames.length === 0 ? '' : store.clusterNames[0])
     const onClusterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setSelectedCluster(event.target.value as string)
@@ -112,6 +144,51 @@ export const NodesAnalyticsView = () => {
                                 ))}
                             </Select>
                         </FormControl>
+                        {selectedDashboard === DashboardTypes.NodesUsageHistory && (
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <FormControl>
+                                    <KeyboardDatePicker
+                                        disableToolbar
+                                        className={classes.dateField}
+                                        variant="inline"
+                                        format="MM/dd/yyyy"
+                                        margin="normal"
+                                        id="date-start"
+                                        label="start date"
+                                        value={dateRange.startDate}
+                                        onChange={dateRange.setStartDate}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date'
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormControl>
+                                    <KeyboardDatePicker
+                                        disableToolbar
+                                        className={classes.dateField}
+                                        variant="inline"
+                                        format="MM/dd/yyyy"
+                                        margin="normal"
+                                        id="date-end"
+                                        label="end date"
+                                        value={dateRange.endDate}
+                                        onChange={dateRange.setEndDate}
+                                        KeyboardButtonProps={{
+                                            'aria-label': 'change date'
+                                        }}
+                                    />
+                                </FormControl>
+                                <IconButton
+                                    color="primary"
+                                    className={classes.dateRangeApply}
+                                    aria-label="apply date range"
+                                    disabled={!dateRange.isDirty()}
+                                    onClick={dateRange.commit}
+                                >
+                                    <CheckCircleOutlineIcon />
+                                </IconButton>
+                            </MuiPickersUtilsProvider>
+                        )}
                     </Grid>
                 </Grid>
                 {selectedDashboard === DashboardTypes.NodesRecentOccupation && (
