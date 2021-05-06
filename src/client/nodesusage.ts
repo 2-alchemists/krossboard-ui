@@ -2,23 +2,36 @@ import axios from 'axios'
 
 import { ResourceError } from '../store/model'
 
-export interface INodeUsagePayload {
-    dateUTC: string
-    name: string
-    state: string
-    message: string
-    cpuCapacity: number
-    cpuAllocatable: number
-    cpuUsageByPods: number
-    memCapacity: number
-    memAllocatable: number
-    memUsageByPods: number
+export interface INodeUsagesPayload {
+    [node: string]: INodeUsagePayload
 }
 
-export const getNodesUsage = async (endpoint: string, clusterName: string): Promise<INodeUsagePayload[]> => {
+export interface INodeUsagePayload {
+    allocatableItems: IResourceUsagePayload
+    capacityItems: IResourceUsagePayload
+    usageByPodItems: IResourceUsagePayload
+}
+
+export interface IResourceUsagePayload {
+    cpuUsage: [IResourceUsageValuePayload]
+    memUsage: [IResourceUsageValuePayload]
+}
+
+export interface IResourceUsageValuePayload {
+    dateUTC: string
+    value: number
+}
+
+export const getNodesUsage = async (
+    endpoint: string,
+    clusterName: string,
+    startDateUTC?: Date,
+    endDateUTC?: Date
+): Promise<INodeUsagesPayload> => {
     const resource = `/nodesusage/${clusterName}`
+
     return axios
-        .get(endpoint + `/api${resource}`)
+        .get(getNodesUsageLink(`${endpoint}/api${resource}`, startDateUTC, endDateUTC))
         .then(res => res.data)
         .then(data => {
             if (data.status && data.status !== 'ok') {
@@ -30,3 +43,23 @@ export const getNodesUsage = async (endpoint: string, clusterName: string): Prom
             throw new ResourceError(e.toString(), resource)
         })
 }
+
+export const getNodesUsageLink = (resource: string, startDateUTC?: Date, endDateUTC?: Date) => {
+    let url = resource + '?'
+
+    let prepend = ''
+
+    if (startDateUTC) {
+        url = url + `${prepend}startDateUTC=${toUTC(startDateUTC)}`
+        prepend = '&'
+    }
+
+    if (endDateUTC) {
+        url = url + `${prepend}endDateUTC=${toUTC(endDateUTC)}`
+        prepend = '&'
+    }
+
+    return url
+}
+
+const toUTC = (date?: Date) => date?.toISOString().replace(/(\.\d*)?Z/, '')
