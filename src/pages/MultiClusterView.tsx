@@ -25,9 +25,12 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1, 3)
     },
     dateField: {
-        minWidth: '10em',
-        maxWidth: '15em',
+        minWidth: '8em',
+        maxWidth: '10em',
         margin: theme.spacing(0, 1)
+    },
+    dateRangeApply: {
+        marginTop: '12px'
     },
     centeredGrid: {
         alignItems: 'center',
