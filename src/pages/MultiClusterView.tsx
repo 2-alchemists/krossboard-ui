@@ -3,11 +3,14 @@ import { useLocalStore, useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 
 import DateFnsUtils from '@date-io/date-fns'
-import { Button, InputLabel, Typography } from '@material-ui/core'
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 
 import { FormatType, getUsageHistoryDownloadLink, PeriodType } from '../client/usagehistory'
@@ -103,9 +106,15 @@ export const MultiClusterView = () => {
                                         }}
                                     />
                                 </FormControl>
-                                <Button className={classes.formControl} variant="outlined" disabled={!dateRange.isDirty()} onClick={dateRange.commit}>
-                                    Apply
-                                </Button>
+                                <IconButton
+                                    color="primary"
+                                    className={classes.dateRangeApply}
+                                    aria-label="apply date range"
+                                    disabled={!dateRange.isDirty()}
+                                    onClick={dateRange.commit}
+                                >
+                                    <CheckCircleOutlineIcon />
+                                </IconButton>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel shrink={true}>export data</InputLabel>
                                     <Typography className={classes.links} color="textPrimary" gutterBottom>
