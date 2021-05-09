@@ -13,9 +13,11 @@ export interface INodeUsagePayload {
 }
 
 export interface IResourceUsagePayload {
-    cpuUsage: [IResourceUsageValuePayload]
-    memUsage: [IResourceUsageValuePayload]
+    cpuUsage: IResourceUsageValuesPayload
+    memUsage: IResourceUsageValuesPayload
 }
+
+export type IResourceUsageValuesPayload = [IResourceUsageValuePayload] | null
 
 export interface IResourceUsageValuePayload {
     dateUTC: string

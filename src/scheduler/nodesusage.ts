@@ -23,7 +23,7 @@ autorun(async () => {
                         const usages: Record<number, IUsageHistoryItem> = {}
                         const node: INodeUsagePayload = items[nodeName]
 
-                        node.allocatableItems.cpuUsage.forEach(v => {
+                        node.allocatableItems.cpuUsage?.forEach(v => {
                             const tag = new Date(v.dateUTC).getTime()
                             const usage = computeIfAbsent(usages, tag, _ => ({
                                 tag
@@ -32,7 +32,7 @@ autorun(async () => {
                             usage.cpuAllocatable = v.value
                         })
 
-                        node.allocatableItems.memUsage.forEach(v => {
+                        node.allocatableItems.memUsage?.forEach(v => {
                             const tag = new Date(v.dateUTC).getTime()
                             const usage = computeIfAbsent(usages, tag, _ => ({
                                 tag
@@ -41,7 +41,7 @@ autorun(async () => {
                             usage.memAllocatable = v.value
                         })
 
-                        node.capacityItems.cpuUsage.forEach(v => {
+                        node.capacityItems.cpuUsage?.forEach(v => {
                             const tag = new Date(v.dateUTC).getTime()
                             const usage = computeIfAbsent(usages, tag, _ => ({
                                 tag
@@ -50,7 +50,7 @@ autorun(async () => {
                             usage.cpuCapacity = v.value
                         })
 
-                        node.capacityItems.memUsage.forEach(v => {
+                        node.capacityItems.memUsage?.forEach(v => {
                             const tag = new Date(v.dateUTC).getTime()
                             const usage = computeIfAbsent(usages, tag, _ => ({
                                 tag
@@ -59,7 +59,7 @@ autorun(async () => {
                             usage.memCapacity = v.value
                         })
 
-                        node.usageByPodItems.cpuUsage.forEach(v => {
+                        node.usageByPodItems.cpuUsage?.forEach(v => {
                             const tag = new Date(v.dateUTC).getTime()
                             const usage = computeIfAbsent(usages, tag, _ => ({
                                 tag
@@ -68,7 +68,7 @@ autorun(async () => {
                             usage.cpuUsageByPods = v.value
                         })
 
-                        node.usageByPodItems.memUsage.forEach(v => {
+                        node.usageByPodItems.memUsage?.forEach(v => {
                             const tag = new Date(v.dateUTC).getTime()
                             const usage = computeIfAbsent(usages, tag, _ => ({
                                 tag
