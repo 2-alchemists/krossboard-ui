@@ -25,6 +25,8 @@ export class KoaStore {
     }
     @observable public currentNodesLoad: Record<ClusterName, IWithHarvesterState<Record<NodeName, IUsageHistoryItem[]>>> = {}
     @observable public nodesUsages: Record<ClusterName, IWithHarvesterState<Record<NodeName, IUsageHistoryItem[]>>> = {}
+    @observable public nodesUsagesDateRange: Interval = { start: sub(new Date(), { hours: 24 }), end: new Date() }
+    @observable public nodesUsagesEndDate: Date | number = this.nodesUsagesDateRange.end
     @observable public resourcesUsages: Record<ClusterName, Record<string /* type */, IWithHarvesterState<IUsageHistoryItem[]>>> = {}
     @observable public usageHistoryDateRange: Interval = { start: sub(new Date(), { hours: 24 }), end: new Date() }
     @observable public usageHistoryEndDate: Date | number = this.usageHistoryDateRange.end
@@ -134,23 +136,6 @@ export class KoaStore {
         for (const key of Object.keys(clusters)) {
             this.addCluster(key, clusters[key])
         }
-    }
-
-    @action
-    public setUsageHistoryStartDate = (date: Date) => {
-        // starting from YYYY/MM/DD 00:00:00 Z
-        const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
-
-        this.usageHistoryDateRange.start = target
-    }
-
-    @action
-    public setUsageHistoryEndDate = (date: Date) => {
-        // ending to YYYY/MM/DD 23:59:59 Z
-        const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999))
-
-        this.usageHistoryDateRange.end = target
-        this.usageHistoryEndDate = target
     }
 
     protected addCluster = (name: string, endpoint: string) => {

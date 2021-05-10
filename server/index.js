@@ -492,56 +492,192 @@ app.get('/api/dataset/:type', (req, res) => {
 })
 
 app.get('/api/nodesusage/:clustername', (req, res) => {
-    res.json([
+    res.json(
         {
-            dateUTC: '2021-04-17T22:48:14',
-            name: 'gke-cluster-1-default-pool-7f5e6673-m6so',
-            cpuCapacity: 2,
-            cpuAllocatable: 0.9400000000000001,
-            cpuUsageByPods: 0.057068408,
-            memCapacity: 4130848768,
-            memAllocatable: 2957492224,
-            memUsageByPods: 199458816
-        },
-        {
-            dateUTC: '2021-04-17T22:48:14',
-            name: 'gke-cluster-1-default-pool-7f5e6673-n8d8',
-            cpuCapacity: 2,
-            cpuAllocatable: 0.9400000000000001,
-            cpuUsageByPods: 0.006896725,
-            memCapacity: 4130848768,
-            memAllocatable: 2957492224,
-            memUsageByPods: 96665600
-        },
-        {
-            dateUTC: '2021-04-17T22:48:14',
-            name: 'gke-cluster-1-default-pool-7f5e6673-qxp1',
-            cpuCapacity: 2,
-            cpuAllocatable: 0.9400000000000001,
-            cpuUsageByPods: 0.004305296,
-            memCapacity: 4130848768,
-            memAllocatable: 2957492224,
-            memUsageByPods: 57884672
-        },
-        {
-            dateUTC: '2021-04-17T22:48:14',
-            name: 'gke-cluster-1-default-pool-7f5e6673-5g5l',
-            cpuCapacity: 2,
-            cpuAllocatable: 0.9400000000000001,
-            cpuUsageByPods: 0.005580291,
-            memCapacity: 4130848768,
-            memAllocatable: 2957492224,
-            memUsageByPods: 60694528
-        },
-        {
-            dateUTC: '2021-04-17T22:48:14',
-            name: 'gke-cluster-1-default-pool-7f5e6673-j6cj',
-            cpuCapacity: 2,
-            cpuAllocatable: 0.9400000000000001,
-            cpuUsageByPods: 0.005956893,
-            memCapacity: 4130848768,
-            memAllocatable: 2957492224,
-            memUsageByPods: 61485056
-        }
-    ])
+            "gke-cluster-1-default-pool-7f5e6673-exhj": {
+              "allocatableItems": {
+                "cpuUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 0.94
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 0.94
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 0.94
+                  }
+                ],
+                "memUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 2957492224
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 2957492224
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 2957492224
+                  }
+                ]
+              },
+              "capacityItems": {
+                "cpuUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 2
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 2
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 2
+                  }
+                ],
+                "memUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 4130848768
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 4130848768
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 4130848768
+                  }
+                ]
+              },
+              "usageByPodItems": {
+                "cpuUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 0.053609777440000006
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 0.062027032839999996
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 0.06116529231999999
+                  }
+                ],
+                "memUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 199214694.4
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 199121469.44
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 198935756.8
+                  }
+                ]
+              }
+            },
+            "gke-cluster-1-default-pool-7f5e6673-tkrb": {
+              "allocatableItems": {
+                "cpuUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 0.94
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 0.94
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 0.94
+                  }
+                ],
+                "memUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 2957500416
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 2957500416
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 2957500416
+                  }
+                ]
+              },
+              "capacityItems": {
+                "cpuUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 2
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 2
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 2
+                  }
+                ],
+                "memUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 4130856960
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 4130856960
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 4130856960
+                  }
+                ]
+              },
+              "usageByPodItems": {
+                "cpuUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 0.00803034421
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 0.01001101176
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 0.009628540840000003
+                  }
+                ],
+                "memUsage": [
+                  {
+                    "dateUTC": "2021-05-03T21:50:00+02:00",
+                    "value": 101192294.4
+                  },
+                  {
+                    "dateUTC": "2021-05-03T21:55:00+02:00",
+                    "value": 101348433.92
+                  },
+                  {
+                    "dateUTC": "2021-05-03T22:00:00+02:00",
+                    "value": 101837209.6
+                  }
+                ]
+              }
+            }
+          }
+    )
 })
