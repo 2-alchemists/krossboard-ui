@@ -17,7 +17,7 @@ export const getDiscovery = async (endpoint: string): Promise<IGetDiscoveryPaylo
         .get(endpoint + '/api/discovery')
         .then(res => res.data)
         .then(data => {
-            if (data.status !== 'ok') {
+            if (data.status === 'error') {
                 throw new ResourceError(`Error returned from server: ${data.message ? data.message : 'unknown'}`, resource)
             }
             return data

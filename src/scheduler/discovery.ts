@@ -19,7 +19,11 @@ autorun(
                         }
                         koaStore.setClusters(instances)
                         koaStore.instances.state.updatedAt = new Date()
-                        koaStore.clearError(koaStore.instances.state)
+                        if( data.status === 'warning' ) {
+                            koaStore.setError(koaStore.instances.state, data.message)
+                        } else {
+                            koaStore.clearError(koaStore.instances.state)
+                        }
                     })
                 })
                 .catch(e => {
