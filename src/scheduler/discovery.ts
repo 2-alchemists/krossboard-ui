@@ -20,7 +20,7 @@ autorun(
                         koaStore.setClusters(instances)
                         koaStore.instances.state.updatedAt = new Date()
                         if( data.status === 'warning' ) {
-                            koaStore.setError(koaStore.instances.state, data.message)
+                            koaStore.setError(koaStore.instances.state, { message: data.message, resource: 'license' })
                         } else {
                             koaStore.clearError(koaStore.instances.state)
                         }
