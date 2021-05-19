@@ -12,7 +12,8 @@ app.get('/', (req, res) => res.send('Im running!'))
 
 app.get('/api/discovery', (req, res) => {
     res.json({
-        status: 'ok',
+        status: 'warning',
+        message: "Free License. Limited to 3 Kubernetes clusters (out of 3 discovered)",
         instances: [
             {
                 clusterName: 'gke_kubernetes-opex-analytics_us-central1-a_koa-dev',
