@@ -17,7 +17,7 @@ import { useStore } from '../store/storeProvider'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        padding: theme.spacing(4),
+        padding: theme.spacing(3),
         paddingTop: 0
     },
     formControl: {
@@ -45,7 +45,7 @@ enum PeriodType {
     monthly = 'monthly'
 }
 
-export const ClusterView = () => {
+export const ClusterUsageHistoryView = () => {
     const classes = useStyles()
     const store = useStore()
 

@@ -15,7 +15,7 @@ import { IUsageHistoryItem } from '../store/model'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        padding: theme.spacing(4)
+        padding: theme.spacing(3),
     },
     noDataContainer: {
         height: '40vh'
@@ -46,7 +46,7 @@ const legend = (value?: IUsageHistoryItem) => {
     }
 }
 
-export const CurrentLoadView = () => {
+export const ClusterUsageCurrentView = () => {
     const classes = useStyles()
     const store = useStore()
 
