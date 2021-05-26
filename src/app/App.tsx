@@ -9,18 +9,22 @@ import { format } from 'date-fns'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
-import { BrowserRouter as Router, NavLink, Redirect, Route, Switch } from 'react-router-dom'
+import {
+    BrowserRouter as Router, NavLink, Redirect, Route, Switch, useHistory
+} from 'react-router-dom'
 
 import {
-    ClickAwayListener, Drawer, Hidden, IconButton, LinearProgress, List, ListItem, ListItemText,
-    Tooltip
+    Drawer, Hidden, IconButton, LinearProgress, List, ListItem, ListItemText, ListSubheader, Tooltip
 } from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
 import Box from '@material-ui/core/Box'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
 import { makeStyles, ThemeProvider } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -29,12 +33,9 @@ import MenuIcon from '@material-ui/icons/Menu'
 
 import Logo from '../../assets/krossboard-logo.png'
 import * as pckg from '../../package.json'
-import { ClusterView } from '../pages/ClusterView'
-import { CurrentLoadView } from '../pages/CurrentLoadView'
-import { MultiClusterView } from '../pages/MultiClusterView'
-import { NodesAnalyticsView } from '../pages/NodesAnalyticsView'
 import { useStore } from '../store/storeProvider'
 import { theme as mytheme } from '../theme'
+import { homeMenu, menus, useMatchingMenus } from './menu'
 
 const drawerWidth = 240
 
@@ -79,28 +80,51 @@ const useStyles = makeStyles(theme => ({
     link: {
         color: 'rgba(255,255,255,0.8)',
         textTransform: 'uppercase',
-        paddingBottom: '3px',
-        margin: theme.spacing(1, 1.5),
-        '&:hover': {
-            textDecoration: 'none',
-            borderBottom: `1px solid ${theme.palette.text.hint}`
-        }
+        padding: '0 0',
+        margin: '0 0',
+        paddingTop: '5px',
+        paddingLeft: theme.spacing(4),
+        whiteSpace: 'nowrap',
+        width: '14em',
     },
-    selected: {
-        borderBottom: `1px solid ${theme.palette.text.primary}`
+    subheader: {
+        color: 'rgba(255,255,255,0.8)',
+    },
+    linkDrawer: {
+        color: 'rgba(255,255,255,0.8)',
+        textTransform: 'uppercase',
+        paddingTop: '0px',
+        paddingBottom: '0px',
+        paddingLeft: theme.spacing(4),
+        whiteSpace: 'nowrap',
+        borderLeft: 'thick solid transparent'
+    },
+    menu: {
+        display: 'flex',
+        flexDirection: 'row',
+        padding: '0',
+        margin: '0'
     },
     itemSelected: {
         borderLeftColor: theme.palette.primary.dark,
         borderLeftStyle: 'solid',
         borderLeftWidth: 'thick'
     },
+    pageMenu: {
+        height: '32px',
+        fontSize: '12px',
+        color: 'burlywood'
+    },
+    pageMenuIcon: {
+        color: 'burlywood'
+    },
     progress: {
         height: '5px'
     },
     errors: {
         position: 'fixed',
-        top: '78px',
-        right: '15px'
+        top: '80px',
+        right: '12px'
     },
     errorsIcon: {
         cursor: 'pointer'
@@ -144,26 +168,13 @@ export const App = () => {
 const Header = () => {
     const classes = useStyles()
     const [drawerOpened, setDrawerOpened] = React.useState(false)
+    const matchingMenus = useMatchingMenus()
+    const theHistory = useHistory()
 
-    const links = [
-        {
-            to: '/',
-            exact: true,
-            text: 'Current usage'
-        },
-        {
-            to: '/cluster-view',
-            text: 'Usage trends & Accounting'
-        },
-        {
-            to: '/multicluster-view',
-            text: 'Consolidated usage & History'
-        },
-        {
-            to: '/nodes-analytics-view',
-            text: 'Nodes Analytics'
-        }
-    ]
+    const onPageMenuChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        event.stopPropagation()
+        theHistory.push(event.target.value as string)
+    }
 
     return (
         <AppBar position="static" elevation={0} className={classes.appBar}>
@@ -194,39 +205,83 @@ const Header = () => {
                             keepMounted: true // Better open performance on mobile.
                         }}
                     >
-                        <List>
-                            {links.map(it => (
-                                <ListItem
-                                    key={it.to}
-                                    button
-                                    component={NavLink}
-                                    to={it.to}
-                                    color="textSecondary"
-                                    className={classes.link}
-                                    activeClassName={classes.itemSelected}
-                                    exact={it.exact}
-                                    onClick={() => setDrawerOpened(false)}
-                                >
-                                    <ListItemText primary={it.text} />
-                                </ListItem>
-                            ))}
+                        <List component="nav">
+                            {menus.map(group => (
+                                <React.Fragment key={group[0].primary}>
+                                    <List 
+                                        component="div" 
+                                        disablePadding
+                                        subheader={
+                                            <ListSubheader 
+                                                component="div"
+                                                className={classes.subheader}>
+                                              {group[0].primary}
+                                            </ListSubheader>
+                                          }
+                                        >
+                                        {group.map(it => (
+                                            <ListItem
+                                                key={it.to}
+                                                button
+                                                component={NavLink}
+                                                to={it.to}
+                                                color="textSecondary"
+                                                className={classes.linkDrawer}
+                                                activeClassName={classes.itemSelected}
+                                                exact={true}
+                                                onClick={() => setDrawerOpened(false)}
+                                            >
+                                                <ListItemText primary={it.secondary} />
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </React.Fragment>)
+                            )}
                         </List>
                     </Drawer>
 
                     <Hidden smDown>
-                        {links.map(it => (
-                            <Link
-                                key={it.to}
-                                to={it.to}
-                                component={NavLink}
-                                color="textSecondary"
-                                className={classes.link}
-                                exact={it.exact}
-                                activeClassName={classes.selected}
-                            >
-                                {it.text}
-                            </Link>
-                        ))}
+                        <div>
+                            <List className={classes.menu}>
+                                {matchingMenus.map(it => (
+                                    <ListItem
+                                        key={it.to}
+                                        button
+                                        color="textSecondary"
+                                        className={classes.link}
+                                        component={NavLink}
+                                        to={it.to}
+                                        exact={true}
+                                        selected={it.matching}
+                                    >
+                                        <ListItemText
+                                            primary={it.primary}
+                                            secondary={
+                                                it.matching && it.hasChildren ? (
+                                                    <Select
+                                                        value={it.to}
+                                                        onChange={onPageMenuChange}
+                                                        className={classes.pageMenu}
+                                                        disableUnderline={true}
+                                                        classes={{
+                                                            icon: classes.pageMenuIcon
+                                                        }}
+                                                    >
+                                                        {menus[it.group].map(choice => (
+                                                            <MenuItem key={choice.to} value={choice.to}>
+                                                                {choice.secondary}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                ) : (
+                                                    <div className={classes.pageMenu} />
+                                                )
+                                            }
+                                        />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </div>
                     </Hidden>
                 </nav>
             </Toolbar>
@@ -294,20 +349,15 @@ const Errors = () => {
 const Content = () => {
     return (
         <Switch>
-             <Route path="/nodes-analytics-view">
-                <NodesAnalyticsView />
-            </Route>
-            <Route path="/multicluster-view">
-                <MultiClusterView />
-            </Route>
-            <Route path="/cluster-view">
-                <ClusterView />
-            </Route>
-            <Route exact path="/">
-                <CurrentLoadView />
-            </Route>
-            <Route path="*">
-                <Redirect to="/" />
+            {menus
+                .flatMap(it => it)
+                .map(it => (
+                    <Route exact key={it.to} path={it.to}>
+                        <it.view />
+                    </Route>
+                ))}
+            <Route>
+                <Redirect to={homeMenu.to} />
             </Route>
         </Switch>
     )
@@ -346,7 +396,7 @@ const Footer = () => {
             </Grid>
             <Box mt={5}>
                 <Typography variant="body2" color="textSecondary" align="center">
-                    {'Copyright © '} 
+                    {'Copyright © '}
                     {new Date().getFullYear()}
                     {' - '}
                     <Link color="inherit" href="https://krossboard.app/aboutus/" target="_blank">
@@ -354,7 +404,7 @@ const Footer = () => {
                     </Link>
                     {'. '}
                     <Link color="inherit" href="https://krossboard.app/legal/terms-of-use/" target="_blank">
-                       Terms of use
+                        Terms of use
                     </Link>
                     {'.'}
                 </Typography>
