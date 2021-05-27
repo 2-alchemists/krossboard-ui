@@ -25,13 +25,13 @@ export const menus: IMenu[][] = [
     [
         {
             to: '/cluster-usage/current',
-            primary: 'Cluster usage',
+            primary: 'Clusters usage',
             secondary: 'Current usage',
             view: ClusterUsageCurrentView
         },
         {
             to: '/cluster-usage/history',
-            primary: 'Cluster usage',
+            primary: 'Clusters usage',
             secondary: 'Usage history',
             view: ClusterUsageHistoryView
         }
@@ -39,21 +39,21 @@ export const menus: IMenu[][] = [
     [
         {
             to: '/namespace-usage',
-            primary: 'Namespace usage',
-            secondary: 'Namespace usage',
+            primary: 'Namespaces usage',
+            secondary: 'Namespaces usage',
             view: NamespaceUsageView
         }
     ],
     [
         {
             to: '/node-usage/recent-occupation',
-            primary: 'Node usage',
+            primary: 'Nodes usage',
             secondary: 'Recent occupation',
             view: NodeUsageRecentOccupationView
         },
         {
             to: '/node-usage/history',
-            primary: 'Node usage',
+            primary: 'Nodes usage',
             secondary: 'Usage history',
             view: NodeUsageHistoryView
         }
