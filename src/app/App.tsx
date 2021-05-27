@@ -111,7 +111,7 @@ const useStyles = makeStyles(theme => ({
         borderLeftWidth: 'thick'
     },
     pageMenu: {
-        height: '32px',
+        height: '16px',
         fontSize: '12px',
         color: 'burlywood'
     },
