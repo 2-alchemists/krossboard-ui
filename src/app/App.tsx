@@ -8,6 +8,7 @@ import '../scheduler/usagehistory'
 import { format } from 'date-fns'
 import { useObserver } from 'mobx-react-lite'
 import * as React from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
     BrowserRouter as Router, NavLink, Redirect, Route, Switch, useHistory
@@ -169,7 +170,7 @@ export const App = () => {
 
 const Header = () => {
     const classes = useStyles()
-    const [drawerOpened, setDrawerOpened] = React.useState(false)
+    const [drawerOpened, setDrawerOpened] = useState(false)
     const matchingMenus = useMatchingMenus()
     const theHistory = useHistory()
 
@@ -259,9 +260,9 @@ const Header = () => {
                                         <ListItemText
                                             primary={it.primary}
                                             secondary={
-                                                it.matching && it.hasChildren ? (
+                                                it.hasChildren ? (
                                                     <Select
-                                                        value={it.to}
+                                                        value={matchingMenus[it.group].to}
                                                         onChange={onPageMenuChange}
                                                         className={classes.pageMenu}
                                                         disableUnderline={true}
