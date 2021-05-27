@@ -24,13 +24,13 @@ export interface IMenuWithMatches extends IMenu {
 export const menus: IMenu[][] = [
     [
         {
-            to: '/cluster-usage/current',
+            to: '/clusters-usage/current',
             primary: 'Clusters usage',
             secondary: 'current resources consumption',
             view: ClusterUsageCurrentView
         },
         {
-            to: '/cluster-usage/history',
+            to: '/clusters-usage/history',
             primary: 'Clusters usage',
             secondary: 'usage history',
             view: ClusterUsageHistoryView
@@ -38,7 +38,7 @@ export const menus: IMenu[][] = [
     ],
     [
         {
-            to: '/namespace-usage',
+            to: '/namespaces-usage',
             primary: 'Namespaces usage',
             secondary: 'namespaces usage',
             view: NamespaceUsageView
@@ -46,13 +46,13 @@ export const menus: IMenu[][] = [
     ],
     [
         {
-            to: '/node-usage/recent-occupation',
+            to: '/node-usages/pods-consumption-occupation',
             primary: 'Nodes usage',
             secondary: 'pods consumption & occupation',
             view: NodeUsageRecentOccupationView
         },
         {
-            to: '/node-usage/history',
+            to: '/node-usages/history',
             primary: 'Nodes usage',
             secondary: 'usage history',
             view: NodeUsageHistoryView
