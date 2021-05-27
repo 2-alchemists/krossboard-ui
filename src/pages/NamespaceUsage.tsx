@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const MultiClusterView = () => {
+export const NamespaceUsageView = () => {
     const classes = useStyles()
     const store = useStore()
     const dateRange = useLocalStore(() => ({
