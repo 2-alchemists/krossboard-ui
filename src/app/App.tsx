@@ -83,9 +83,10 @@ const useStyles = makeStyles(theme => ({
         padding: '0 0',
         margin: '0 0',
         paddingTop: '5px',
-        paddingLeft: theme.spacing(4),
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
         whiteSpace: 'nowrap',
-        width: '14em',
+        width: '16em',
     },
     subheader: {
         color: 'rgba(255,255,255,0.8)',
