@@ -37,7 +37,7 @@ import { useStore } from '../store/storeProvider'
 import { theme as mytheme } from '../theme'
 import { homeMenu, menus, useMatchingMenus } from './menu'
 
-const drawerWidth = 240
+const drawerWidth = 290
 
 const useStyles = makeStyles(theme => ({
     '@global': {
@@ -89,11 +89,11 @@ const useStyles = makeStyles(theme => ({
         width: '16em',
     },
     subheader: {
+        textTransform: 'uppercase',
         color: 'rgba(255,255,255,0.8)',
     },
     linkDrawer: {
         color: 'rgba(255,255,255,0.8)',
-        textTransform: 'uppercase',
         paddingTop: '0px',
         paddingBottom: '0px',
         paddingLeft: theme.spacing(4),
