@@ -94,9 +94,7 @@ export const SettingsView = () => {
                         Upload Kubernetes configuration
                     </Typography>
                     <Typography variant="body2" className={classes.paragraph}>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur unde suscipit, quam beatae rerum
-                        inventore consectetur, neque doloribus, cupiditate numquam dignissimos laborum fugiat deleniti? Eum quasi quidem
-                        quibusdam.
+                        Select a Kubernetes configuration file (i.e. KUBECONFIG file) and trigger an upload request. Once success, the different clusters defined inside the uploaded file will be discovered and handled by Krossboard within the next 5 minutes. If you have several KUBECONFIG files, repeat the process for each file.
                     </Typography>
 
                     <form onSubmit={handleUpload}>
