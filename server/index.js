@@ -1,8 +1,12 @@
 // Quick & dirty implementation of the server which mimics backend, for testing purposes.
+//
+// $ yarn start-server 
 const express = require('express')
 const cors = require('cors')
+const multer = require('multer')
 const app = express()
 const port = 1519
+const upload = multer()
 
 app.use(cors())
 
@@ -681,4 +685,23 @@ app.get('/api/nodesusage/:clustername', (req, res) => {
             }
           }
     )
+})
+
+app.post('/api/kubeconfig', multer().any(), (req, res) => {
+  const rnd = Math.floor(Math.random() * 2);
+
+  if(rnd === 0) {
+    res.json({
+      status: 'error',
+      message: 'invalid format'
+    })
+    return
+  }  
+
+  const formData = req.files
+    console.log('form data', formData);
+  
+    res.json({
+        status: 'ok'
+    })
 })
