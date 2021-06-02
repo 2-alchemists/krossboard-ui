@@ -29,6 +29,12 @@ export const uploadKubeconfig = async (
             }
         })
         .catch(e => {
+            const message = e?.response?.data?.message
+            
+            if(message) {
+                throw new ResourceError(message, resource)
+            }
+            
             throw new ResourceError(e.toString(), resource)
         })
 }
