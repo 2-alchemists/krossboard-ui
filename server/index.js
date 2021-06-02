@@ -691,7 +691,9 @@ app.post('/api/kubeconfig', multer().any(), (req, res) => {
   const rnd = Math.floor(Math.random() * 2);
 
   if(rnd === 0) {
-    res.json({
+    res
+      .status(400)
+      .json({
       status: 'error',
       message: 'invalid format'
     })
