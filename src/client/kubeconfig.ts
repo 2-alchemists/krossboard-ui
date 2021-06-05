@@ -10,7 +10,7 @@ export const uploadKubeconfig = async (
     endpoint: string,
     kubeconfig: File,
     onProgress?: (progressEvent: any) => void
-): Promise<void> => {
+): Promise<string> => {
     const resource = `/kubeconfig`
 
     const bodyFormData = new FormData()
@@ -24,9 +24,11 @@ export const uploadKubeconfig = async (
         })
         .then(res => res.data)
         .then((data: IGetDiscoveryPayload) => {
-            if (data.status !== 'ok') {
+            if (data.status !== 'success') {
                 throw new ResourceError(`${data.message ? data.message : 'unknown'}`, resource)
             }
+
+            return data.message ?? 'Successfully uploaded!'
         })
         .catch(e => {
             const message = e?.response?.data?.message
