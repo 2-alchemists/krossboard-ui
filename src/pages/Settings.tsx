@@ -45,14 +45,15 @@ const useStyles = makeStyles(theme => ({
     },
     message: {
         float: 'left',
-        marginTop: '5px'
+        marginTop: '5px',
+        width: '80%'
     },
     error: {
         color: '#cd5c5c'
     },
 }))
 
-type UploadState = { kind: 'pending' } | { kind: 'progress'; progress: number } | { kind: 'done' } | { kind: 'error'; message: string }
+type UploadState = { kind: 'pending' } | { kind: 'progress'; progress: number } | { kind: 'done'; message: string } | { kind: 'error'; message: string }
 
 export const SettingsView = () => {
     const classes = useStyles()
@@ -76,8 +77,8 @@ export const SettingsView = () => {
                     progress: Math.round((100 * e.loaded) / e.total)
                 })
             })
-                .then(_ => {
-                    setUploadState({ kind: 'done' })
+                .then(m => {
+                    setUploadState({ kind: 'done', message: m })
                 })
                 .catch((e: Error) => {
                     setUploadState({ kind: 'error', message: e.message })
@@ -121,7 +122,7 @@ export const SettingsView = () => {
                         <Divider className={classes.divider} color="primary" />
                         {uploadState.kind === 'done' && (
                             <Typography variant="subtitle2" className={clsx(classes.message)}>
-                                Successfully uploaded!
+                                {uploadState.message}
                             </Typography>
                         )}
                         {uploadState.kind === 'error' && (
