@@ -704,6 +704,7 @@ app.post('/api/kubeconfig', multer().any(), (req, res) => {
     console.log('form data', formData);
   
     res.json({
-        status: 'ok'
+        status: 'success',
+        message: 'upload completed successfully /opt/krossboard/kubeconfig.d/kubeconfig-uploaded-20210603T192933'
     })
 })
