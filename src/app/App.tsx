@@ -150,7 +150,13 @@ const useStyles = makeStyles(theme => ({
             paddingTop: theme.spacing(2),
             paddingBottom: '0px'
         }
-    }
+    },
+    listItemRoot: {
+        '&$selected': {
+          backgroundColor: theme.palette.primary.dark
+        },
+    },
+    selected: {},
 }))
 
 export const App = () => {
@@ -252,6 +258,7 @@ const Header = () => {
                                         button
                                         color="textSecondary"
                                         className={classes.link}
+                                        classes={{ root: classes.listItemRoot, selected: classes.selected }}
                                         component={NavLink}
                                         to={it.to}
                                         exact={true}
