@@ -1268,10 +1268,10 @@
   resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.1.tgz#283f669ff76d7b8260df8ab7a4262cc83d988256"
   integrity sha512-fZQQafSREFyuZcdWFAExYjBiCL7AUCdgsk80iO0q4yihYYdcIiH28CcuPTGFgLOCC8RlW49GSQxdHwZP+I7CNg==
 
-"@types/node@^11.13.6":
-  version "11.15.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.15.4.tgz#2c8d58f726cfbbd9b76d179475fd386d650a2fda"
-  integrity sha512-z7deEbNOPcS7pb7uyaZhbITh18ruGghYh86VmUL2zJPKeu9tEAqF0goQH0dhWamHoBJpkyWroNxPZjzNvbYVCw==
+"@types/node@^17.0.25":
+  version "17.0.25"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.25.tgz#527051f3c2f77aa52e5dc74e45a3da5fb2301448"
+  integrity sha512-wANk6fBrUwdpY4isjWrKTufkrXdu1D2YHCot2fD/DfWxF5sMrVSA+KN7ydckvaTCh0HiqX9IVl0L5/ZoXg5M7w==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
