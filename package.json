@@ -1,10 +1,15 @@
 {
   "name": "krossboard-ui",
-  "version": "1.0.0",
+  "version": "1.2.0",
+  "private": false,
   "description": "Frontend for Krossboard",
-  "author": "(c) Company 2019",
+  "author": {
+    "name": "2Alchimists",
+    "web": "https://2alchemists.com/"
+  },
   "homepage": "https://krossboard.app",
-  "license": "UNLICENSED",
+  "license": "GNU AFFERO GENERAL PUBLIC LICENSE",
+  "repository": "git@github.com:2-alchemists/krossboard-ui.git",
   "main": "src/index.tsx",
   "scripts": {
     "develop": "concurrently -r \"yarn:type-check:watch\" \"yarn:start\"",
