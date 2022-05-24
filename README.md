@@ -5,7 +5,7 @@
 
 
 # Overview
-`krossboard-ui` is the interface component of [Krossboard](https://github.com/2-alchemists/krossboard).
+`krossboard-ui` is the user interface component of [Krossboard](https://github.com/2-alchemists/krossboard).
 
 Key features of Krossboard:
 
