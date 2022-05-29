@@ -1,7 +1,9 @@
-# Krossboard UI
+![](krossboard-architecture-overview.png)
 
-![build](https://github.com/2-alchemists/krossboard-ui/workflows/build/badge.svg)
+---
 
+![Apache License](https://img.shields.io/github/license/2-alchemists/krossboard-ui.svg?label=License&style=for-the-badge)
+[![test-and-build](<https://img.shields.io/github/workflow/status/2-alchemists/krossboard-ui/build?label=build&logo=GitHub&style=for-the-badge>)](https://github.com/2-alchemists/krossboard-ui/actions/workflows/build.yml)
 
 
 # Overview
@@ -15,7 +17,6 @@ Key features of Krossboard:
 * **REST API**: Exposes the generated analytics data to third-party systems. For example, [Krossboard UI](https://github.com/2-alchemists/krossboard-ui) consumes this API to produce its charts and dashboards.
 * **Easy to deploy**: Krossboard can be easily deployed through a virtual machine on-premises or on public clouds. In a close future, it's expected to be deployed through a Kubernetes operator. It can be set up to automatically discover and handle Kubernetes clusters backed by Amazon EKS, Google GKE, Microsoft AKS.
 
-![](krossboard-architecture-overview.png)
 
 # Getting Started with Krossboard
 
