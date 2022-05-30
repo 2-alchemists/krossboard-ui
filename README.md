@@ -1,12 +1,12 @@
-![](krossboard-architecture-overview.png)
+![krossboard-overview](krossboard-architecture-overview.png)
 
 ---
 
-![Apache License](https://img.shields.io/github/license/2-alchemists/krossboard-ui.svg?label=License&style=for-the-badge)
+![license](https://img.shields.io/github/license/2-alchemists/krossboard-ui.svg?label=License&style=for-the-badge)
 [![test-and-build](<https://img.shields.io/github/workflow/status/2-alchemists/krossboard-ui/build?label=build&logo=GitHub&style=for-the-badge>)](https://github.com/2-alchemists/krossboard-ui/actions/workflows/build.yml)
 
-
 # Overview
+
 `krossboard-ui` is the user interface component of [Krossboard](https://github.com/2-alchemists/krossboard).
 
 Key features of Krossboard:
@@ -29,8 +29,8 @@ Key features of Krossboard:
 
 As prerequisites, the following tools must be properly installed:
 
-- [Node.js](https://nodejs.org/en/download/) LTS v12.16.2 - codename `Erbium` (including [npm](https://www.npmjs.com/) v6.14.4)
-- [yarn](https://yarnpkg.com/lang/en/)
+* [Node.js](https://nodejs.org/en/download/) LTS v12.16.2 - codename `Erbium` (including [npm](https://www.npmjs.com/) v6.14.4)
+* [yarn](https://yarnpkg.com/lang/en/)
 
 [Node.js][Node.js] environment can be checked with the following command line:
 
@@ -119,8 +119,8 @@ Perform the release is pretty straight-forward:
 
 [Node.js]: https://nodejs.org/
 
-
 # Open to Contributions
+
 We encourage feedback and always make our best to handle any issues as fast as possible.
 
 Don't hesitate to submit a issue or make a feature request.
