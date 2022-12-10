@@ -18,7 +18,6 @@ import { ClusterUsageHistoryView } from '../pages/ClusterUsageHistory'
 import { NamespaceUsageView } from '../pages/NamespaceUsage'
 import { NodeUsageHistoryView } from '../pages/NodeUsageHistory'
 import { NodeUsageRecentOccupationView } from '../pages/NodeUsageRecentOccupation'
-import { SettingsView } from '../pages/Settings'
 
 export interface IMenu {
     to: string
@@ -71,14 +70,6 @@ export const menus: IMenu[][] = [
             primary: 'Nodes usage',
             secondary: 'Usage History',
             view: NodeUsageHistoryView
-        }
-    ],
-    [
-        {
-            to: '/settings',
-            primary: 'Settings',
-            secondary: 'Settings',
-            view: SettingsView
         }
     ],
 ]
