@@ -1,8 +1,9 @@
-# Krossboard UI
 
-![build](https://github.com/2-alchemists/krossboard-ui/workflows/build/badge.svg)
+![license](https://img.shields.io/github/license/2-alchemists/krossboard-ui.svg?label=License&style=for-the-badge)
+[![test-and-build](<https://img.shields.io/github/workflow/status/2-alchemists/krossboard-ui/build?label=build&logo=GitHub&style=for-the-badge>)](https://github.com/2-alchemists/krossboard-ui/actions/workflows/build.yml)
+---
 
-## Overview
+# Overview
 
 `krossboard-ui` is the user interface component of [Krossboard](https://github.com/2-alchemists/krossboard).
 
@@ -117,7 +118,7 @@ Perform the release is pretty straight-forward:
 
 [Node.js]: https://nodejs.org/
 
-## Open to Contributions
+# Open to Contributions
 
 We encourage feedback and always make our best to handle any issues as fast as possible.
 
