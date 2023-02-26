@@ -1,9 +1,7 @@
-![krossboard-overview](krossboard-architecture-overview.png)
-
----
 
 ![license](https://img.shields.io/github/license/2-alchemists/krossboard-ui.svg?label=License&style=for-the-badge)
 [![test-and-build](<https://img.shields.io/github/workflow/status/2-alchemists/krossboard-ui/build?label=build&logo=GitHub&style=for-the-badge>)](https://github.com/2-alchemists/krossboard-ui/actions/workflows/build.yml)
+---
 
 # Overview
 
@@ -17,15 +15,16 @@ Key features of Krossboard:
 * **REST API**: Exposes the generated analytics data to third-party systems. For example, [Krossboard UI](https://github.com/2-alchemists/krossboard-ui) consumes this API to produce its charts and dashboards.
 * **Easy to deploy**: Krossboard can be easily deployed through a virtual machine on-premises or on public clouds. In a close future, it's expected to be deployed through a Kubernetes operator. It can be set up to automatically discover and handle Kubernetes clusters backed by Amazon EKS, Google GKE, Microsoft AKS.
 
+![krossboard-architecture-overview](krossboard-architecture-overview.png)
 
-# Getting Started with Krossboard
+## Getting Started with Krossboard
 
 * [Setup Krossboard for Multi-Cloud or Cross-Kubernetes Distributions](https://krossboard.app/docs/60_deploy-for-cross-cloud-and-on-premises-kubernetes/)
 * [Setup Krossboard for Amazon EKS](https://krossboard.app/docs/50_deploy-for-amazon-eks/)
 * [Setup Krossboard for Azure AKS](https://krossboard.app/docs/30_deploy-for-azure-aks/)
 * [Setup Krossboard for Google GKE](https://krossboard.app/docs/20_deploy-for-google-gke/)
 
-# Development Setup for Krossboard UI
+## Development Setup for Krossboard UI
 
 As prerequisites, the following tools must be properly installed:
 
@@ -48,7 +47,7 @@ Once installed, you can then configure the [Node.js][Node.js] environment this w
 Now using node v12.16.2 (npm v6.14.4)
 ```
 
-## Initialization
+### Initialization
 
 Install all the dependencies required by the project by typing the following command line (this can take a while):
 
@@ -58,7 +57,7 @@ Install all the dependencies required by the project by typing the following com
 ✨  Done in 33.90s.
 ```
 
-## Start "develop" mode
+### Start "develop" mode
 
 In develop mode, you'll need a backend to serve the data on port 1519. A mocked one is available by typing the following command:
 
@@ -74,7 +73,7 @@ Then launch the front with the following command:
 
 Open `http://localhost:1234`.
 
-## Build project
+### Build project
 
 ```sh
 > yarn build
@@ -83,7 +82,7 @@ Open `http://localhost:1234`.
 
 Generated files are then available in the `dist` folder.
 
-## Commits
+### Commits
 
 The project follow [Conventional Commits](https://www.conventionalcommits.org/), a set of rules regarding how you should commit your code to bring you the great benefit.
 
@@ -91,7 +90,7 @@ The project follow [Conventional Commits](https://www.conventionalcommits.org/),
 
 For this, rules are enforced by a pre-commit hook mananaged by [husky](https://github.com/typicode/husky).
 
-## Release
+### Release
 
 The process of releasing the product is managed by [standard-version](https://github.com/conventional-changelog/standard-version).
 

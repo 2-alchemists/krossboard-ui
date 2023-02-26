@@ -1,6 +1,6 @@
 {
   "name": "krossboard-ui",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": false,
   "description": "Frontend for Krossboard",
   "author": {
@@ -16,7 +16,7 @@
     "start": "parcel ./src/index.html",
     "build": "yarn type-check && parcel build ./src/index.html --no-source-maps",
     "prettify": "prettier --write './src/**/*.{ts,tsx}'",
-    "start-server": "nodemon server/index.js",
+    "start-server": "yarn nodemon server/index.js",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'src/**/*.tsx' 'test/**/*.ts'",
@@ -86,7 +86,7 @@
     "@types/react-dom": "^17.0.3",
     "concurrently": "^4.1.0",
     "husky": "^4.3.8",
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.20",
     "parcel-bundler": "^1.12.3",
     "parcel-plugin-clean-dist": "^0.0.6",
     "prettier": "^1.17.0",
