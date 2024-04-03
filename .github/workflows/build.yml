@@ -8,7 +8,7 @@ on:
 
 jobs:
   check-commits:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -20,7 +20,7 @@ jobs:
         uses: wagoid/commitlint-github-action@v2
 
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v2.1.0
