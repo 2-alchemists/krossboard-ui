@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const NamespaceUsageView = () => {
+export const ClusterUsageView = () => {
     const classes = useStyles()
     const store = useStore()
     const dateRange = useLocalStore(() => ({

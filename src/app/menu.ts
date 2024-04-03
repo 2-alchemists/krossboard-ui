@@ -13,9 +13,9 @@
 
 import { useEffect, useState } from 'react'
 import { matchPath, useLocation } from 'react-router'
+import { ClusterUsageView } from '../pages/ClusterUsage'
 import { ClusterUsageCurrentView } from '../pages/ClusterUsageCurrent'
 import { ClusterUsageHistoryView } from '../pages/ClusterUsageHistory'
-import { NamespaceUsageView } from '../pages/NamespaceUsage'
 import { NodeUsageHistoryView } from '../pages/NodeUsageHistory'
 import { NodeUsageRecentOccupationView } from '../pages/NodeUsageRecentOccupation'
 
@@ -52,10 +52,10 @@ export const menus: IMenu[][] = [
     ],
     [
         {
-            to: '/namespaces-usage',
-            primary: 'Namespaces usage',
-            secondary: 'Namespaces Usage',
-            view: NamespaceUsageView
+            to: '/cluster-usage',
+            primary: 'Cluster usage',
+            secondary: 'Cluster Usage',
+            view: ClusterUsageView
         }
     ],
     [
